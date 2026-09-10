@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b9ffa42686e6f54bb234d0519f095f7, type: 3}
   m_Name: BallSizeXL
   m_EditorClassIdentifier: Assembly-CSharp::BallStat
-  _moveSpeed: 11.55
+  _moveSpeed: 20
   _moveAcceleration: 1
-  _moveResponseTime: 2
+  _moveResponseTime: 1.25
   _jumpForce: 405
   _maxGravityVelocity: 77.9
   _mass: 27
