@@ -2,11 +2,6 @@ using UnityEngine;
 
 public class GameInputController : MonoBehaviour
 {
-    //[SerializeField] private InputActionReference moveAction;
-    //[SerializeField] private InputActionReference jumpAction;
-    //[SerializeField] private InputActionReference lookAction;
-    //[SerializeField] private InputActionReference changeSizeAction;
-    [SerializeField] private PlayerCameraController playerCameraController;
 
     private PlayerInput playerInput;
 
@@ -37,8 +32,6 @@ public class GameInputController : MonoBehaviour
         SizeChangeInput = playerInput.Player.SizeChange.ReadValue<float>();
         JumpHeld = playerInput.Player.Jump.IsPressed();
         JumpPressed = playerInput.Player.Jump.WasPressedThisFrame();
-
-
     }
 
 
