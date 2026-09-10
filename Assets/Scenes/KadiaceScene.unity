@@ -637,12 +637,12 @@ MonoBehaviour:
   playerRb: {fileID: 1163206129}
   playerController: {fileID: 0}
   mainCamTransform: {fileID: 0}
-  maxEffectSpeed: 20
-  effectStartSpeed: 8
+  maxEffectSpeed: 65
+  effectStartSpeed: 20
   slowDamping: {x: 0.05, y: 0.05, z: 0.1}
   fastDamping: {x: 0.1, y: 0.1, z: 0.7}
   slowFOV: 60
-  fastFOV: 75
+  fastFOV: 90
   effectChangeSpeed: 3
 --- !u!1 &2054262560
 GameObject:
