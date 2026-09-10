@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,18 +13,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float gravityTiltAmount = 0.7f;
     [SerializeField] private List<BallStat> ownedBalls;
     [SerializeField] private int currentBallNum = 0;
+    private bool canChange = true;
 
     private void Update()
     {
-        //Vector2 moveInput = inputController.MoveInput;
-
 
         playerCharacter.SetMoveInput(inputController.MoveInput);
 
         float currentSizeChangeInput = inputController.SizeChangeInput;
-        //if()
+
         if (previousSizeChangeInput != currentSizeChangeInput && currentSizeChangeInput != 0)
         {
+            if (!canChange) return;
+            //playerCharacter.canChange
             int diff = (int)currentSizeChangeInput;
             int num;
 
@@ -44,18 +46,28 @@ public class PlayerController : MonoBehaviour
             currentBallNum = num;
 
             playerCharacter.PlaySizeChange(ownedBalls[currentBallNum]);
-            // 입력값이 변했을 때만 실행
-            Debug.Log($"Input Changed: diff:{diff} , num:{num}");
-            Debug.Log($"Input Changed: {previousSizeChangeInput} → {currentSizeChangeInput}");
         }
         previousSizeChangeInput = currentSizeChangeInput;
 
-        if (inputController.JumpPressed)
+        if (inputController.JumpPressed && playerCharacter.IsGrounded)
         {
-            playerCharacter.JumpRequested();
+            playerCharacter.ProcessJump();
         }
 
 
+    }
+
+    public IEnumerator ChangeBallStat()
+    {
+        canChange = false;
+        playerCharacter.SetTargetVelocity();
+
+        Time.timeScale = 0.3f;
+        yield return new WaitForSecondsRealtime(1f);
+        Time.timeScale = 1.0f;
+
+
+        canChange = true;
     }
 
 

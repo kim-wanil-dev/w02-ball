@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +9,7 @@ public class PlayerCharacter : MonoBehaviour
     [SerializeField] private Transform groundCheckOrigin;
     [SerializeField] private float groundCheckDistance = 0.2f;
     [SerializeField] private bool isGrounded;
+    public bool IsGrounded => isGrounded;
 
 
     [Header("Gravity")]
@@ -20,7 +20,7 @@ public class PlayerCharacter : MonoBehaviour
     private Rigidbody rb;
     [SerializeField] private Vector2 moveInput;
     private Vector3 gravityDirection = Vector3.down;
-    private bool jumpRequested;
+    //private bool jumpRequested;
     private Vector3 targetVelocity;
 
 
@@ -66,11 +66,10 @@ public class PlayerCharacter : MonoBehaviour
     private void FixedUpdate()
     {
         CheckGround();
-        ProcessJump();
+        //ProcessJump();
         ApplyMovement();
         RotateSphere();
 
-        //Debug.Log($"velocity : {rb.linearVelocity}");
         velocityText.text = $"{rb.linearVelocity.magnitude:F2}";
     }
 
@@ -84,7 +83,6 @@ public class PlayerCharacter : MonoBehaviour
 
     public void PlaySizeChange(BallStat inputBallStat)
     {
-        Debug.Log("PlaySizeChange");
         if (!canChange) return;
         groundCheckOrigin.localPosition = new Vector3(0f, -inputBallStat.SphereRadius + 0.5f, 0f);
         sphereVisual.localScale = Vector3.one * inputBallStat.SphereRadius * 2f;
@@ -94,26 +92,12 @@ public class PlayerCharacter : MonoBehaviour
         physicsMaterial.bounciness = currentBallStat.Bounciness;
         rb.mass = currentBallStat.Mass;
 
-
-        //pendingBallStat = inputBallStat;
-
-
-        StartCoroutine(ChangeBallStat());
     }
-    public IEnumerator ChangeBallStat()
+    public void SetTargetVelocity()
     {
-        canChange = false;
         targetVelocity = rb.linearVelocity;
-
-        Time.timeScale = 0.3f;
-        yield return new WaitForSecondsRealtime(1f);
-        Time.timeScale = 1.0f;
-        //currentBallStat = pendingBallStat;
-        //pendingBallStat = null;
-
-
-        canChange = true;
     }
+
 
     public void SetMoveInput(Vector2 moveInput)
 
@@ -122,10 +106,10 @@ public class PlayerCharacter : MonoBehaviour
     }
 
 
-    public void JumpRequested()
-    {
-        jumpRequested = true;
-    }
+    //public void Jump()
+    //{
+    //    jumpRequested = true;
+    //}
 
 
 
@@ -295,16 +279,8 @@ public class PlayerCharacter : MonoBehaviour
     // Jump
     // =========================================================
 
-    private void ProcessJump()
+    public void ProcessJump()
     {
-        if (!jumpRequested)
-            return;
-
-        jumpRequested = false;
-
-        if (!isGrounded)
-            return;
-
         rb.AddForce(
             -gravityDirection *
             currentBallStat.JumpForce,

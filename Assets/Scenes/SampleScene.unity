@@ -1180,8 +1180,8 @@ MonoBehaviour:
   _areaSize: 500
   _resolution: 100
   _upperHeight: 100
-  _lowerHeight: -100
-  _depth: 30
+  _lowerHeight: 0
+  _depth: 20
   _scale: 40
   _material: {fileID: 2100000, guid: e092bb4da9b5519429316c8b2586747c, type: 2}
   _groundLayer:
@@ -1200,16 +1200,20 @@ PrefabInstance:
       value: ImpulseObstacle
       objectReference: {fileID: 0}
     - target: {fileID: 5655054319665708315, guid: af3066af2b62b854ea8d282f0d408f21, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 5655054319665708315, guid: af3066af2b62b854ea8d282f0d408f21, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 42.4254
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5655054319665708315, guid: af3066af2b62b854ea8d282f0d408f21, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 18.7956
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 5655054319665708315, guid: af3066af2b62b854ea8d282f0d408f21, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 103.1
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 5655054319665708315, guid: af3066af2b62b854ea8d282f0d408f21, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1304,6 +1308,10 @@ PrefabInstance:
       propertyPath: cameraTransform
       value: 
       objectReference: {fileID: 330585546}
+    - target: {fileID: 4923353048819393092, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
+      propertyPath: groundCheckDistance
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5559117678160151991, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
       propertyPath: inputController
       value: 
