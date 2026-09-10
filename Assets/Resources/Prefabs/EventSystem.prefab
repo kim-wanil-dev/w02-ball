@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 9092572964702882904}
   - component: {fileID: 3849048037377481638}
   - component: {fileID: 8867845597612651744}
+  - component: {fileID: 7180888827630258134}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -79,3 +80,15 @@ MonoBehaviour:
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
   m_ScrollDeltaPerTick: 6
+--- !u!114 &7180888827630258134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4191472052741728545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ad178bfd1d8d5746a7f1003dcf89c20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameInputController
