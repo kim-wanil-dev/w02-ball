@@ -67,7 +67,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         ProcessMoveInput();
-        ProcessSizeChangeInput();
+        ProcessResizeInput();
         ProcessJumpInput();
     }
 
@@ -87,7 +87,7 @@ public class PlayerController : MonoBehaviour
         _moveInput = GameInputController.Instance.MoveInput;
     }
 
-    private void ProcessSizeChangeInput()
+    private void ProcessResizeInput()
     {
         int currentSizeChangeInput = (int)GameInputController.Instance.ResizeInput;
 
@@ -211,41 +211,37 @@ public class PlayerController : MonoBehaviour
         if (inputMagnitude <= 0.001f)
             return;
 
-        float targetSpeed =
-            _moveSpeed * inputMagnitude;
+        Vector3 targetVelocity =
+            groundMoveDirection *
+            _moveSpeed *
+            inputMagnitude;
 
-        Vector3 currentGroundVelocity =
+        Vector3 currentVelocity =
             Vector3.ProjectOnPlane(
                 _rb.linearVelocity,
                 _groundNormal
             );
 
-        float currentSpeed =
-            Vector3.Dot(
-                currentGroundVelocity,
-                groundMoveDirection
+        Vector3 velocityDelta =
+            targetVelocity - currentVelocity;
+
+        Vector3 responseAcceleration =
+            velocityDelta / _moveResponseTime;
+
+        Vector3 velocityChange =
+            responseAcceleration * Time.fixedDeltaTime;
+
+        velocityChange =
+            Vector3.ClampMagnitude(
+                velocityChange,
+                velocityDelta.magnitude
             );
 
-        if (currentSpeed >= targetSpeed)
-            return;
-
-        float responseAcceleration =
-            _moveSpeed /
-            _moveResponseTime;
-
-        float remainingSpeed =
-            targetSpeed - currentSpeed;
-
-        float velocityChange = Mathf.Min(
-            responseAcceleration * Time.fixedDeltaTime,
-            remainingSpeed
-        );
-
-        float acceleration =
+        Vector3 acceleration =
             velocityChange / Time.fixedDeltaTime;
 
         _rb.AddForce(
-            groundMoveDirection * acceleration,
+            acceleration,
             ForceMode.Acceleration
         );
     }
