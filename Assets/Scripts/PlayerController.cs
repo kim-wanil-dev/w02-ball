@@ -27,7 +27,6 @@ public class PlayerController : MonoBehaviour
     private Vector2 moveInput;
     private float previousSizeChangeInput;
 
-    public bool IsGrounded { get; private set; }
 
     private Vector3 groundCheckOffset;
     private Vector3 groundNormal = Vector3.up;
@@ -42,6 +41,10 @@ public class PlayerController : MonoBehaviour
     private Vector3 targetVelocity;
 
     private bool jumpRequested;
+
+    public bool IsGrounded { get; private set; }
+    public List<BallStat> OwnedBalls { get { return ownedBalls; } }
+    public int CurrentBallNum { get { return currentBallNum; } }
 
     private void Awake()
     {
