@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 _moveInput;
     private float _previousSizeChangeInput;
 
-    private Vector3 _groundCheckOffset;
+    private Vector3 _gravityDir = Vector3.down;
     private Vector3 _groundNormal = Vector3.up;
 
     private Rigidbody _rb;
@@ -117,7 +117,7 @@ public class PlayerController : MonoBehaviour
 
     private void CheckGround()
     {
-        Vector3 gravityDirection = GetGravityDirection();
+        Vector3 gravityDirection = _gravityDir;
 
         float sphereRadius =
             _ownedBalls[_currentBallNum].SphereRadius;
@@ -160,7 +160,7 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 GetWorldMoveInput(Vector2 input)
     {
-        Vector3 upDirection = -GetGravityDirection();
+        Vector3 upDirection = -_gravityDir;
 
         Vector3 cameraForward =
             Vector3.ProjectOnPlane(_cameraTransform.forward, upDirection);
@@ -273,7 +273,7 @@ public class PlayerController : MonoBehaviour
         Vector3 planarVelocity =
             Vector3.ProjectOnPlane(
                 _rb.linearVelocity,
-                GetGravityDirection()
+                _gravityDir
             );
 
         float currentSpeed =
@@ -317,7 +317,7 @@ public class PlayerController : MonoBehaviour
             return;
 
         Vector3 jumpDirection =
-            -GetGravityDirection();
+            -_gravityDir;
 
         _rb.AddForce(
             jumpDirection *
@@ -326,19 +326,8 @@ public class PlayerController : MonoBehaviour
         );
     }
 
-    private Vector3 GetGravityDirection()
-    {
-        if (Physics.gravity.sqrMagnitude < 0.001f)
-            return Vector3.down;
-
-        return Physics.gravity.normalized;
-    }
-
     public void InitSizeBall(BallStat inputBallStat)
     {
-        _groundCheckOffset = new Vector3(0f,
-            -inputBallStat.SphereRadius + 0.5f, 0f);
-
         transform.localScale = 2 * Vector3.one *
             inputBallStat.SphereRadius;
 
