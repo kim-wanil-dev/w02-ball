@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour
         if (_cameraTransform == null && Camera.main != null)
             _cameraTransform = Camera.main.transform;
 
-        ResizeBall(_ownedBalls[_currentBallNum]);
+        InitSizeBall(_ownedBalls[_currentBallNum]);
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -103,8 +103,8 @@ public class PlayerController : MonoBehaviour
         if (nextBallNum == _currentBallNum)
             return;
 
+        ResizeBall(_currentBallNum, nextBallNum);
         _currentBallNum = nextBallNum;
-        ResizeBall(_ownedBalls[_currentBallNum]);
 
     }
 
@@ -328,7 +328,7 @@ public class PlayerController : MonoBehaviour
         return Physics.gravity.normalized;
     }
 
-    public void ResizeBall(BallStat inputBallStat)
+    public void InitSizeBall(BallStat inputBallStat)
     {
         if (!_canChange)
             return;
@@ -354,5 +354,44 @@ public class PlayerController : MonoBehaviour
 
         _rb.mass =
             inputBallStat.Mass;
+    }
+
+    public void ResizeBall(int currentBallNum, int nextBallNum)
+    {
+        BallStat currentBallStat = _ownedBalls[currentBallNum];
+        BallStat nextBallStat = _ownedBalls[nextBallNum];
+
+        if (!_canChange)
+            return;
+
+        Vector3 currentVelocity = _rb.linearVelocity;
+        float velocityRatio = Mathf.Sqrt(
+            currentBallStat.Mass / nextBallStat.Mass
+        );
+
+        _groundCheckOffset = new Vector3(
+            0f,
+            -nextBallStat.SphereRadius + 0.5f,
+            0f
+        );
+
+        transform.localScale =
+            Vector3.one *
+            nextBallStat.SphereRadius;
+
+        _moveSpeed = nextBallStat.MoveSpeed;
+        _moveAcceleration = nextBallStat.MoveAcceleration;
+        _moveResponseTime = nextBallStat.MoveResponseTime;
+        _jumpForce = nextBallStat.JumpForce;
+        _maxGravityVelocity = nextBallStat.MaxGravityVelocity;
+
+        _physicsMaterial.bounciness =
+            nextBallStat.Bounciness;
+
+        _rb.mass =
+            nextBallStat.Mass;
+
+        _rb.linearVelocity =
+            currentVelocity * velocityRatio;
     }
 }
