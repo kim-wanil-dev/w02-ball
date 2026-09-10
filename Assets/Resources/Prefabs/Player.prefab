@@ -153,17 +153,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 283a05265caa1eb458cfb6decbef9d21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  _inputController: {fileID: 0}
   _groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  _groundCheckDistance: 1
-  _moveResponseTime: 0.2
+  _groundCheckDistance: 0.1
+  _groundCheckRadiusRatio: 0.9
   _ownedBalls:
   - {fileID: 11400000, guid: 5a67a359f1204cd4b95fb650c7f4a02d, type: 2}
   - {fileID: 11400000, guid: 1eb012c8afdc6284dae6a58faf9d42b3, type: 2}
   - {fileID: 11400000, guid: 8fa17fab22ef23246b29cb02e2e42158, type: 2}
   - {fileID: 11400000, guid: 32707346193573c45b3e6acf9d193d50, type: 2}
   _currentBallNum: 0
-  _velocityText: {fileID: 0}
-  _heightText: {fileID: 0}

@@ -20,5 +20,5 @@ MonoBehaviour:
   _mass: 3
   _bounciness: 0.15
   _sphereRadius: 3
-  _slowCameraDistance: 9
-  _fastCameraDistance: 12
+  _slowCameraDistance: 25
+  _fastCameraDistance: 28
