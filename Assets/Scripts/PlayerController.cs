@@ -8,9 +8,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask _groundLayer;
     [SerializeField] private float _groundCheckDistance = 1f;
 
-    [Header("Movement")]
-    [SerializeField] private float _moveResponseTime = 0.2f;
-
     [Header("Ball Stat")]
     [SerializeField] private List<BallStat> _ownedBalls;
     [SerializeField] private int _currentBallNum;
@@ -31,7 +28,11 @@ public class PlayerController : MonoBehaviour
     private PhysicsMaterial _physicsMaterial;
 
     private bool _canChange = true;
-
+    private float _moveSpeed;
+    private float _moveAcceleration;
+    private float _moveResponseTime;
+    private float _jumpForce;
+    private float _maxGravityVelocity;
     private Vector3 _targetVelocity;
 
     private bool _jumpRequested;
@@ -51,7 +52,7 @@ public class PlayerController : MonoBehaviour
         if (_cameraTransform == null && Camera.main != null)
             _cameraTransform = Camera.main.transform;
 
-        PlaySizeChange(_ownedBalls[_currentBallNum]);
+        ResizeBall(_ownedBalls[_currentBallNum]);
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -95,7 +96,7 @@ public class PlayerController : MonoBehaviour
         int nextBallNum = Mathf.Clamp(currentSizeChangeInput + _currentBallNum, 0, _ownedBalls.Count);
 
         _currentBallNum = nextBallNum;
-        PlaySizeChange(_ownedBalls[_currentBallNum]);
+        ResizeBall(_ownedBalls[_currentBallNum]);
 
         _previousSizeChangeInput = currentSizeChangeInput;
     }
@@ -198,7 +199,7 @@ public class PlayerController : MonoBehaviour
             return;
 
         float targetSpeed =
-            _ownedBalls[_currentBallNum].MoveSpeed * inputMagnitude;
+            _moveSpeed * inputMagnitude;
 
         Vector3 currentGroundVelocity =
             Vector3.ProjectOnPlane(
@@ -216,7 +217,7 @@ public class PlayerController : MonoBehaviour
             return;
 
         float responseAcceleration =
-            _ownedBalls[_currentBallNum].MoveSpeed /
+            _moveSpeed /
             _moveResponseTime;
 
         float remainingSpeed =
@@ -253,7 +254,7 @@ public class PlayerController : MonoBehaviour
             worldMoveInput.normalized;
 
         float targetSpeed =
-            _ownedBalls[_currentBallNum].MoveSpeed *
+            _moveSpeed *
             inputMagnitude;
 
         Vector3 planarVelocity =
@@ -275,7 +276,7 @@ public class PlayerController : MonoBehaviour
             targetSpeed - currentSpeed;
 
         float acceleration =
-            _ownedBalls[_currentBallNum].MoveAcceleration *
+           _moveAcceleration *
             inputMagnitude;
 
         float velocityChange = Mathf.Min(
@@ -307,7 +308,7 @@ public class PlayerController : MonoBehaviour
 
         _rb.AddForce(
             jumpDirection *
-            _ownedBalls[_currentBallNum].JumpForce,
+            _jumpForce,
             ForceMode.Impulse
         );
     }
@@ -320,7 +321,7 @@ public class PlayerController : MonoBehaviour
         return Physics.gravity.normalized;
     }
 
-    public void PlaySizeChange(BallStat inputBallStat)
+    public void ResizeBall(BallStat inputBallStat)
     {
         if (!_canChange)
             return;
@@ -333,15 +334,18 @@ public class PlayerController : MonoBehaviour
 
         transform.localScale =
             Vector3.one *
-            inputBallStat.SphereRadius *
-            2f;
+            inputBallStat.SphereRadius;
 
-        _ownedBalls[_currentBallNum] = inputBallStat;
+        _moveSpeed = inputBallStat.MoveSpeed;
+        _moveAcceleration = inputBallStat.MoveAcceleration;
+        _moveResponseTime = inputBallStat.MoveResponseTime;
+        _jumpForce = inputBallStat.JumpForce;
+        _maxGravityVelocity = inputBallStat.MaxGravityVelocity;
 
         _physicsMaterial.bounciness =
-            _ownedBalls[_currentBallNum].Bounciness;
+            inputBallStat.Bounciness;
 
         _rb.mass =
-            _ownedBalls[_currentBallNum].Mass;
+            inputBallStat.Mass;
     }
 }
