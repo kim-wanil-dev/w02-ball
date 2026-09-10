@@ -2,42 +2,42 @@ using UnityEngine;
 
 public class PlayerCameraController : MonoBehaviour
 {
-    [SerializeField] private Transform player;
-    [SerializeField] private GameInputController inputHandler;
+    [SerializeField] private Transform _player;
+    [SerializeField] private GameInputController _inputHandler;
 
-    [SerializeField] private float height = 1.5f;
-    [SerializeField] private float sensitivity = 0.12f;
+    [SerializeField] private float _height = 1.5f;
+    [SerializeField] private float _sensitivity = 0.12f;
 
-    [SerializeField] private float minPitch = -30f;
-    [SerializeField] private float maxPitch = 70f;
+    [SerializeField] private float _minPitch = -30f;
+    [SerializeField] private float _maxPitch = 70f;
 
-    private float yaw;
-    private float pitch;
+    private float _yaw;
+    private float _pitch;
 
     private void Update()
     {
         Vector2 lookInput =
-            inputHandler.LookInput;
+            _inputHandler.LookInput;
 
-        yaw +=
+        _yaw +=
             lookInput.x *
-            sensitivity;
+            _sensitivity;
 
-        pitch -=
+        _pitch -=
             lookInput.y *
-            sensitivity;
+            _sensitivity;
 
-        pitch =
+        _pitch =
             Mathf.Clamp(
-                pitch,
-                minPitch,
-                maxPitch
+                _pitch,
+                _minPitch,
+                _maxPitch
             );
 
         transform.rotation =
             Quaternion.Euler(
-                pitch,
-                yaw,
+                _pitch,
+                _yaw,
                 0f
             );
     }
@@ -45,7 +45,7 @@ public class PlayerCameraController : MonoBehaviour
     private void FixedUpdate()
     {
         transform.position =
-            player.position +
-            Vector3.up * height;
+            _player.position +
+            Vector3.up * _height;
     }
 }

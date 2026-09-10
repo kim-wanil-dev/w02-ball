@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -61,7 +60,7 @@ public class PlayerController : MonoBehaviour
         Cursor.visible = false;
 
         Instantiate(Resources.Load<GameObject>($"Prefabs/EventSystem"));
-        GameObject DebugCanvas = Instantiate(Resources.Load<GameObject>($"Prefabs/Player"));
+        GameObject DebugCanvas = Instantiate(Resources.Load<GameObject>($"Prefabs/DebugCanvas"));
         _velocityText = DebugCanvas.transform.Find("VelocityText").GetComponent<Text>();
         _heightText = DebugCanvas.transform.Find("HeightText").GetComponent<Text>();
     }
