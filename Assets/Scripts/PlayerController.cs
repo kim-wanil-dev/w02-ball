@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Ground")]
     [SerializeField] private LayerMask _groundLayer;
-    [SerializeField] private float _groundCheckDistance = 0.2f;
+    [SerializeField] private float _groundCheckDistance = 1f;
 
     [Header("Movement")]
     [SerializeField] private float _moveResponseTime = 0.2f;
@@ -67,8 +67,6 @@ public class PlayerController : MonoBehaviour
         ProcessMoveInput();
         ProcessSizeChangeInput();
         ProcessJumpInput();
-
-        Debug.Log($"Ground: {IsGrounded}\n Ground Normal: {_groundNormal}");
     }
 
     private void FixedUpdate()
@@ -77,8 +75,9 @@ public class PlayerController : MonoBehaviour
         ProcessJump();
         ApplyMovement();
 
-        _velocityText.text = $"{_rb.linearVelocity.magnitude:F2}";
-        _heightText.text = $"{_rb.transform.position.y:F2}";
+        _velocityText.text = $"{_rb.linearVelocity.magnitude:F2} m/s";
+        _heightText.text = $"{_rb.transform.position.y:F2} m";
+        Debug.Log($"Ground: {IsGrounded}\n Ground Normal: {_groundNormal}");
     }
 
     private void ProcessMoveInput()
@@ -88,7 +87,7 @@ public class PlayerController : MonoBehaviour
 
     private void ProcessSizeChangeInput()
     {
-        float currentSizeChangeInput = _inputController.SizeChangeInput;
+        float currentSizeChangeInput = _inputController.ResizeInput;
 
         if (_previousSizeChangeInput != currentSizeChangeInput && currentSizeChangeInput != 0f)
         {

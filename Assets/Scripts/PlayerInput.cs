@@ -113,16 +113,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""priority"": 0
                 },
                 {
-                    ""name"": ""Skill"",
-                    ""type"": ""Button"",
-                    ""id"": ""2d8cfb4a-de8a-46cf-b375-7ce5ec875684"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false,
-                    ""priority"": 0
-                },
-                {
                     ""name"": ""Look"",
                     ""type"": ""Value"",
                     ""id"": ""ad987fa1-5c22-4b11-b879-24a2be2ff99f"",
@@ -133,17 +123,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""priority"": 0
                 },
                 {
-                    ""name"": ""Aim"",
-                    ""type"": ""Button"",
-                    ""id"": ""fd0eba7a-deb2-46e0-9d55-28eed23bc3d6"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": ""Press(behavior=2)"",
-                    ""initialStateCheck"": false,
-                    ""priority"": 0
-                },
-                {
-                    ""name"": ""SizeChange"",
+                    ""name"": ""Resize"",
                     ""type"": ""Value"",
                     ""id"": ""1a0229f6-68e8-4103-9856-8237f7324e9d"",
                     ""expectedControlType"": ""Axis"",
@@ -153,9 +133,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""priority"": 0
                 },
                 {
-                    ""name"": ""Fly"",
+                    ""name"": ""Dive"",
                     ""type"": ""Value"",
-                    ""id"": ""8c3b348c-dc31-4137-9765-797a7ae8f2a1"",
+                    ""id"": ""22fbcdbf-69eb-4dc6-9398-55eb6a258dcc"",
                     ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -231,61 +211,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""2D Vector"",
-                    ""id"": ""80fde923-b4df-4cfc-a5c8-bc771dc79f13"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""abb868f9-cfcb-4f7f-ae01-e544dcbb5f4b"",
-                    ""path"": ""<Gamepad>/leftStick/up"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""e629a39a-e494-40bf-a6f7-a48311030384"",
-                    ""path"": ""<Gamepad>/leftStick/down"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""4a3faebc-762b-4985-b9cb-781c703079c1"",
-                    ""path"": ""<Gamepad>/leftStick/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""fa8ff634-3d2b-489f-a2f6-218f36e7d020"",
-                    ""path"": ""<Gamepad>/leftStick/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": """",
                     ""id"": ""7a879468-4198-4f41-bb7c-73253a29d60c"",
                     ""path"": ""<Keyboard>/space"",
@@ -298,12 +223,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""dacf5c16-631e-48c1-b60c-e0cdc4dac2c3"",
-                    ""path"": ""<Keyboard>/q"",
+                    ""id"": ""f5523790-46dc-43e1-a50a-b148c3465d8e"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Skill"",
+                    ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -320,12 +245,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""672f8fce-210b-4347-bc07-9d99e4aca9d0"",
-                    ""path"": ""<Mouse>/rightButton"",
+                    ""id"": ""3916584a-5466-4a0b-b819-e84c4a824601"",
+                    ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Aim"",
+                    ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -336,7 +261,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SizeChange"",
+                    ""action"": ""Resize"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -347,7 +272,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SizeChange"",
+                    ""action"": ""Resize"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -358,42 +283,53 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SizeChange"",
+                    ""action"": ""Resize"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""1D Axis"",
-                    ""id"": ""7e91b670-a56b-42a9-95a9-1ef57f5ea7de"",
+                    ""id"": ""8703d003-6b29-4d47-b923-2ea2472ddd93"",
                     ""path"": ""1DAxis"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Fly"",
+                    ""action"": ""Resize"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""Positive"",
-                    ""id"": ""491d4922-0eff-48ac-971a-d54794e62db9"",
-                    ""path"": ""<Keyboard>/space"",
+                    ""name"": ""negative"",
+                    ""id"": ""1dba0ca7-0caf-4355-a1e9-20347aeb1342"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Fly"",
+                    ""action"": ""Resize"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""Negative"",
-                    ""id"": ""e0c2ed95-019c-49cf-a4ab-4b3b39442084"",
-                    ""path"": ""<Keyboard>/ctrl"",
+                    ""name"": ""positive"",
+                    ""id"": ""3330ef41-a6f5-4bd6-9e75-22242863eb26"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Fly"",
+                    ""action"": ""Resize"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9ed8fab0-1f97-4a4b-9634-c57f407f8a9b"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dive"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -421,11 +357,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
-        m_Player_Skill = m_Player.FindAction("Skill", throwIfNotFound: true);
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
-        m_Player_Aim = m_Player.FindAction("Aim", throwIfNotFound: true);
-        m_Player_SizeChange = m_Player.FindAction("SizeChange", throwIfNotFound: true);
-        m_Player_Fly = m_Player.FindAction("Fly", throwIfNotFound: true);
+        m_Player_Resize = m_Player.FindAction("Resize", throwIfNotFound: true);
+        m_Player_Dive = m_Player.FindAction("Dive", throwIfNotFound: true);
     }
 
     ~@PlayerInput()
@@ -508,11 +442,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Jump;
-    private readonly InputAction m_Player_Skill;
     private readonly InputAction m_Player_Look;
-    private readonly InputAction m_Player_Aim;
-    private readonly InputAction m_Player_SizeChange;
-    private readonly InputAction m_Player_Fly;
+    private readonly InputAction m_Player_Resize;
+    private readonly InputAction m_Player_Dive;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -533,25 +465,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         /// <summary>
-        /// Provides access to the underlying input action "Player/Skill".
-        /// </summary>
-        public InputAction @Skill => m_Wrapper.m_Player_Skill;
-        /// <summary>
         /// Provides access to the underlying input action "Player/Look".
         /// </summary>
         public InputAction @Look => m_Wrapper.m_Player_Look;
         /// <summary>
-        /// Provides access to the underlying input action "Player/Aim".
+        /// Provides access to the underlying input action "Player/Resize".
         /// </summary>
-        public InputAction @Aim => m_Wrapper.m_Player_Aim;
+        public InputAction @Resize => m_Wrapper.m_Player_Resize;
         /// <summary>
-        /// Provides access to the underlying input action "Player/SizeChange".
+        /// Provides access to the underlying input action "Player/Dive".
         /// </summary>
-        public InputAction @SizeChange => m_Wrapper.m_Player_SizeChange;
-        /// <summary>
-        /// Provides access to the underlying input action "Player/Fly".
-        /// </summary>
-        public InputAction @Fly => m_Wrapper.m_Player_Fly;
+        public InputAction @Dive => m_Wrapper.m_Player_Dive;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -584,21 +508,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Jump.started += instance.OnJump;
             @Jump.performed += instance.OnJump;
             @Jump.canceled += instance.OnJump;
-            @Skill.started += instance.OnSkill;
-            @Skill.performed += instance.OnSkill;
-            @Skill.canceled += instance.OnSkill;
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
-            @Aim.started += instance.OnAim;
-            @Aim.performed += instance.OnAim;
-            @Aim.canceled += instance.OnAim;
-            @SizeChange.started += instance.OnSizeChange;
-            @SizeChange.performed += instance.OnSizeChange;
-            @SizeChange.canceled += instance.OnSizeChange;
-            @Fly.started += instance.OnFly;
-            @Fly.performed += instance.OnFly;
-            @Fly.canceled += instance.OnFly;
+            @Resize.started += instance.OnResize;
+            @Resize.performed += instance.OnResize;
+            @Resize.canceled += instance.OnResize;
+            @Dive.started += instance.OnDive;
+            @Dive.performed += instance.OnDive;
+            @Dive.canceled += instance.OnDive;
         }
 
         /// <summary>
@@ -616,21 +534,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Jump.started -= instance.OnJump;
             @Jump.performed -= instance.OnJump;
             @Jump.canceled -= instance.OnJump;
-            @Skill.started -= instance.OnSkill;
-            @Skill.performed -= instance.OnSkill;
-            @Skill.canceled -= instance.OnSkill;
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
-            @Aim.started -= instance.OnAim;
-            @Aim.performed -= instance.OnAim;
-            @Aim.canceled -= instance.OnAim;
-            @SizeChange.started -= instance.OnSizeChange;
-            @SizeChange.performed -= instance.OnSizeChange;
-            @SizeChange.canceled -= instance.OnSizeChange;
-            @Fly.started -= instance.OnFly;
-            @Fly.performed -= instance.OnFly;
-            @Fly.canceled -= instance.OnFly;
+            @Resize.started -= instance.OnResize;
+            @Resize.performed -= instance.OnResize;
+            @Resize.canceled -= instance.OnResize;
+            @Dive.started -= instance.OnDive;
+            @Dive.performed -= instance.OnDive;
+            @Dive.canceled -= instance.OnDive;
         }
 
         /// <summary>
@@ -699,13 +611,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnJump(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Skill" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnSkill(InputAction.CallbackContext context);
-        /// <summary>
         /// Method invoked when associated input action "Look" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
@@ -713,25 +618,18 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnLook(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Aim" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Resize" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnAim(InputAction.CallbackContext context);
+        void OnResize(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "SizeChange" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Dive" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnSizeChange(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "Fly" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnFly(InputAction.CallbackContext context);
+        void OnDive(InputAction.CallbackContext context);
     }
 }
