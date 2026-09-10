@@ -10,14 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2b9ffa42686e6f54bb234d0519f095f7, type: 3}
-  m_Name: BallSize5
+  m_Name: BallSizeS
   m_EditorClassIdentifier: Assembly-CSharp::BallStat
-  moveSpeed: 20
-  moveAcceleration: 100
-  jumpForce: 20
-  sphereRadius: 2.5
-  mass: 3
-  bounciness: 0
-  gravity: 35
-  slowCameraDistance: 8
-  fastCameraDistance: 10
+  _moveSpeed: 12
+  _moveAcceleration: 27
+  _moveResponseTime: 0.5
+  _jumpForce: 20
+  _maxGravityVelocity: 15
+  _mass: 3
+  _bounciness: 0.15
+  _sphereRadius: 3
+  _slowCameraDistance: 9
+  _fastCameraDistance: 12
