@@ -2,30 +2,48 @@ using UnityEngine;
 
 public class PlayerCameraController : MonoBehaviour
 {
-    [SerializeField] private Transform _player;
-    [SerializeField] private GameInputController _inputHandler;
-
     [SerializeField] private float _height = 1.5f;
-    [SerializeField] private float _sensitivity = 0.12f;
+    [SerializeField] private float _mouseSensitivity = 0.12f;
+    [SerializeField] private float _gamepadSensitivity = 0.6f;
 
     [SerializeField] private float _minPitch = -30f;
     [SerializeField] private float _maxPitch = 70f;
 
+    private Transform _player;
+
     private float _yaw;
     private float _pitch;
+
+    private void Awake()
+    {
+        _player = GameObject.Find("Player").transform;
+    }
 
     private void Update()
     {
         Vector2 lookInput =
-            _inputHandler.LookInput;
+            GameInputController.Instance.LookInput;
 
-        _yaw +=
-            lookInput.x *
-            _sensitivity;
+        if (GameInputController.Instance.GamePadConnected)
+        {
+            _yaw +=
+                lookInput.x *
+                _gamepadSensitivity;
 
-        _pitch -=
-            lookInput.y *
-            _sensitivity;
+            _pitch -=
+                lookInput.y *
+                _gamepadSensitivity;
+        }
+        else
+        {
+            _yaw +=
+                lookInput.x *
+                _mouseSensitivity;
+
+            _pitch -=
+                lookInput.y *
+                _mouseSensitivity;
+        }
 
         _pitch =
             Mathf.Clamp(

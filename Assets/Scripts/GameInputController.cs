@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameInputController : MonoBehaviour
 {
-
-    private PlayerInput _playerInput;
+    public static GameInputController Instance;
+    // private PlayerInput playerInput;
+    private InputSystem_Actions inputActions;
 
     public Vector2 MoveInput { get; private set; }
     public Vector2 LookInput { get; private set; }
@@ -11,29 +13,51 @@ public class GameInputController : MonoBehaviour
     public float ResizeInput { get; private set; }
     public bool JumpPressed { get; private set; }
     public bool JumpHeld { get; private set; }
+    public bool GamePadConnected { get; private set; }
     private void Awake()
     {
-        _playerInput = new PlayerInput();
+        Instance = this;
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+
+        inputActions = new InputSystem_Actions();
+        // playerInput = new PlayerInput();
     }
 
     private void OnEnable()
     {
-        _playerInput.Player.Enable();
+        inputActions.Enable();
+        inputActions.Player.Look.performed += CheckDeviceType;
+        inputActions.Player.Look.canceled += CheckDeviceType;
     }
 
     private void OnDisable()
     {
-        _playerInput.Player.Disable();
+        inputActions.Player.Look.performed -= CheckDeviceType;
+        inputActions.Player.Look.canceled -= CheckDeviceType;
+
+        inputActions.Disable();
+    }
+
+    private void CheckDeviceType(InputAction.CallbackContext ctx)
+    {
+        GamePadConnected = ctx.control.device is Gamepad;
     }
 
     private void Update()
     {
-        MoveInput = _playerInput.Player.Move.ReadValue<Vector2>();
-        LookInput = _playerInput.Player.Look.ReadValue<Vector2>();
-        DiveInput = _playerInput.Player.Dive.ReadValue<float>();
-        ResizeInput = _playerInput.Player.Resize.ReadValue<float>();
-        JumpPressed = _playerInput.Player.Jump.WasPressedThisFrame();
-        JumpHeld = _playerInput.Player.Jump.IsPressed();
+        MoveInput = inputActions.Player.Move.ReadValue<Vector2>();
+        LookInput = inputActions.Player.Look.ReadValue<Vector2>();
+        DiveInput = inputActions.Player.Dive.ReadValue<float>();
+        ResizeInput = inputActions.Player.Resize.ReadValue<float>();
+        JumpPressed = inputActions.Player.Jump.WasPressedThisFrame();
+        JumpHeld = inputActions.Player.Jump.IsPressed();
     }
 
 

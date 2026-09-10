@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b9ffa42686e6f54bb234d0519f095f7, type: 3}
   m_Name: BallSize3
   m_EditorClassIdentifier: Assembly-CSharp::BallStat
-  moveSpeed: 40
-  moveAcceleration: 50
-  jumpForce: 20
-  sphereRadius: 1.5
-  mass: 1
-  bounciness: 0
-  gravity: 20
-  slowCameraDistance: 6
-  fastCameraDistance: 8
+  _moveSpeed: 3
+  _moveAcceleration: 3
+  _moveResponseTime: 3
+  _jumpForce: 3
+  _maxGravityVelocity: 3
+  _mass: 3
+  _bounciness: 1
+  _sphereRadius: 3
+  _slowCameraDistance: 3
+  _fastCameraDistance: 3

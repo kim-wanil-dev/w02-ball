@@ -4,9 +4,6 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Input")]
-    [SerializeField] private GameInputController _inputController;
-
     [Header("Ground")]
     [SerializeField] private LayerMask _groundLayer;
     [SerializeField] private float _groundCheckDistance = 1f;
@@ -85,12 +82,12 @@ public class PlayerController : MonoBehaviour
 
     private void ProcessMoveInput()
     {
-        _moveInput = _inputController.MoveInput;
+        _moveInput = GameInputController.Instance.MoveInput;
     }
 
     private void ProcessSizeChangeInput()
     {
-        int currentSizeChangeInput = (int)_inputController.ResizeInput;
+        int currentSizeChangeInput = (int)GameInputController.Instance.ResizeInput;
 
         if (_previousSizeChangeInput == currentSizeChangeInput || currentSizeChangeInput == 0)
             return;
@@ -105,7 +102,7 @@ public class PlayerController : MonoBehaviour
 
     private void ProcessJumpInput()
     {
-        if (_inputController.JumpPressed && IsGrounded)
+        if (GameInputController.Instance.JumpPressed && IsGrounded)
             _jumpRequested = true;
     }
 
