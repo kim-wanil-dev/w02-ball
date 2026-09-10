@@ -85,6 +85,9 @@ public class PlayerController : MonoBehaviour
                 .GetComponent<SphereCollider>();
         physicsMaterial = _collider.material;
         PlaySizeChange(ownedBalls[currentBallNum]);
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private void Start()

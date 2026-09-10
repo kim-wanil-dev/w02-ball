@@ -779,7 +779,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ad178bfd1d8d5746a7f1003dcf89c20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameInputController
-  playerCameraController: {fileID: 696318832}
 --- !u!114 &1616886992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1107,7 +1106,8 @@ PrefabInstance:
       propertyPath: inputController
       value: 
       objectReference: {fileID: 1616886991}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4923353048819393092, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
