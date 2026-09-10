@@ -90,15 +90,22 @@ public class PlayerController : MonoBehaviour
     {
         int currentSizeChangeInput = (int)GameInputController.Instance.ResizeInput;
 
-        if (_previousSizeChangeInput == currentSizeChangeInput || currentSizeChangeInput == 0)
+        if (_previousSizeChangeInput == currentSizeChangeInput)
             return;
 
-        int nextBallNum = Mathf.Clamp(currentSizeChangeInput + _currentBallNum, 0, _ownedBalls.Count);
+        _previousSizeChangeInput = currentSizeChangeInput;
+
+        if (currentSizeChangeInput == 0)
+            return;
+
+        int nextBallNum = Mathf.Clamp(currentSizeChangeInput + _currentBallNum, 0, _ownedBalls.Count - 1);
+
+        if (nextBallNum == _currentBallNum)
+            return;
 
         _currentBallNum = nextBallNum;
         ResizeBall(_ownedBalls[_currentBallNum]);
 
-        _previousSizeChangeInput = currentSizeChangeInput;
     }
 
     private void ProcessJumpInput()
