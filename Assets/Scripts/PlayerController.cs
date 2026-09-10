@@ -6,7 +6,10 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Ground")]
     [SerializeField] private LayerMask _groundLayer;
-    [SerializeField] private float _groundCheckDistance = 1f;
+    [SerializeField] private float _groundCheckDistance = 0.1f;
+
+    [SerializeField, Range(0.5f, 1f)]
+    private float _groundCheckRadiusRatio = 0.9f;
 
     [Header("Ball Stat")]
     [SerializeField] private List<BallStat> _ownedBalls;
@@ -27,13 +30,11 @@ public class PlayerController : MonoBehaviour
     private SphereCollider _collider;
     private PhysicsMaterial _physicsMaterial;
 
-    private bool _canChange = true;
     private float _moveSpeed;
     private float _moveAcceleration;
     private float _moveResponseTime;
     private float _jumpForce;
     private float _maxGravityVelocity;
-    private Vector3 _targetVelocity;
 
     private bool _jumpRequested;
 
@@ -116,14 +117,24 @@ public class PlayerController : MonoBehaviour
 
     private void CheckGround()
     {
-        Vector3 origin = transform.position + _groundCheckOffset;
         Vector3 gravityDirection = GetGravityDirection();
 
-        if (Physics.Raycast(
-            origin,
+        float sphereRadius =
+            _ownedBalls[_currentBallNum].SphereRadius;
+
+        float checkRadius =
+            sphereRadius * _groundCheckRadiusRatio;
+
+        float castDistance =
+            (sphereRadius - checkRadius) +
+            _groundCheckDistance;
+
+        if (Physics.SphereCast(
+            transform.position,
+            checkRadius,
             gravityDirection,
             out RaycastHit hit,
-            _groundCheckDistance,
+            castDistance,
             _groundLayer,
             QueryTriggerInteraction.Ignore))
         {
@@ -133,17 +144,12 @@ public class PlayerController : MonoBehaviour
         else
         {
             IsGrounded = false;
+            _groundNormal = -gravityDirection;
         }
     }
 
     private void ApplyMovement()
     {
-        if (!_canChange)
-        {
-            _rb.linearVelocity = _targetVelocity;
-            return;
-        }
-
         Vector3 worldMoveInput = GetWorldMoveInput(_moveInput);
 
         if (IsGrounded)
@@ -330,17 +336,10 @@ public class PlayerController : MonoBehaviour
 
     public void InitSizeBall(BallStat inputBallStat)
     {
-        if (!_canChange)
-            return;
+        _groundCheckOffset = new Vector3(0f,
+            -inputBallStat.SphereRadius + 0.5f, 0f);
 
-        _groundCheckOffset = new Vector3(
-            0f,
-            -inputBallStat.SphereRadius + 0.5f,
-            0f
-        );
-
-        transform.localScale =
-            Vector3.one *
+        transform.localScale = 2 * Vector3.one *
             inputBallStat.SphereRadius;
 
         _moveSpeed = inputBallStat.MoveSpeed;
@@ -352,8 +351,7 @@ public class PlayerController : MonoBehaviour
         _physicsMaterial.bounciness =
             inputBallStat.Bounciness;
 
-        _rb.mass =
-            inputBallStat.Mass;
+        _rb.mass = inputBallStat.Mass;
     }
 
     public void ResizeBall(int currentBallNum, int nextBallNum)
@@ -361,37 +359,13 @@ public class PlayerController : MonoBehaviour
         BallStat currentBallStat = _ownedBalls[currentBallNum];
         BallStat nextBallStat = _ownedBalls[nextBallNum];
 
-        if (!_canChange)
-            return;
-
         Vector3 currentVelocity = _rb.linearVelocity;
         float velocityRatio = Mathf.Sqrt(
             currentBallStat.Mass / nextBallStat.Mass
         );
 
-        _groundCheckOffset = new Vector3(
-            0f,
-            -nextBallStat.SphereRadius + 0.5f,
-            0f
-        );
+        InitSizeBall(nextBallStat);
 
-        transform.localScale =
-            Vector3.one *
-            nextBallStat.SphereRadius;
-
-        _moveSpeed = nextBallStat.MoveSpeed;
-        _moveAcceleration = nextBallStat.MoveAcceleration;
-        _moveResponseTime = nextBallStat.MoveResponseTime;
-        _jumpForce = nextBallStat.JumpForce;
-        _maxGravityVelocity = nextBallStat.MaxGravityVelocity;
-
-        _physicsMaterial.bounciness =
-            nextBallStat.Bounciness;
-
-        _rb.mass =
-            nextBallStat.Mass;
-
-        _rb.linearVelocity =
-            currentVelocity * velocityRatio;
+        _rb.linearVelocity = currentVelocity * velocityRatio;
     }
 }

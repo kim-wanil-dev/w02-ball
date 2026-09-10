@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BallStat
   _moveSpeed: 2.31
   _moveAcceleration: 1
-  _moveResponseTime: 13.5
+  _moveResponseTime: 2
   _jumpForce: 3
   _maxGravityVelocity: 77.9
   _mass: 27
   _bounciness: 1
   _sphereRadius: 9
-  _slowCameraDistance: 12
-  _fastCameraDistance: 15
+  _slowCameraDistance: 28
+  _fastCameraDistance: 31
