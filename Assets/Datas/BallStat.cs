@@ -9,6 +9,7 @@ public class BallStat : ScriptableObject
     [SerializeField] private float sphereRadius;
     [SerializeField] private float mass;
     [SerializeField] private float bounciness;
+    [SerializeField] private float gravity;
 
     public float MoveSpeed => moveSpeed;
     public float MoveAcceleration => moveAcceleration;
@@ -16,4 +17,5 @@ public class BallStat : ScriptableObject
     public float SphereRadius => sphereRadius;
     public float Mass => mass;
     public float Bounciness => bounciness;
+    public float Gravity => gravity;
 }

@@ -18,3 +18,4 @@ MonoBehaviour:
   sphereRadius: 1.5
   mass: 1
   bounciness: 1
+  gravity: 20

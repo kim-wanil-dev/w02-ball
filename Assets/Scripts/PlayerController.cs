@@ -346,6 +346,9 @@ public class PlayerController : MonoBehaviour
 
         rb.mass =
             ownedBalls[currentBallNum].Mass;
+
+        gravityStrength = 
+            ownedBalls[currentBallNum].Gravity;
     }
 
     public IEnumerator ChangeBallStat()
