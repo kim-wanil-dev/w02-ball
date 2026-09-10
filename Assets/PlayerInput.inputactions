@@ -27,16 +27,6 @@
                     "priority": 0
                 },
                 {
-                    "name": "Skill",
-                    "type": "Button",
-                    "id": "2d8cfb4a-de8a-46cf-b375-7ce5ec875684",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false,
-                    "priority": 0
-                },
-                {
                     "name": "Look",
                     "type": "Value",
                     "id": "ad987fa1-5c22-4b11-b879-24a2be2ff99f",
@@ -47,17 +37,7 @@
                     "priority": 0
                 },
                 {
-                    "name": "Aim",
-                    "type": "Button",
-                    "id": "fd0eba7a-deb2-46e0-9d55-28eed23bc3d6",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "Press(behavior=2)",
-                    "initialStateCheck": false,
-                    "priority": 0
-                },
-                {
-                    "name": "SizeChange",
+                    "name": "Resize",
                     "type": "Value",
                     "id": "1a0229f6-68e8-4103-9856-8237f7324e9d",
                     "expectedControlType": "Axis",
@@ -67,9 +47,9 @@
                     "priority": 0
                 },
                 {
-                    "name": "Fly",
+                    "name": "Dive",
                     "type": "Value",
-                    "id": "8c3b348c-dc31-4137-9765-797a7ae8f2a1",
+                    "id": "22fbcdbf-69eb-4dc6-9398-55eb6a258dcc",
                     "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
@@ -145,61 +125,6 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "2D Vector",
-                    "id": "80fde923-b4df-4cfc-a5c8-bc771dc79f13",
-                    "path": "2DVector",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "up",
-                    "id": "abb868f9-cfcb-4f7f-ae01-e544dcbb5f4b",
-                    "path": "<Gamepad>/leftStick/up",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "e629a39a-e494-40bf-a6f7-a48311030384",
-                    "path": "<Gamepad>/leftStick/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "4a3faebc-762b-4985-b9cb-781c703079c1",
-                    "path": "<Gamepad>/leftStick/left",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "fa8ff634-3d2b-489f-a2f6-218f36e7d020",
-                    "path": "<Gamepad>/leftStick/right",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
                     "name": "",
                     "id": "7a879468-4198-4f41-bb7c-73253a29d60c",
                     "path": "<Keyboard>/space",
@@ -212,12 +137,12 @@
                 },
                 {
                     "name": "",
-                    "id": "dacf5c16-631e-48c1-b60c-e0cdc4dac2c3",
-                    "path": "<Keyboard>/q",
+                    "id": "f5523790-46dc-43e1-a50a-b148c3465d8e",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Skill",
+                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -234,12 +159,12 @@
                 },
                 {
                     "name": "",
-                    "id": "672f8fce-210b-4347-bc07-9d99e4aca9d0",
-                    "path": "<Mouse>/rightButton",
+                    "id": "3916584a-5466-4a0b-b819-e84c4a824601",
+                    "path": "<Gamepad>/rightStick",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Aim",
+                    "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -250,7 +175,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SizeChange",
+                    "action": "Resize",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -261,7 +186,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SizeChange",
+                    "action": "Resize",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -272,42 +197,53 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SizeChange",
+                    "action": "Resize",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
                     "name": "1D Axis",
-                    "id": "7e91b670-a56b-42a9-95a9-1ef57f5ea7de",
+                    "id": "8703d003-6b29-4d47-b923-2ea2472ddd93",
                     "path": "1DAxis",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Fly",
+                    "action": "Resize",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "Positive",
-                    "id": "491d4922-0eff-48ac-971a-d54794e62db9",
-                    "path": "<Keyboard>/space",
+                    "name": "negative",
+                    "id": "1dba0ca7-0caf-4355-a1e9-20347aeb1342",
+                    "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Fly",
+                    "action": "Resize",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "Negative",
-                    "id": "e0c2ed95-019c-49cf-a4ab-4b3b39442084",
-                    "path": "<Keyboard>/ctrl",
+                    "name": "positive",
+                    "id": "3330ef41-a6f5-4bd6-9e75-22242863eb26",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Fly",
+                    "action": "Resize",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "9ed8fab0-1f97-4a4b-9634-c57f407f8a9b",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dive",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
