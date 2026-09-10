@@ -17,5 +17,5 @@ MonoBehaviour:
   jumpForce: 20
   sphereRadius: 2.5
   mass: 3
-  bounciness: 0.5
+  bounciness: 0
   gravity: 35
