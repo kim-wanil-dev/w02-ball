@@ -771,32 +771,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8fa17fab22ef23246b29cb02e2e42158, type: 2}
   currentBallNum: 0
   velocityText: {fileID: 591884268}
---- !u!114 &1163206131
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5013440853710862984}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04c234b1381528042aed90a6b7eb5317, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerCharacter
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  groundCheckOrigin: {fileID: 0}
-  groundCheckDistance: 2
-  isGrounded: 0
-  gravityStrength: 20
-  moveInput: {x: 0, y: 0}
-  sphereVisual: {fileID: 1799207609544741508}
-  cameraTransform: {fileID: 330585546}
-  currentBallStat: {fileID: 11400000, guid: 5a67a359f1204cd4b95fb650c7f4a02d, type: 2}
-  pendingBallStat: {fileID: 0}
-  canChange: 1
-  velocityText: {fileID: 591884268}
 --- !u!1 &1182598730
 GameObject:
   m_ObjectHideFlags: 0
@@ -1422,7 +1396,6 @@ GameObject:
   - component: {fileID: 4791683036030656914}
   - component: {fileID: 1163206129}
   - component: {fileID: 1163206130}
-  - component: {fileID: 1163206131}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
