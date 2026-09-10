@@ -3,61 +3,60 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
     [Header("Input")]
-    [SerializeField] private GameInputController inputController;
+    [SerializeField] private GameInputController _inputController;
 
     [Header("Ground")]
-    [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private float groundCheckDistance = 0.2f;
+    [SerializeField] private LayerMask _groundLayer;
+    [SerializeField] private float _groundCheckDistance = 0.2f;
 
     [Header("Movement")]
-    [SerializeField] private float moveResponseTime = 0.2f;
+    [SerializeField] private float _moveResponseTime = 0.2f;
 
     [Header("Ball Stat")]
-    [SerializeField] private List<BallStat> ownedBalls;
-    [SerializeField] private int currentBallNum;
+    [SerializeField] private List<BallStat> _ownedBalls;
+    [SerializeField] private int _currentBallNum;
 
     [Header("UI")]
-    [SerializeField] private Text velocityText;
+    [SerializeField] private Text _velocityText;
+    [SerializeField] private Text _heightText;
 
-    private Transform cameraTransform;
-    private Vector2 moveInput;
-    private float previousSizeChangeInput;
+    private Transform _cameraTransform;
+    private Vector2 _moveInput;
+    private float _previousSizeChangeInput;
 
+    private Vector3 _groundCheckOffset;
+    private Vector3 _groundNormal = Vector3.up;
 
-    private Vector3 groundCheckOffset;
-    private Vector3 groundNormal = Vector3.up;
-
-    private Rigidbody rb;
+    private Rigidbody _rb;
 
     private SphereCollider _collider;
-    private PhysicsMaterial physicsMaterial;
+    private PhysicsMaterial _physicsMaterial;
 
-    private bool canChange = true;
+    private bool _canChange = true;
 
-    private Vector3 targetVelocity;
+    private Vector3 _targetVelocity;
 
-    private bool jumpRequested;
+    private bool _jumpRequested;
 
     public bool IsGrounded { get; private set; }
-    public List<BallStat> OwnedBalls { get { return ownedBalls; } }
-    public int CurrentBallNum { get { return currentBallNum; } }
+    public List<BallStat> OwnedBalls { get { return _ownedBalls; } }
+    public int CurrentBallNum { get { return _currentBallNum; } }
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody>();
-        rb.useGravity = true;
+        _rb = GetComponent<Rigidbody>();
+        _rb.useGravity = true;
 
         _collider = GetComponent<SphereCollider>();
-        physicsMaterial = _collider.material;
+        _physicsMaterial = _collider.material;
 
-        if (cameraTransform == null && Camera.main != null)
-            cameraTransform = Camera.main.transform;
+        if (_cameraTransform == null && Camera.main != null)
+            _cameraTransform = Camera.main.transform;
 
-        PlaySizeChange(ownedBalls[currentBallNum]);
+        PlaySizeChange(_ownedBalls[_currentBallNum]);
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -69,7 +68,7 @@ public class PlayerController : MonoBehaviour
         ProcessSizeChangeInput();
         ProcessJumpInput();
 
-        Debug.Log($"Ground: {IsGrounded}\n Ground Normal: {groundNormal}");
+        Debug.Log($"Ground: {IsGrounded}\n Ground Normal: {_groundNormal}");
     }
 
     private void FixedUpdate()
@@ -78,22 +77,22 @@ public class PlayerController : MonoBehaviour
         ProcessJump();
         ApplyMovement();
 
-        if (velocityText != null)
-            velocityText.text = $"{rb.linearVelocity.magnitude:F2}";
+        _velocityText.text = $"{_rb.linearVelocity.magnitude:F2}";
+        _heightText.text = $"{_rb.transform.position.y:F2}";
     }
 
     private void ProcessMoveInput()
     {
-        moveInput = inputController.MoveInput;
+        _moveInput = _inputController.MoveInput;
     }
 
     private void ProcessSizeChangeInput()
     {
-        float currentSizeChangeInput = inputController.SizeChangeInput;
+        float currentSizeChangeInput = _inputController.SizeChangeInput;
 
-        if (previousSizeChangeInput != currentSizeChangeInput && currentSizeChangeInput != 0f)
+        if (_previousSizeChangeInput != currentSizeChangeInput && currentSizeChangeInput != 0f)
         {
-            if (!canChange)
+            if (!_canChange)
                 return;
 
             int diff = (int)currentSizeChangeInput;
@@ -101,11 +100,11 @@ public class PlayerController : MonoBehaviour
 
             if (diff == 1)
             {
-                nextBallNum = (currentBallNum + 1) % ownedBalls.Count;
+                nextBallNum = (_currentBallNum + 1) % _ownedBalls.Count;
             }
             else if (diff == -1)
             {
-                nextBallNum = (currentBallNum - 1 + ownedBalls.Count) % ownedBalls.Count;
+                nextBallNum = (_currentBallNum - 1 + _ownedBalls.Count) % _ownedBalls.Count;
             }
             else
             {
@@ -113,34 +112,34 @@ public class PlayerController : MonoBehaviour
                 return;
             }
 
-            currentBallNum = nextBallNum;
-            PlaySizeChange(ownedBalls[currentBallNum]);
+            _currentBallNum = nextBallNum;
+            PlaySizeChange(_ownedBalls[_currentBallNum]);
         }
 
-        previousSizeChangeInput = currentSizeChangeInput;
+        _previousSizeChangeInput = currentSizeChangeInput;
     }
 
     private void ProcessJumpInput()
     {
-        if (inputController.JumpPressed && IsGrounded)
-            jumpRequested = true;
+        if (_inputController.JumpPressed && IsGrounded)
+            _jumpRequested = true;
     }
 
     private void CheckGround()
     {
-        Vector3 origin = transform.position + groundCheckOffset;
+        Vector3 origin = transform.position + _groundCheckOffset;
         Vector3 gravityDirection = GetGravityDirection();
 
         if (Physics.Raycast(
             origin,
             gravityDirection,
             out RaycastHit hit,
-            groundCheckDistance,
-            groundLayer,
+            _groundCheckDistance,
+            _groundLayer,
             QueryTriggerInteraction.Ignore))
         {
             IsGrounded = true;
-            groundNormal = hit.normal;
+            _groundNormal = hit.normal;
         }
         else
         {
@@ -150,13 +149,13 @@ public class PlayerController : MonoBehaviour
 
     private void ApplyMovement()
     {
-        if (!canChange)
+        if (!_canChange)
         {
-            rb.linearVelocity = targetVelocity;
+            _rb.linearVelocity = _targetVelocity;
             return;
         }
 
-        Vector3 worldMoveInput = GetWorldMoveInput(moveInput);
+        Vector3 worldMoveInput = GetWorldMoveInput(_moveInput);
 
         if (IsGrounded)
             Roll(worldMoveInput);
@@ -168,14 +167,16 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 upDirection = -GetGravityDirection();
 
-        Vector3 cameraForward = Vector3.ProjectOnPlane(cameraTransform.forward, upDirection);
+        Vector3 cameraForward =
+            Vector3.ProjectOnPlane(_cameraTransform.forward, upDirection);
 
         if (cameraForward.sqrMagnitude < 0.001f)
             return Vector3.zero;
 
         cameraForward.Normalize();
 
-        Vector3 cameraRight = Vector3.Cross(upDirection, cameraForward).normalized;
+        Vector3 cameraRight =
+            Vector3.Cross(upDirection, cameraForward).normalized;
 
         Vector3 worldMoveInput =
             cameraForward * input.y +
@@ -186,7 +187,8 @@ public class PlayerController : MonoBehaviour
 
     private void Roll(Vector3 worldMoveInput)
     {
-        Vector3 groundMoveDirection = GetGroundMoveDirection(worldMoveInput);
+        Vector3 groundMoveDirection =
+            GetGroundMoveDirection(worldMoveInput);
 
         UpdateGroundMoveVelocity(
             groundMoveDirection,
@@ -196,7 +198,8 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 GetGroundMoveDirection(Vector3 worldMoveInput)
     {
-        Vector3 groundMoveDirection = Vector3.ProjectOnPlane(worldMoveInput, groundNormal);
+        Vector3 groundMoveDirection =
+            Vector3.ProjectOnPlane(worldMoveInput, _groundNormal);
 
         if (groundMoveDirection.sqrMagnitude < 0.001f)
             return Vector3.zero;
@@ -204,37 +207,49 @@ public class PlayerController : MonoBehaviour
         return groundMoveDirection.normalized;
     }
 
-    private void UpdateGroundMoveVelocity(Vector3 groundMoveDirection, float inputMagnitude)
+    private void UpdateGroundMoveVelocity(
+        Vector3 groundMoveDirection,
+        float inputMagnitude)
     {
         inputMagnitude = Mathf.Clamp01(inputMagnitude);
 
         if (inputMagnitude <= 0.001f)
             return;
 
-        float targetSpeed = ownedBalls[currentBallNum].MoveSpeed * inputMagnitude;
+        float targetSpeed =
+            _ownedBalls[_currentBallNum].MoveSpeed * inputMagnitude;
 
         Vector3 currentGroundVelocity =
-            Vector3.ProjectOnPlane(rb.linearVelocity, groundNormal);
+            Vector3.ProjectOnPlane(
+                _rb.linearVelocity,
+                _groundNormal
+            );
 
         float currentSpeed =
-            Vector3.Dot(currentGroundVelocity, groundMoveDirection);
+            Vector3.Dot(
+                currentGroundVelocity,
+                groundMoveDirection
+            );
 
         if (currentSpeed >= targetSpeed)
             return;
 
         float responseAcceleration =
-            ownedBalls[currentBallNum].MoveSpeed / moveResponseTime;
+            _ownedBalls[_currentBallNum].MoveSpeed /
+            _moveResponseTime;
 
-        float remainingSpeed = targetSpeed - currentSpeed;
+        float remainingSpeed =
+            targetSpeed - currentSpeed;
 
         float velocityChange = Mathf.Min(
             responseAcceleration * Time.fixedDeltaTime,
             remainingSpeed
         );
 
-        float acceleration = velocityChange / Time.fixedDeltaTime;
+        float acceleration =
+            velocityChange / Time.fixedDeltaTime;
 
-        rb.AddForce(
+        _rb.AddForce(
             groundMoveDirection * acceleration,
             ForceMode.Acceleration
         );
@@ -247,36 +262,50 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateAirMoveVelocity(Vector3 worldMoveInput)
     {
-        float inputMagnitude = Mathf.Clamp01(worldMoveInput.magnitude);
+        float inputMagnitude =
+            Mathf.Clamp01(worldMoveInput.magnitude);
 
         if (inputMagnitude <= 0.001f)
             return;
 
-        Vector3 moveDirection = worldMoveInput.normalized;
-        float targetSpeed = ownedBalls[currentBallNum].MoveSpeed * inputMagnitude;
+        Vector3 moveDirection =
+            worldMoveInput.normalized;
+
+        float targetSpeed =
+            _ownedBalls[_currentBallNum].MoveSpeed *
+            inputMagnitude;
 
         Vector3 planarVelocity =
-            Vector3.ProjectOnPlane(rb.linearVelocity, GetGravityDirection());
+            Vector3.ProjectOnPlane(
+                _rb.linearVelocity,
+                GetGravityDirection()
+            );
 
         float currentSpeed =
-            Vector3.Dot(planarVelocity, moveDirection);
+            Vector3.Dot(
+                planarVelocity,
+                moveDirection
+            );
 
         if (currentSpeed >= targetSpeed)
             return;
 
-        float remainingSpeed = targetSpeed - currentSpeed;
+        float remainingSpeed =
+            targetSpeed - currentSpeed;
 
         float acceleration =
-            ownedBalls[currentBallNum].MoveAcceleration * inputMagnitude;
+            _ownedBalls[_currentBallNum].MoveAcceleration *
+            inputMagnitude;
 
         float velocityChange = Mathf.Min(
             acceleration * Time.fixedDeltaTime,
             remainingSpeed
         );
 
-        acceleration = velocityChange / Time.fixedDeltaTime;
+        acceleration =
+            velocityChange / Time.fixedDeltaTime;
 
-        rb.AddForce(
+        _rb.AddForce(
             moveDirection * acceleration,
             ForceMode.Acceleration
         );
@@ -284,18 +313,20 @@ public class PlayerController : MonoBehaviour
 
     private void ProcessJump()
     {
-        if (!jumpRequested)
+        if (!_jumpRequested)
             return;
 
-        jumpRequested = false;
+        _jumpRequested = false;
 
         if (!IsGrounded)
             return;
 
-        Vector3 jumpDirection = -GetGravityDirection();
+        Vector3 jumpDirection =
+            -GetGravityDirection();
 
-        rb.AddForce(
-            jumpDirection * ownedBalls[currentBallNum].JumpForce,
+        _rb.AddForce(
+            jumpDirection *
+            _ownedBalls[_currentBallNum].JumpForce,
             ForceMode.Impulse
         );
     }
@@ -310,24 +341,26 @@ public class PlayerController : MonoBehaviour
 
     public void PlaySizeChange(BallStat inputBallStat)
     {
-        if (!canChange)
+        if (!_canChange)
             return;
 
-        groundCheckOffset = new Vector3(
+        _groundCheckOffset = new Vector3(
             0f,
             -inputBallStat.SphereRadius + 0.5f,
             0f
         );
 
         transform.localScale =
-            Vector3.one * inputBallStat.SphereRadius * 2f;
+            Vector3.one *
+            inputBallStat.SphereRadius *
+            2f;
 
-        ownedBalls[currentBallNum] = inputBallStat;
+        _ownedBalls[_currentBallNum] = inputBallStat;
 
-        physicsMaterial.bounciness =
-            ownedBalls[currentBallNum].Bounciness;
+        _physicsMaterial.bounciness =
+            _ownedBalls[_currentBallNum].Bounciness;
 
-        rb.mass =
-            ownedBalls[currentBallNum].Mass;
+        _rb.mass =
+            _ownedBalls[_currentBallNum].Mass;
     }
 }
