@@ -19,3 +19,5 @@ MonoBehaviour:
   mass: 5
   bounciness: 0
   gravity: 50
+  slowCameraDistance: 10
+  fastCameraDistance: 12
