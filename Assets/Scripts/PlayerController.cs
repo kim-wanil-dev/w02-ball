@@ -55,6 +55,9 @@ public class PlayerController : MonoBehaviour
             cameraTransform = Camera.main.transform;
 
         PlaySizeChange(ownedBalls[currentBallNum]);
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private void Update()
