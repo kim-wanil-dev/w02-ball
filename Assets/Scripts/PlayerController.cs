@@ -19,9 +19,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private List<BallStat> _ownedBalls;
     [SerializeField] private int _currentBallNum;
 
-    [Header("UI")]
-    [SerializeField] private Text _velocityText;
-    [SerializeField] private Text _heightText;
+    private Text _velocityText;
+    private Text _heightText;
 
     private Transform _cameraTransform;
     private Vector2 _moveInput;
@@ -60,6 +59,11 @@ public class PlayerController : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        Instantiate(Resources.Load<GameObject>($"Prefabs/EventSystem"));
+        GameObject DebugCanvas = Instantiate(Resources.Load<GameObject>($"Prefabs/Player"));
+        _velocityText = DebugCanvas.transform.Find("VelocityText").GetComponent<Text>();
+        _heightText = DebugCanvas.transform.Find("HeightText").GetComponent<Text>();
     }
 
     private void Update()
@@ -87,33 +91,15 @@ public class PlayerController : MonoBehaviour
 
     private void ProcessSizeChangeInput()
     {
-        float currentSizeChangeInput = _inputController.ResizeInput;
+        int currentSizeChangeInput = (int)_inputController.ResizeInput;
 
-        if (_previousSizeChangeInput != currentSizeChangeInput && currentSizeChangeInput != 0f)
-        {
-            if (!_canChange)
-                return;
+        if (_previousSizeChangeInput == currentSizeChangeInput || currentSizeChangeInput == 0)
+            return;
 
-            int diff = (int)currentSizeChangeInput;
-            int nextBallNum;
+        int nextBallNum = Mathf.Clamp(currentSizeChangeInput + _currentBallNum, 0, _ownedBalls.Count);
 
-            if (diff == 1)
-            {
-                nextBallNum = (_currentBallNum + 1) % _ownedBalls.Count;
-            }
-            else if (diff == -1)
-            {
-                nextBallNum = (_currentBallNum - 1 + _ownedBalls.Count) % _ownedBalls.Count;
-            }
-            else
-            {
-                Debug.LogError($"currentSizeChangeInput: {currentSizeChangeInput} error");
-                return;
-            }
-
-            _currentBallNum = nextBallNum;
-            PlaySizeChange(_ownedBalls[_currentBallNum]);
-        }
+        _currentBallNum = nextBallNum;
+        PlaySizeChange(_ownedBalls[_currentBallNum]);
 
         _previousSizeChangeInput = currentSizeChangeInput;
     }
