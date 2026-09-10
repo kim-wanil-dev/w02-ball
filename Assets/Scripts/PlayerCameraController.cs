@@ -42,7 +42,7 @@ public class PlayerCameraController : MonoBehaviour
             );
     }
 
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         transform.position =
             player.position +
