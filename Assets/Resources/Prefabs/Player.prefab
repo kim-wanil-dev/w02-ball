@@ -161,12 +161,7 @@ MonoBehaviour:
   _groundCheckRadiusRatio: 0.9
   _smallBall: {fileID: 11400000, guid: 5a67a359f1204cd4b95fb650c7f4a02d, type: 2}
   _largeBall: {fileID: 11400000, guid: 8fa17fab22ef23246b29cb02e2e42158, type: 2}
-  _diveAcceleration: -20
-  _hapticStrength: 0.5
-  _groundHapticInterval: 0.1
-  _fallHapticInterval: 0.12
-  _minHapticSpeed: 10
-  _minFallSpeed: 40
+  _diveAcceleration: 20
 --- !u!114 &7444097142018545840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,3 +174,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c2d8876214e0394caac5d0c08b98226, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HapticController
+  _hapticChangeSpeed: 2

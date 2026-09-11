@@ -134,9 +134,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""Dive"",
-                    ""type"": ""Value"",
-                    ""id"": ""22fbcdbf-69eb-4dc6-9398-55eb6a258dcc"",
-                    ""expectedControlType"": ""Axis"",
+                    ""type"": ""Button"",
+                    ""id"": ""bfd26de5-bf20-4186-a04c-2ed7fe9eedfa"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true,
@@ -301,7 +301,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""negative"",
                     ""id"": ""1dba0ca7-0caf-4355-a1e9-20347aeb1342"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -312,7 +312,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""positive"",
                     ""id"": ""3330ef41-a6f5-4bd6-9e75-22242863eb26"",
-                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -322,8 +322,8 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""9ed8fab0-1f97-4a4b-9634-c57f407f8a9b"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""id"": ""52eeda99-777c-4a2e-b9e2-231a2d390bf9"",
+                    ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
