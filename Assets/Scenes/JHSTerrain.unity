@@ -169330,6 +169330,10 @@ PrefabInstance:
       propertyPath: _smallBall
       value: 
       objectReference: {fileID: 11400000, guid: 5a67a359f1204cd4b95fb650c7f4a02d, type: 2}
+    - target: {fileID: 1725289687414119516, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
+      propertyPath: _diveAcceleration
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 3640661126572887836, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 239.7

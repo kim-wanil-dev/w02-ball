@@ -17,8 +17,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private BallStat _smallBall;
     [SerializeField] private BallStat _largeBall;
 
-    [Header("Gravity"), Range(-100f, 0f)]
-    [SerializeField] private float _diveAcceleration = -20f;
+    [Header("Gravity"), Range(0f, 100f)]
+    [SerializeField] private float _diveAcceleration = 20f;
 
     private Text _velocityText;
     private Text _heightText;
@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     private Transform _cameraTransform;
     private Vector2 _moveInput;
     private float _previousSizeChangeInput;
-    private float _diveInput;
+    private bool _diveInput;
     private HapticManager _hapticManager;
 
     private Vector3 _gravityDir = Vector3.down;
@@ -89,7 +89,6 @@ public class PlayerController : MonoBehaviour
         if (_cameraTransform == null && Camera.main != null)
             _cameraTransform = Camera.main.transform;
 
-        //InitSizeBall(_ownedBalls[_currentBallNum]);
         InitSizeBall(_smallBall);
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -230,11 +229,6 @@ public class PlayerController : MonoBehaviour
         );
 
         _hapticManager.HapticControl(intensity);
-
-        Debug.Log(radiusDelta);
-
-
-
     }
     private void ApplyMomentum()
     {
@@ -248,8 +242,6 @@ public class PlayerController : MonoBehaviour
 
         Vector3 velocity = _rb.linearVelocity;
 
-
-        //반지름에 맞게 회전 계산
         Vector3 horizontalVelocity =
             new Vector3(velocity.x, 0f, velocity.z);
 
@@ -279,6 +271,7 @@ public class PlayerController : MonoBehaviour
     private void ProcessDiveInput()
     {
         _diveInput = GameInputController.Instance.DiveInput;
+        Debug.Log(_diveInput);
     }
 
     private void FixedUpdate()
@@ -513,14 +506,11 @@ public class PlayerController : MonoBehaviour
 
     private void ApplyDiveGravity()
     {
-        if (_diveInput <= 0f)
+        if (!_diveInput)
             return;
 
-        Vector3 diveAcceleration =
-            _gravityDir * _diveAcceleration * _diveInput;
-
         _rb.AddForce(
-            diveAcceleration,
+             _gravityDir * _diveAcceleration,
             ForceMode.Acceleration
         );
     }

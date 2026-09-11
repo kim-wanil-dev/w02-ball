@@ -4,12 +4,11 @@ using UnityEngine.InputSystem;
 public class GameInputController : MonoBehaviour
 {
     public static GameInputController Instance;
-    // private PlayerInput playerInput;
     private InputSystem_Actions inputActions;
 
     public Vector2 MoveInput { get; private set; }
     public Vector2 LookInput { get; private set; }
-    public float DiveInput { get; private set; }
+    public bool DiveInput { get; private set; }
     public float ResizeInput { get; private set; }
     public bool JumpPressed { get; private set; }
     public bool JumpHeld { get; private set; }
@@ -25,9 +24,7 @@ public class GameInputController : MonoBehaviour
         {
             Instance = this;
         }
-
         inputActions = new InputSystem_Actions();
-        // playerInput = new PlayerInput();
     }
 
     private void OnEnable()
@@ -54,11 +51,9 @@ public class GameInputController : MonoBehaviour
     {
         MoveInput = inputActions.Player.Move.ReadValue<Vector2>();
         LookInput = inputActions.Player.Look.ReadValue<Vector2>();
-        DiveInput = inputActions.Player.Dive.ReadValue<float>();
+        DiveInput = inputActions.Player.Dive.IsPressed();
         ResizeInput = inputActions.Player.Resize.ReadValue<float>();
         JumpPressed = inputActions.Player.Jump.WasPressedThisFrame();
         JumpHeld = inputActions.Player.Jump.IsPressed();
     }
-
-
 }
