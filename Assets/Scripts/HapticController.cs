@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class HapticManager : MonoBehaviour
+public class HapticController : MonoBehaviour
 {
     private Coroutine vibrationCoroutine;
 

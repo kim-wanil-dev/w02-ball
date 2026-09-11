@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8364270193662471029}
   - component: {fileID: 6700164203079211433}
   - component: {fileID: 1725289687414119516}
+  - component: {fileID: 7444097142018545840}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -164,3 +165,21 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8fa17fab22ef23246b29cb02e2e42158, type: 2}
   - {fileID: 11400000, guid: 32707346193573c45b3e6acf9d193d50, type: 2}
   _currentBallNum: 0
+  _diveAcceleration: -20
+  _hapticStrength: 0.5
+  _groundHapticInterval: 0.1
+  _fallHapticInterval: 0.12
+  _minHapticSpeed: 10
+  _minFallSpeed: 40
+--- !u!114 &7444097142018545840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6909172467078964908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c2d8876214e0394caac5d0c08b98226, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HapticController
