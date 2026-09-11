@@ -15,8 +15,8 @@ MonoBehaviour:
   _moveSpeed: 60
   _moveAcceleration: 27
   _moveResponseTime: 0.5
-  _jumpForce: 30
-  _maxGravityVelocity: 30
+  _jumpForce: 60
+  _maxGravityVelocity: 60
   _mass: 1
   _bounciness: 0.15
   _sphereRadius: 3
