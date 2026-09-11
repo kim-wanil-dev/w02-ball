@@ -169265,6 +169265,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: JHSSLopePrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 1534280255697099163, guid: 1744ae594e6660341b8b62935286bb1b, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1815710166567102904, guid: 1744ae594e6660341b8b62935286bb1b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 128.4
