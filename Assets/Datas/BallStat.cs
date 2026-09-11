@@ -18,6 +18,7 @@ public class BallStat : ScriptableObject
     [Header("Camera")]
     [SerializeField] private float _slowCameraDistance;
     [SerializeField] private float _fastCameraDistance;
+    [SerializeField] private float _sizeRatio;
 
     public float MoveSpeed => _moveSpeed;
     public float MoveAcceleration => _moveAcceleration;
@@ -29,4 +30,6 @@ public class BallStat : ScriptableObject
     public float MaxGravityVelocity => _maxGravityVelocity;
     public float SlowCameraDistance => _slowCameraDistance;
     public float FastCameraDistance => _fastCameraDistance;
+    public float SizeRatio => _sizeRatio;
+
 }

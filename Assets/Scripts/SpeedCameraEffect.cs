@@ -105,8 +105,10 @@ public class SpeedCameraEffect : MonoBehaviour
 
         float targetDistance =
             Mathf.Lerp(
-                _playerController.OwnedBalls[_playerController.CurrentBallNum].SlowCameraDistance,
-                _playerController.OwnedBalls[_playerController.CurrentBallNum].FastCameraDistance,
+                _playerController.SmallBall.SlowCameraDistance,
+                _playerController.SmallBall.FastCameraDistance,
+                //_playerController.OwnedBalls[_playerController.CurrentBallNum].SlowCameraDistance,
+                //_playerController.OwnedBalls[_playerController.CurrentBallNum].FastCameraDistance,
                 speedRatio
             );
 
