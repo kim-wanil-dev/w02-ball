@@ -119,11 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &148909246 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6909172467078964908, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
-  m_PrefabInstance: {fileID: 2857149768569708677}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -758,23 +753,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &1163206129 stripped
-Rigidbody:
-  m_CorrespondingSourceObject: {fileID: 6700164203079211433, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
-  m_PrefabInstance: {fileID: 2857149768569708677}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1163206135
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 148909246}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c2d8876214e0394caac5d0c08b98226, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HapticManager
 --- !u!1 &1182598730
 GameObject:
   m_ObjectHideFlags: 0
@@ -1128,16 +1106,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6feee618d2e132e45b57fca1dc2ac2cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpeedCameraEffect
-  playerRb: {fileID: 1163206129}
-  playerController: {fileID: 0}
-  mainCamTransform: {fileID: 0}
-  maxEffectSpeed: 20
-  effectStartSpeed: 8
-  slowDamping: {x: 0.05, y: 0.05, z: 0.1}
-  fastDamping: {x: 0.1, y: 0.1, z: 0.7}
-  slowFOV: 60
-  fastFOV: 75
-  effectChangeSpeed: 3
+  _maxEffectSpeed: 80
+  _effectStartSpeed: 20
+  _slowDamping: {x: 0.05, y: 0.05, z: 0.1}
+  _fastDamping: {x: 0.1, y: 0.1, z: 0.7}
+  _slowFOV: 60
+  _fastFOV: 75
+  _effectChangeSpeed: 3
 --- !u!1 &2054262560
 GameObject:
   m_ObjectHideFlags: 0
@@ -1266,6 +1241,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1725289687414119516, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
+      propertyPath: _largeBall
+      value: 
+      objectReference: {fileID: 11400000, guid: 8fa17fab22ef23246b29cb02e2e42158, type: 2}
+    - target: {fileID: 1725289687414119516, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
+      propertyPath: _smallBall
+      value: 
+      objectReference: {fileID: 11400000, guid: 5a67a359f1204cd4b95fb650c7f4a02d, type: 2}
+    - target: {fileID: 1725289687414119516, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
       propertyPath: velocityText
       value: 
       objectReference: {fileID: 0}
@@ -1276,7 +1259,7 @@ PrefabInstance:
     - target: {fileID: 1725289687414119516, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
       propertyPath: _hapticManager
       value: 
-      objectReference: {fileID: 1163206135}
+      objectReference: {fileID: 0}
     - target: {fileID: 1725289687414119516, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
       propertyPath: _currentBallNum
       value: 3
@@ -1341,17 +1324,23 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6700164203079211433, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
+      propertyPath: m_Interpolate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6700164203079211433, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6909172467078964908, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6909172467078964908, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1163206135}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
