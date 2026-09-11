@@ -19,9 +19,6 @@ public class PlayerController : MonoBehaviour
     [Header("Gravity"), Range(-100f, 0f)]
     [SerializeField] private float _diveAcceleration = -20f;
 
-    [Header("Haptic")]
-    [SerializeField] private HapticManager _hapticManager;
-
     [SerializeField] private float _hapticStrength = 0.5f;
 
     [SerializeField] private float _groundHapticInterval = 0.1f;
@@ -37,6 +34,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 _moveInput;
     private float _previousSizeChangeInput;
     private float _diveInput;
+    private HapticController _hapticController;
 
     private Vector3 _gravityDir = Vector3.down;
     private Vector3 _groundNormal = Vector3.up;
@@ -70,7 +68,7 @@ public class PlayerController : MonoBehaviour
         _collider = GetComponent<SphereCollider>();
         _physicsMaterial = _collider.material;
 
-        _hapticManager = GetComponent<HapticManager>();
+        _hapticController = GetComponent<HapticController>();
 
         if (_cameraTransform == null && Camera.main != null)
             _cameraTransform = Camera.main.transform;
@@ -459,7 +457,7 @@ public class PlayerController : MonoBehaviour
         float highFrequency =
             Mathf.Clamp01(speed01 * 0.25f / mass) * _hapticStrength;
 
-        _hapticManager.Vibrate(
+        _hapticController.Vibrate(
             lowFrequency,
             highFrequency,
             0.05f
@@ -481,7 +479,7 @@ public class PlayerController : MonoBehaviour
             fallSpeed
         ) * _hapticStrength;
 
-        _hapticManager.Vibrate(
+        _hapticController.Vibrate(
             fall01 * 0.15f,
             fall01 * 0.35f,
             0.04f
