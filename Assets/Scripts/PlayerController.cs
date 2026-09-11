@@ -15,15 +15,21 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private List<BallStat> _ownedBalls;
     [SerializeField] private int _currentBallNum;
 
+    [Header("Gravity"), Range(-100f, 0f)]
+    [SerializeField] private float _diveAcceleration = -20f;
+
     private Text _velocityText;
     private Text _heightText;
 
     private Transform _cameraTransform;
     private Vector2 _moveInput;
     private float _previousSizeChangeInput;
+    private float _diveInput;
 
     private Vector3 _gravityDir = Vector3.down;
     private Vector3 _groundNormal = Vector3.up;
+    private bool _hasGroundContact;
+    private Vector3 _contactGroundNormal = Vector3.up;
 
     private Rigidbody _rb;
 
@@ -69,17 +75,7 @@ public class PlayerController : MonoBehaviour
         ProcessMoveInput();
         ProcessResizeInput();
         ProcessJumpInput();
-    }
-
-    private void FixedUpdate()
-    {
-        CheckGround();
-        ProcessJump();
-        ApplyMovement();
-
-        _velocityText.text = $"{_rb.linearVelocity.magnitude:F2} m/s";
-        _heightText.text = $"{_rb.transform.position.y:F2} m";
-        Debug.Log($"Ground: {IsGrounded}\n Ground Normal: {_groundNormal}");
+        ProcessDiveInput();
     }
 
     private void ProcessMoveInput()
@@ -115,6 +111,25 @@ public class PlayerController : MonoBehaviour
             _jumpRequested = true;
     }
 
+    private void ProcessDiveInput()
+    {
+        _diveInput = GameInputController.Instance.DiveInput;
+    }
+
+    private void FixedUpdate()
+    {
+        CheckGround();
+        ProcessJump();
+        ApplyMovement();
+
+
+        ClampGravityVelocity();
+
+        _velocityText.text = $"{_rb.linearVelocity.magnitude:F2} m/s";
+        _heightText.text = $"{_rb.transform.position.y:F2} m";
+        Debug.Log($"Ground: {IsGrounded}\n Ground Normal: {_groundNormal}");
+    }
+
     private void CheckGround()
     {
         Vector3 gravityDirection = _gravityDir;
@@ -125,8 +140,7 @@ public class PlayerController : MonoBehaviour
         float checkRadius =
             sphereRadius * _groundCheckRadiusRatio;
 
-        float castDistance =
-            (sphereRadius - checkRadius) +
+        float castDistance = sphereRadius - checkRadius +
             _groundCheckDistance;
 
         if (Physics.SphereCast(
@@ -141,11 +155,38 @@ public class PlayerController : MonoBehaviour
             IsGrounded = true;
             _groundNormal = hit.normal;
         }
+        else if (_hasGroundContact)
+        {
+            IsGrounded = true;
+            _groundNormal = _contactGroundNormal;
+        }
         else
         {
             IsGrounded = false;
             _groundNormal = -gravityDirection;
         }
+
+        _hasGroundContact = false;
+    }
+
+    private void ProcessJump()
+    {
+        if (!_jumpRequested)
+            return;
+
+        _jumpRequested = false;
+
+        if (!IsGrounded)
+            return;
+
+        Vector3 jumpDirection =
+            -_gravityDir;
+
+        _rb.AddForce(
+            jumpDirection *
+            _jumpForce,
+            ForceMode.Impulse
+        );
     }
 
     private void ApplyMovement()
@@ -249,6 +290,7 @@ public class PlayerController : MonoBehaviour
     private void AirMove(Vector3 worldMoveInput)
     {
         UpdateAirMoveVelocity(worldMoveInput);
+        ApplyDiveGravity();
     }
 
     private void UpdateAirMoveVelocity(Vector3 worldMoveInput)
@@ -302,24 +344,32 @@ public class PlayerController : MonoBehaviour
         );
     }
 
-    private void ProcessJump()
+    private void ApplyDiveGravity()
     {
-        if (!_jumpRequested)
+        if (_diveInput <= 0f)
             return;
 
-        _jumpRequested = false;
-
-        if (!IsGrounded)
-            return;
-
-        Vector3 jumpDirection =
-            -_gravityDir;
+        Vector3 diveAcceleration =
+            _gravityDir * _diveAcceleration * _diveInput;
 
         _rb.AddForce(
-            jumpDirection *
-            _jumpForce,
-            ForceMode.Impulse
+            diveAcceleration,
+            ForceMode.Acceleration
         );
+    }
+
+    private void ClampGravityVelocity()
+    {
+        float gravitySpeed =
+            Vector3.Dot(
+                _rb.linearVelocity,
+                _gravityDir
+            );
+        if (gravitySpeed <= _maxGravityVelocity)
+            return;
+        Vector3 excessVelocity = _gravityDir *
+            (gravitySpeed - _maxGravityVelocity);
+        _rb.linearVelocity -= excessVelocity;
     }
 
     public void InitSizeBall(BallStat inputBallStat)
@@ -352,5 +402,34 @@ public class PlayerController : MonoBehaviour
         InitSizeBall(nextBallStat);
 
         _rb.linearVelocity = currentVelocity * velocityRatio;
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if ((_groundLayer.value & (1 << collision.gameObject.layer)) == 0)
+            return;
+
+        Vector3 upDirection = -_gravityDir;
+
+        float bestDot = -1f;
+        Vector3 bestNormal = upDirection;
+
+        for (int i = 0; i < collision.contactCount; i++)
+        {
+            Vector3 normal = collision.GetContact(i).normal;
+            float dot = Vector3.Dot(normal, upDirection);
+
+            if (dot > bestDot)
+            {
+                bestDot = dot;
+                bestNormal = normal;
+            }
+        }
+
+        if (bestDot <= 0f)
+            return;
+
+        _hasGroundContact = true;
+        _contactGroundNormal = bestNormal;
     }
 }

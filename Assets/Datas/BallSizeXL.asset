@@ -16,7 +16,7 @@ MonoBehaviour:
   _moveAcceleration: 1
   _moveResponseTime: 1.25
   _jumpForce: 405
-  _maxGravityVelocity: 77.9
+  _maxGravityVelocity: 150
   _mass: 27
   _bounciness: 1
   _sphereRadius: 9
