@@ -939,6 +939,14 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 1725289687414119516, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
+      propertyPath: _largeBall
+      value: 
+      objectReference: {fileID: 11400000, guid: 32707346193573c45b3e6acf9d193d50, type: 2}
+    - target: {fileID: 1725289687414119516, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
+      propertyPath: _smallBall
+      value: 
+      objectReference: {fileID: 11400000, guid: 5a67a359f1204cd4b95fb650c7f4a02d, type: 2}
+    - target: {fileID: 1725289687414119516, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
       propertyPath: velocityText
       value: 
       objectReference: {fileID: 0}
