@@ -62561,11 +62561,6 @@ MonoBehaviour:
       m_Data: []
   m_Knots:
     m_KnotsLink: []
---- !u!54 &788020747 stripped
-Rigidbody:
-  m_CorrespondingSourceObject: {fileID: 6700164203079211433, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
-  m_PrefabInstance: {fileID: 7909397957172476261}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &788728032
 GameObject:
   m_ObjectHideFlags: 0
@@ -154127,16 +154122,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6feee618d2e132e45b57fca1dc2ac2cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpeedCameraEffect
-  playerRb: {fileID: 788020747}
-  playerController: {fileID: 0}
-  mainCamTransform: {fileID: 0}
-  maxEffectSpeed: 20
-  effectStartSpeed: 8
-  slowDamping: {x: 0.05, y: 0.05, z: 0.1}
-  fastDamping: {x: 0.1, y: 0.1, z: 0.7}
-  slowFOV: 60
-  fastFOV: 75
-  effectChangeSpeed: 3
+  _maxEffectSpeed: 80
+  _effectStartSpeed: 20
+  _slowDamping: {x: 0.05, y: 0.05, z: 0.1}
+  _fastDamping: {x: 0.1, y: 0.1, z: 0.7}
+  _slowFOV: 60
+  _fastFOV: 75
+  _effectChangeSpeed: 3
 --- !u!1 &1947932221
 GameObject:
   m_ObjectHideFlags: 0
@@ -169182,6 +169174,10 @@ PrefabInstance:
     - target: {fileID: 1534280255697099163, guid: 1744ae594e6660341b8b62935286bb1b, type: 3}
       propertyPath: m_Name
       value: JHSSLopePrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 1534280255697099163, guid: 1744ae594e6660341b8b62935286bb1b, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1815710166567102904, guid: 1744ae594e6660341b8b62935286bb1b, type: 3}
       propertyPath: m_LocalPosition.x
