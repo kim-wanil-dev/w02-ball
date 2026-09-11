@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+
     [Header("Ground")]
     [SerializeField] private LayerMask _groundLayer;
     [SerializeField] private float _groundCheckDistance = 0.1f;
@@ -17,6 +18,15 @@ public class PlayerController : MonoBehaviour
 
     [Header("Gravity"), Range(-100f, 0f)]
     [SerializeField] private float _diveAcceleration = -20f;
+
+    [Header("Haptic")]
+    [SerializeField] private HapticManager _hapticManager;
+
+    [SerializeField] private float _groundHapticInterval = 0.1f;
+    [SerializeField] private float _fallHapticInterval = 0.12f;
+
+    [SerializeField] private float _minHapticSpeed = 10f;
+    [SerializeField] private float _minFallSpeed = 40f;
 
     private Text _velocityText;
     private Text _heightText;
@@ -44,6 +54,8 @@ public class PlayerController : MonoBehaviour
 
     private bool _jumpRequested;
 
+    private float _hapticTimer = 0f;
+
     public bool IsGrounded { get; private set; }
     public List<BallStat> OwnedBalls { get { return _ownedBalls; } }
     public int CurrentBallNum { get { return _currentBallNum; } }
@@ -55,6 +67,8 @@ public class PlayerController : MonoBehaviour
 
         _collider = GetComponent<SphereCollider>();
         _physicsMaterial = _collider.material;
+
+        _hapticManager = GetComponent<HapticManager>();
 
         if (_cameraTransform == null && Camera.main != null)
             _cameraTransform = Camera.main.transform;
@@ -122,6 +136,7 @@ public class PlayerController : MonoBehaviour
         ProcessJump();
         ApplyMovement();
 
+        HapticControl();
 
         ClampGravityVelocity();
 
@@ -402,6 +417,75 @@ public class PlayerController : MonoBehaviour
         InitSizeBall(nextBallStat);
 
         _rb.linearVelocity = currentVelocity * velocityRatio;
+    }
+
+    private void HapticControl()
+    {
+        _hapticTimer -= Time.fixedDeltaTime;
+
+        if (_hapticTimer > 0f)
+            return;
+
+        if (IsGrounded)
+        {
+            GroundHaptic();
+        }
+        else
+        {
+            AirHaptic();
+        }
+    }
+
+    private void GroundHaptic()
+    {
+        float speed = _rb.linearVelocity.magnitude;
+
+        if (speed < _minHapticSpeed)
+            return;
+
+        float speed01 = Mathf.InverseLerp(
+            _minHapticSpeed,
+            _ownedBalls[_currentBallNum].MoveSpeed,
+            speed
+        );
+
+        float mass = _ownedBalls[CurrentBallNum].Mass;
+
+        float lowFrequency =
+            Mathf.Clamp01(speed01 * 0.4f * mass);
+
+        float highFrequency =
+            Mathf.Clamp01(speed01 * 0.25f / mass);
+
+        _hapticManager.Vibrate(
+            lowFrequency,
+            highFrequency,
+            0.05f
+        );
+
+        _hapticTimer = _groundHapticInterval;
+    }
+
+    private void AirHaptic()
+    {
+        float fallSpeed = -_rb.linearVelocity.y;
+
+        if (fallSpeed < _minFallSpeed)
+            return;
+
+        float fall01 = Mathf.InverseLerp(
+            _minFallSpeed,
+            _ownedBalls[_currentBallNum].MaxGravityVelocity,
+            fallSpeed
+        );
+
+        _hapticManager.Vibrate(
+            fall01 * 0.15f,
+            fall01 * 0.35f,
+            0.04f
+        );
+
+        _hapticTimer = _fallHapticInterval;
     }
 
     private void OnCollisionStay(Collision collision)
