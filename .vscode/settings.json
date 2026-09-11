@@ -67,5 +67,5 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "W02Terrain.slnx"
+    "dotnet.defaultSolution": "w02-ball.slnx"
 }
