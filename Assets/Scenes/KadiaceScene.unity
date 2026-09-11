@@ -230,7 +230,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!154 &177207303
 TerrainCollider:
   m_ObjectHideFlags: 0
@@ -984,11 +984,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &1163206129 stripped
-Rigidbody:
-  m_CorrespondingSourceObject: {fileID: 6700164203079211433, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
-  m_PrefabInstance: {fileID: 2857149768569708677}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1947397247
 GameObject:
   m_ObjectHideFlags: 0
@@ -1104,16 +1099,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6feee618d2e132e45b57fca1dc2ac2cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpeedCameraEffect
-  playerRb: {fileID: 1163206129}
-  playerController: {fileID: 0}
-  mainCamTransform: {fileID: 0}
-  maxEffectSpeed: 65
-  effectStartSpeed: 20
-  slowDamping: {x: 0.05, y: 0.05, z: 0.1}
-  fastDamping: {x: 0.1, y: 0.1, z: 0.7}
-  slowFOV: 60
-  fastFOV: 90
-  effectChangeSpeed: 3
+  _maxEffectSpeed: 80
+  _effectStartSpeed: 20
+  _slowDamping: {x: 0.05, y: 0.05, z: 0.1}
+  _fastDamping: {x: 0.1, y: 0.1, z: 0.7}
+  _slowFOV: 60
+  _fastFOV: 75
+  _effectChangeSpeed: 3
 --- !u!1 &2054262560
 GameObject:
   m_ObjectHideFlags: 0
