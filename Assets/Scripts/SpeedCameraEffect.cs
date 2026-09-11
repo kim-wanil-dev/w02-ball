@@ -4,21 +4,21 @@ using UnityEngine;
 public class SpeedCameraEffect : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private Rigidbody playerRb;
-    [SerializeField] private PlayerController playerController;
-    [SerializeField] private Transform mainCamTransform;
+    private Rigidbody _playerRb;
+    private PlayerController _playerController;
+    private Transform _mainCamTransform;
 
     [Header("Speed")]
-    [SerializeField] private float maxEffectSpeed = 80f;
-    [SerializeField] private float effectStartSpeed = 20f;
+    [SerializeField] private float _maxEffectSpeed = 80f;
+    [SerializeField] private float _effectStartSpeed = 20f;
 
     [Header("Damping")]
     [SerializeField]
-    private Vector3 slowDamping =
+    private Vector3 _slowDamping =
         new Vector3(0.05f, 0.05f, 0.1f);
 
     [SerializeField]
-    private Vector3 fastDamping =
+    private Vector3 _fastDamping =
         new Vector3(0.1f, 0.1f, 0.7f);
 
     [Header("Distance")]
@@ -26,11 +26,11 @@ public class SpeedCameraEffect : MonoBehaviour
     //[SerializeField] private float fastDistance = 6f;
 
     [Header("FOV")]
-    [SerializeField] private float slowFOV = 60f;
-    [SerializeField] private float fastFOV = 75f;
+    [SerializeField] private float _slowFOV = 60f;
+    [SerializeField] private float _fastFOV = 75f;
 
     [Header("Smooth")]
-    [SerializeField] private float effectChangeSpeed = 3f;
+    [SerializeField] private float _effectChangeSpeed = 3f;
 
     private CinemachineCamera _cinemachineCamera;
     private CinemachineThirdPersonFollow _thirdPersonFollow;
@@ -43,16 +43,13 @@ public class SpeedCameraEffect : MonoBehaviour
 
     private void Start()
     {
-        if (playerController == null)
+        if (GameObject.Find("Player") != null)
         {
-            playerController = GameObject.Find("Player").GetComponent<PlayerController>();
-        }
-        if (mainCamTransform == null)
-        {
-            mainCamTransform = Camera.main.transform;
+            _playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+            _playerRb = GameObject.Find("Player").GetComponent<Rigidbody>();
         }
 
-
+        _mainCamTransform = Camera.main.transform;
     }
     private void Update()
     {
@@ -66,12 +63,12 @@ public class SpeedCameraEffect : MonoBehaviour
     {
 
         float speed =
-            playerRb.linearVelocity.magnitude;
+            _playerRb.linearVelocity.magnitude;
 
         float speedRatio =
             Mathf.InverseLerp(
-                effectStartSpeed,
-                maxEffectSpeed,
+                _effectStartSpeed,
+                _maxEffectSpeed,
                 speed
             );
 
@@ -82,13 +79,13 @@ public class SpeedCameraEffect : MonoBehaviour
 
         Vector3 targetDamping =
             Vector3.Lerp(
-                slowDamping,
-                fastDamping,
+                _slowDamping,
+                _fastDamping,
                 speedRatio
             );
 
         //카메라 보는 방향과 플레이어의 이동 방향이 반대인 경우 z댐핑 없애기
-        if (Vector3.Dot(mainCamTransform.forward, playerRb.linearVelocity) <= 0)
+        if (Vector3.Dot(_mainCamTransform.forward, _playerRb.linearVelocity) <= 0)
         {
             targetDamping.z = 0;
         }
@@ -97,7 +94,7 @@ public class SpeedCameraEffect : MonoBehaviour
             Vector3.Lerp(
                 _thirdPersonFollow.Damping,
                 targetDamping,
-                effectChangeSpeed *
+                _effectChangeSpeed *
                 Time.deltaTime
             );
 
@@ -108,8 +105,8 @@ public class SpeedCameraEffect : MonoBehaviour
 
         float targetDistance =
             Mathf.Lerp(
-                playerController.OwnedBalls[playerController.CurrentBallNum].SlowCameraDistance,
-                playerController.OwnedBalls[playerController.CurrentBallNum].FastCameraDistance,
+                _playerController.OwnedBalls[_playerController.CurrentBallNum].SlowCameraDistance,
+                _playerController.OwnedBalls[_playerController.CurrentBallNum].FastCameraDistance,
                 speedRatio
             );
 
@@ -117,7 +114,7 @@ public class SpeedCameraEffect : MonoBehaviour
             Mathf.Lerp(
                 _thirdPersonFollow.CameraDistance,
                 targetDistance,
-                effectChangeSpeed *
+                _effectChangeSpeed *
                 Time.deltaTime
             );
 
@@ -129,18 +126,23 @@ public class SpeedCameraEffect : MonoBehaviour
         LensSettings lens =
             _cinemachineCamera.Lens;
 
-        float targetFOV =
-            Mathf.Lerp(
-                slowFOV,
-                fastFOV,
-                speedRatio
-            );
+        float targetFOV;
+        if (Vector3.Dot(_mainCamTransform.forward, _playerRb.linearVelocity) <= 0)
+        {
+            targetFOV = _slowFOV;
+        }
+
+        else
+        {
+            targetFOV = Mathf.Lerp(_slowFOV, _fastFOV, speedRatio);
+
+        }
 
         lens.FieldOfView =
             Mathf.Lerp(
                 lens.FieldOfView,
                 targetFOV,
-                effectChangeSpeed *
+                _effectChangeSpeed *
                 Time.deltaTime
             );
 

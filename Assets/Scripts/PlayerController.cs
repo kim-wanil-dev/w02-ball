@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class PlayerController : MonoBehaviour
 {
 
@@ -87,7 +88,9 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         ProcessMoveInput();
-        ProcessResizeInput();
+        //ProcessResizeInput();
+        TestProcessResizeInput();
+        TestInitSizeBall(_targetBallStat);
         ProcessJumpInput();
         ProcessDiveInput();
     }
@@ -119,6 +122,168 @@ public class PlayerController : MonoBehaviour
 
     }
 
+
+    private bool _isExpanding = false;
+    private bool _isShrinking = false;
+    float _elpasedTime = 0f;
+    public float _maxResizeHoldTime = 0.3f;
+    Vector3 _previusLocalScale;
+    Vector3 _previusLenearVelocity;
+    float _previusMoveSpeed;
+    float _previusMoveAcceleration;
+    float _previusResponseTime;
+    float _previusJumpForce;
+    float _previusMaxGravityVelocity;
+    float _previusBounciness;
+    float _previusMass;
+    BallStat _targetBallStat;
+    private void TestProcessResizeInput()
+    {
+        if (_elpasedTime >= _maxResizeHoldTime)
+        {
+            _isExpanding = false;
+            _isShrinking = false;
+            _elpasedTime = 0f;
+            Time.timeScale = 1f;
+            _targetBallStat = null;
+            ApplyMomentum();
+            return;
+        }
+
+        int currentSizeChangeInput = (int)GameInputController.Instance.ResizeInput;
+
+        if (_previousSizeChangeInput == currentSizeChangeInput)
+            return;
+
+        _previousSizeChangeInput = currentSizeChangeInput;
+
+
+        if (currentSizeChangeInput == 0)
+        {
+            _isExpanding = false;
+            _isShrinking = false;
+            _elpasedTime = 0f;
+            Time.timeScale = 1f;
+            _targetBallStat = null;
+            ApplyMomentum();
+            return;
+        }
+
+        SaveCurrentBallStat();
+        _elpasedTime = 0f;
+        Time.timeScale = 1f;
+        if (currentSizeChangeInput == 1)
+        {
+            Debug.Log("start expand");
+            _isExpanding = true;
+            _targetBallStat = _ownedBalls[3];
+            return;
+        }
+
+        if (currentSizeChangeInput == -1)
+        {
+            Debug.Log("start shrink");
+            _isShrinking = true;
+            _targetBallStat = _ownedBalls[0];
+            return;
+        }
+
+    }
+    public void SaveCurrentBallStat()
+    {
+        _previusLocalScale = transform.localScale;
+        _previusMoveSpeed = _moveSpeed;
+        _previusMoveAcceleration = _moveAcceleration;
+        _previusResponseTime = _moveResponseTime;
+        _previusJumpForce = _jumpForce;
+        _previusMaxGravityVelocity = _maxGravityVelocity;
+        _previusBounciness = _physicsMaterial.bounciness;
+        _previusMass = _rb.mass;
+
+        _previusLenearVelocity = _rb.linearVelocity;
+    }
+
+
+
+    public void TestInitSizeBall(BallStat inputBallStat)
+    {
+        if (_targetBallStat == null)
+            return;
+        if (!_isExpanding && !_isShrinking)
+            return;
+        //Debug.Log("being resize");
+        //if (_elpasedTime >= _maxResizeHoldTime)
+        //{
+        //    _isExpanding = false;
+        //    _isShrinking = false;
+        //    _elpasedTime = 0f;
+        //    Time.timeScale = 1f;
+        //    _targetBallStat = null;
+        //    ApplyMomentum();
+        //    return;
+        //}
+
+        _elpasedTime += Time.unscaledDeltaTime;
+
+        float x = _elpasedTime / _maxResizeHoldTime;
+        /////
+        ///
+
+        //outback
+        //const float c1 = 1.70158f;
+        //const float c3 = c1 + 1;
+        //float t = 1 + c3 * Mathf.Pow(x - 1, 3) + c1 * Mathf.Pow(x - 1, 2);
+
+        //
+        float t = Mathf.Sin((x * Mathf.PI) / 2f);
+
+
+        transform.localScale = Vector3.Slerp(_previusLocalScale, Vector3.one * inputBallStat.SphereRadius, t);
+        _moveSpeed = Mathf.Lerp(_previusMoveSpeed, inputBallStat.MoveSpeed, t);
+        _moveAcceleration = Mathf.Lerp(_previusMoveAcceleration, inputBallStat.MoveAcceleration, t);
+        _moveResponseTime = Mathf.Lerp(_previusResponseTime, inputBallStat.MoveResponseTime, t);
+        _jumpForce = Mathf.Lerp(_previusJumpForce, inputBallStat.JumpForce, t);
+        _maxGravityVelocity = Mathf.Lerp(_previusMaxGravityVelocity, inputBallStat.MaxGravityVelocity, t);
+        _physicsMaterial.bounciness = Mathf.Lerp(_previusBounciness, inputBallStat.Bounciness, t);
+        _rb.mass = Mathf.Lerp(_previusMass, inputBallStat.Mass, t);
+        //////
+    }
+    private void ApplyMomentum()
+    {
+        Vector3 previusMomentum = _previusMass * _previusLenearVelocity;
+        Vector3 targetVelocity = previusMomentum / (_rb.mass);
+        //Vector3 targetVelocity = previusMomentum / (_rb.mass / 9);
+        //Debug.Log($"_previusLenearVelocity:{_previusLenearVelocity.magnitude}");
+        //Debug.Log($"_previusMass:{_previusMass}");
+        //Debug.Log($"targetVelocity:{targetVelocity.magnitude}");
+        //Debug.Log($"mass:{_rb.mass}");
+        _rb.linearVelocity = targetVelocity;
+        _rb.angularVelocity = Vector3.zero;
+        //_rb.AddForce(targetVelocity, ForceMode.VelocityChange);
+        Debug.Log($"_moveAcceleration{_moveAcceleration}");
+        Vector3 velocity = _rb.linearVelocity;
+
+
+        //반지름에 맞게 회전 계산
+        Vector3 horizontalVelocity =
+            new Vector3(velocity.x, 0f, velocity.z);
+
+        if (horizontalVelocity.sqrMagnitude > 0.001f)
+        {
+            float angularSpeed =
+                horizontalVelocity.magnitude / transform.localScale.x;
+
+            Vector3 rotationAxis =
+                Vector3.Cross(
+                    Vector3.up,
+                    horizontalVelocity.normalized
+                );
+
+            _rb.angularVelocity =
+                rotationAxis * angularSpeed;
+        }
+    }
+
     private void ProcessJumpInput()
     {
         if (GameInputController.Instance.JumpPressed && IsGrounded)
@@ -142,7 +307,7 @@ public class PlayerController : MonoBehaviour
 
         _velocityText.text = $"{_rb.linearVelocity.magnitude:F2} m/s";
         _heightText.text = $"{_rb.transform.position.y:F2} m";
-        Debug.Log($"Ground: {IsGrounded}\n Ground Normal: {_groundNormal}");
+        //Debug.Log($"Ground: {IsGrounded}\n Ground Normal: {_groundNormal}");
     }
 
     private void CheckGround()
