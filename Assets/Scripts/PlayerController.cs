@@ -110,6 +110,11 @@ public class PlayerController : MonoBehaviour
         ProcessDiveInput();
     }
 
+    private void OnDisable()
+    {
+        _hapticManager.StopHaptic();
+    }
+
     private void ProcessMoveInput()
     {
         _moveInput = GameInputController.Instance.MoveInput;
@@ -125,6 +130,9 @@ public class PlayerController : MonoBehaviour
             _elpasedTime = 0f;
             Time.timeScale = 1f;
             _targetBallStat = null;
+
+            _hapticManager.StopHaptic();
+
             return;
         }
 
@@ -146,6 +154,7 @@ public class PlayerController : MonoBehaviour
             _targetBallStat = null;
 
             _hapticManager.StopHaptic();
+
             return;
         }
 
@@ -217,6 +226,7 @@ public class PlayerController : MonoBehaviour
         float radiusDelta = transform.localScale.x - previousRadius;
         transform.Translate(Vector3.up * (radiusDelta), Space.World);
 
+        // 진동
         float intensity = Mathf.Lerp(
             0.05f,
             0.1f,
