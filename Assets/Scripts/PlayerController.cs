@@ -210,7 +210,7 @@ public class PlayerController : MonoBehaviour
 
         _currentSizeRatio = Mathf.Lerp(_originalSizeRatio, _targetSizeRatio, t);
         float previousRadius = transform.localScale.x;
-        transform.localScale = Vector3.Lerp(_originalLocalScale, Vector3.one * inputBallStat.SphereRadius, t);
+        transform.localScale = Vector3.Lerp(_originalLocalScale, Vector3.one * inputBallStat.Scale, t);
         _moveSpeed = Mathf.Lerp(_originalMoveSpeed, inputBallStat.MoveSpeed, t);
         _moveAcceleration = Mathf.Lerp(_originalMoveAcceleration, inputBallStat.MoveAcceleration, t);
         _moveResponseTime = Mathf.Lerp(_originalResponseTime, inputBallStat.MoveResponseTime, t);
@@ -218,10 +218,6 @@ public class PlayerController : MonoBehaviour
         _maxGravityVelocity = Mathf.Lerp(_originalMaxGravityVelocity, inputBallStat.MaxGravityVelocity, t);
         _physicsMaterial.bounciness = Mathf.Lerp(_originalBounciness, inputBallStat.Bounciness, t);
         _rb.mass = Mathf.Lerp(_originalMass, inputBallStat.Mass, t);
-
-        //float previousRadius = Mathf.Lerp(_smallBall.SphereRadius, _largeBall.SphereRadius, _previousSizeRatio);
-        //float currentRadius = Mathf.Lerp(_smallBall.SphereRadius, _largeBall.SphereRadius, _currentSizeRatio);
-        //transform.position = Vector3.Lerp(_originalPosition, _originalPosition + new Vector3(0f, transform.localScale.x - previousRadius, 0f), t);
 
         float radiusDelta = transform.localScale.x - previousRadius;
         transform.Translate(Vector3.up * (radiusDelta), Space.World);
@@ -303,7 +299,7 @@ public class PlayerController : MonoBehaviour
         Vector3 gravityDirection = _gravityDir;
 
         float sphereRadius =
-            transform.localScale.x;
+            _collider.radius * transform.lossyScale.x;
 
         float checkRadius =
             sphereRadius * _groundCheckRadiusRatio;
@@ -545,8 +541,8 @@ public class PlayerController : MonoBehaviour
 
     public void InitSizeBall(BallStat inputBallStat)
     {
-        transform.localScale = 2 * Vector3.one *
-            inputBallStat.SphereRadius;
+        transform.localScale = Vector3.one *
+            inputBallStat.Scale;
 
         _moveSpeed = inputBallStat.MoveSpeed;
         _moveAcceleration = inputBallStat.MoveAcceleration;

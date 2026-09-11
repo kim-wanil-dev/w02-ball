@@ -19,7 +19,7 @@ MonoBehaviour:
   _maxGravityVelocity: 150
   _mass: 27
   _bounciness: 1
-  _sphereRadius: 18
+  _scale: 18
   _slowCameraDistance: 28
   _fastCameraDistance: 31
   _sizeRatio: 1
