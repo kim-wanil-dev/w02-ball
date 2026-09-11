@@ -20,6 +20,14 @@ public class PlayerController : MonoBehaviour
     [Header("Gravity"), Range(-100f, 0f)]
     [SerializeField] private float _diveAcceleration = -20f;
 
+    [SerializeField] private float _hapticStrength = 0.5f;
+
+    [SerializeField] private float _groundHapticInterval = 0.1f;
+    [SerializeField] private float _fallHapticInterval = 0.12f;
+
+    [SerializeField] private float _minHapticSpeed = 10f;
+    [SerializeField] private float _minFallSpeed = 40f;
+
     private Text _velocityText;
     private Text _heightText;
 
@@ -27,7 +35,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 _moveInput;
     private float _previousSizeChangeInput;
     private float _diveInput;
-    private HapticManager _hapticManager;
+    private HapticController _hapticController;
 
     private Vector3 _gravityDir = Vector3.down;
     private Vector3 _groundNormal = Vector3.up;
@@ -46,6 +54,7 @@ public class PlayerController : MonoBehaviour
     private float _maxGravityVelocity;
 
     private bool _jumpRequested;
+    private float _hapticTimer = 0f;
 
     private bool _isExpanding = false;
     private bool _isShrinking = false;
@@ -68,6 +77,7 @@ public class PlayerController : MonoBehaviour
     private float _currentSizeRatio;
     private float _previousSizeRatio;
     private float _targetSizeRatio;
+    private float _previousMass;
     private BallStat _targetBallStat;
 
     public bool IsGrounded { get; private set; }
@@ -84,7 +94,7 @@ public class PlayerController : MonoBehaviour
         _collider = GetComponent<SphereCollider>();
         _physicsMaterial = _collider.material;
 
-        _hapticManager = GetComponent<HapticManager>();
+        _hapticController = GetComponent<HapticController>();
 
         if (_cameraTransform == null && Camera.main != null)
             _cameraTransform = Camera.main.transform;
@@ -123,7 +133,6 @@ public class PlayerController : MonoBehaviour
             _isExpanding = false;
             _isShrinking = false;
             _elpasedTime = 0f;
-            Time.timeScale = 1f;
             _targetBallStat = null;
             return;
         }
@@ -134,8 +143,7 @@ public class PlayerController : MonoBehaviour
             return;
 
         _previousSizeChangeInput = currentSizeChangeInput;
-        _previousSizeRatio = _currentSizeRatio;
-        _previousLenearVelocity = _rb.linearVelocity;
+
 
 
         if (currentSizeChangeInput == 0)
@@ -144,13 +152,10 @@ public class PlayerController : MonoBehaviour
             _isShrinking = false;
             _elpasedTime = 0f;
             _targetBallStat = null;
-
-            _hapticManager.StopHaptic();
             return;
         }
 
         SaveCurrentBallStat();
-
         _elpasedTime = 0f;
         if (currentSizeChangeInput == 1)
         {
@@ -199,47 +204,40 @@ public class PlayerController : MonoBehaviour
         float x = _elpasedTime / _transitionDuration;
         float t = Mathf.Sin((x * Mathf.PI) / 2f);
 
+        _previousSizeRatio = _currentSizeRatio;
         _currentSizeRatio = Mathf.Lerp(_originalSizeRatio, _targetSizeRatio, t);
-        float previousRadius = transform.localScale.x;
-        transform.localScale = Vector3.Lerp(_originalLocalScale, Vector3.one * inputBallStat.SphereRadius, t);
+        float previousScale = transform.localScale.x;
+        transform.localScale = Vector3.Lerp(_originalLocalScale, Vector3.one * inputBallStat.Scale, t);
         _moveSpeed = Mathf.Lerp(_originalMoveSpeed, inputBallStat.MoveSpeed, t);
         _moveAcceleration = Mathf.Lerp(_originalMoveAcceleration, inputBallStat.MoveAcceleration, t);
         _moveResponseTime = Mathf.Lerp(_originalResponseTime, inputBallStat.MoveResponseTime, t);
         _jumpForce = Mathf.Lerp(_originalJumpForce, inputBallStat.JumpForce, t);
         _maxGravityVelocity = Mathf.Lerp(_originalMaxGravityVelocity, inputBallStat.MaxGravityVelocity, t);
         _physicsMaterial.bounciness = Mathf.Lerp(_originalBounciness, inputBallStat.Bounciness, t);
+        _previousMass = _rb.mass;
         _rb.mass = Mathf.Lerp(_originalMass, inputBallStat.Mass, t);
 
-        //float previousRadius = Mathf.Lerp(_smallBall.SphereRadius, _largeBall.SphereRadius, _previousSizeRatio);
-        //float currentRadius = Mathf.Lerp(_smallBall.SphereRadius, _largeBall.SphereRadius, _currentSizeRatio);
-        //transform.position = Vector3.Lerp(_originalPosition, _originalPosition + new Vector3(0f, transform.localScale.x - previousRadius, 0f), t);
-
-        float radiusDelta = transform.localScale.x - previousRadius;
-        transform.Translate(Vector3.up * (radiusDelta), Space.World);
-
-        float intensity = Mathf.Lerp(
-            0.05f,
-            0.1f,
-            _currentSizeRatio
-        );
-
-        _hapticManager.HapticControl(intensity);
-
-        Debug.Log(radiusDelta);
+        float scaleDelta = transform.localScale.x - previousScale;
+        transform.Translate(Vector3.up * (scaleDelta), Space.World);
 
 
 
     }
     private void ApplyMomentum()
     {
-        float previousMass = Mathf.Lerp(_smallBall.Mass, _largeBall.Mass, _previousSizeRatio);
+        _previousLenearVelocity = _rb.linearVelocity;
+
+        //Vector3 targetVelocity = _previousLenearVelocity * Mathf.Sqrt(_previousMass / _rb.mass);
+        float velocityRatio = Mathf.Sqrt(_previousMass / _rb.mass);
+        _rb.linearVelocity *= velocityRatio;
+
+        Debug.Log($"velocityRatio{velocityRatio}");
+        Debug.Log($"_rb.linearVelocity{_rb.linearVelocity.magnitude}");
 
 
-        Vector3 targetVelocity = _previousLenearVelocity * Mathf.Sqrt(previousMass / _rb.mass);
+        //_rb.linearVelocity = targetVelocity;
 
-        _rb.linearVelocity = targetVelocity;
         _rb.angularVelocity = Vector3.zero;
-
         Vector3 velocity = _rb.linearVelocity;
 
 
@@ -281,29 +279,31 @@ public class PlayerController : MonoBehaviour
         ProcessJump();
         ApplyMovement();
 
+        HapticControl();
+
         ClampGravityVelocity();
 
         _velocityText.text = $"{_rb.linearVelocity.magnitude:F2} m/s";
         _heightText.text = $"{_rb.transform.position.y:F2} m";
-        Debug.Log($"Ground: {IsGrounded}\n Ground Normal: {_groundNormal}");
+        //Debug.Log($"Ground: {IsGrounded}\n Ground Normal: {_groundNormal}");
     }
 
     private void CheckGround()
     {
         Vector3 gravityDirection = _gravityDir;
 
-        float sphereRadius =
+        float scale =
             transform.localScale.x;
 
-        float checkRadius =
-            sphereRadius * _groundCheckRadiusRatio;
+        float checkScale =
+            scale * _groundCheckRadiusRatio;
 
-        float castDistance = sphereRadius - checkRadius +
+        float castDistance = scale - checkScale +
             _groundCheckDistance;
 
         if (Physics.SphereCast(
             transform.position,
-            checkRadius,
+            checkScale,
             gravityDirection,
             out RaycastHit hit,
             castDistance,
@@ -356,8 +356,11 @@ public class PlayerController : MonoBehaviour
         else
             AirMove(worldMoveInput);
 
-        if (_isExpanding || _isShrinking)
-            ApplyMomentum();
+        if (!_isExpanding && !_isShrinking)
+            return;
+        if (Mathf.Approximately(_rb.mass, _previousMass))
+            return;
+        ApplyMomentum();
     }
 
     private Vector3 GetWorldMoveInput(Vector2 input)
@@ -535,8 +538,8 @@ public class PlayerController : MonoBehaviour
 
     public void InitSizeBall(BallStat inputBallStat)
     {
-        transform.localScale = 2 * Vector3.one *
-            inputBallStat.SphereRadius;
+        transform.localScale = Vector3.one *
+            inputBallStat.Scale;
 
         _moveSpeed = inputBallStat.MoveSpeed;
         _moveAcceleration = inputBallStat.MoveAcceleration;
@@ -553,22 +556,73 @@ public class PlayerController : MonoBehaviour
         SaveCurrentBallStat();
     }
 
-    // 충돌
-    private void OnCollisionEnter(Collision collision)
+    private void HapticControl()
     {
-        float impulse = collision.impulse.magnitude;
+        _hapticTimer -= Time.fixedDeltaTime;
 
-        float intensity = Mathf.InverseLerp(
-            10f,
-            100f,
-            impulse
+        if (_hapticTimer > 0f)
+            return;
+
+        if (IsGrounded)
+        {
+            GroundHaptic();
+        }
+        else
+        {
+            AirHaptic();
+        }
+    }
+
+    private void GroundHaptic()
+    {
+        float speed = _rb.linearVelocity.magnitude;
+
+        if (speed < _minHapticSpeed)
+            return;
+
+        float speed01 = Mathf.InverseLerp(
+            _minHapticSpeed,
+            _moveSpeed,
+            speed
         );
 
-        _hapticManager.HapticControl(
-            intensity,
-            0f,
-            0.15f
+        float mass = _rb.mass;
+
+        float lowFrequency =
+            Mathf.Clamp01(speed01 * 0.4f * mass) * _hapticStrength;
+
+        float highFrequency =
+            Mathf.Clamp01(speed01 * 0.25f / mass) * _hapticStrength;
+
+        _hapticController.Vibrate(
+            lowFrequency,
+            highFrequency,
+            0.05f
         );
+
+        _hapticTimer = _groundHapticInterval;
+    }
+
+    private void AirHaptic()
+    {
+        float fallSpeed = -_rb.linearVelocity.y;
+
+        if (fallSpeed < _minFallSpeed)
+            return;
+
+        float fall01 = Mathf.InverseLerp(
+            _minFallSpeed,
+            _maxGravityVelocity,
+            fallSpeed
+        ) * _hapticStrength;
+
+        _hapticController.Vibrate(
+            fall01 * 0.15f,
+            fall01 * 0.35f,
+            0.04f
+        );
+
+        _hapticTimer = _fallHapticInterval;
     }
 
     private void OnCollisionStay(Collision collision)

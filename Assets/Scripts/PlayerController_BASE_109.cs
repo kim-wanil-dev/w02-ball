@@ -20,6 +20,14 @@ public class PlayerController : MonoBehaviour
     [Header("Gravity"), Range(-100f, 0f)]
     [SerializeField] private float _diveAcceleration = -20f;
 
+    [SerializeField] private float _hapticStrength = 0.5f;
+
+    [SerializeField] private float _groundHapticInterval = 0.1f;
+    [SerializeField] private float _fallHapticInterval = 0.12f;
+
+    [SerializeField] private float _minHapticSpeed = 10f;
+    [SerializeField] private float _minFallSpeed = 40f;
+
     private Text _velocityText;
     private Text _heightText;
 
@@ -27,7 +35,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 _moveInput;
     private float _previousSizeChangeInput;
     private float _diveInput;
-    private HapticManager _hapticManager;
+    private HapticController _hapticController;
 
     private Vector3 _gravityDir = Vector3.down;
     private Vector3 _groundNormal = Vector3.up;
@@ -46,6 +54,7 @@ public class PlayerController : MonoBehaviour
     private float _maxGravityVelocity;
 
     private bool _jumpRequested;
+    private float _hapticTimer = 0f;
 
     private bool _isExpanding = false;
     private bool _isShrinking = false;
@@ -84,7 +93,7 @@ public class PlayerController : MonoBehaviour
         _collider = GetComponent<SphereCollider>();
         _physicsMaterial = _collider.material;
 
-        _hapticManager = GetComponent<HapticManager>();
+        _hapticController = GetComponent<HapticController>();
 
         if (_cameraTransform == null && Camera.main != null)
             _cameraTransform = Camera.main.transform;
@@ -144,13 +153,10 @@ public class PlayerController : MonoBehaviour
             _isShrinking = false;
             _elpasedTime = 0f;
             _targetBallStat = null;
-
-            _hapticManager.StopHaptic();
             return;
         }
 
         SaveCurrentBallStat();
-
         _elpasedTime = 0f;
         if (currentSizeChangeInput == 1)
         {
@@ -217,14 +223,6 @@ public class PlayerController : MonoBehaviour
         float radiusDelta = transform.localScale.x - previousRadius;
         transform.Translate(Vector3.up * (radiusDelta), Space.World);
 
-        float intensity = Mathf.Lerp(
-            0.05f,
-            0.1f,
-            _currentSizeRatio
-        );
-
-        _hapticManager.HapticControl(intensity);
-
         Debug.Log(radiusDelta);
 
 
@@ -280,6 +278,8 @@ public class PlayerController : MonoBehaviour
         CheckGround();
         ProcessJump();
         ApplyMovement();
+
+        HapticControl();
 
         ClampGravityVelocity();
 
@@ -553,22 +553,73 @@ public class PlayerController : MonoBehaviour
         SaveCurrentBallStat();
     }
 
-    // 충돌
-    private void OnCollisionEnter(Collision collision)
+    private void HapticControl()
     {
-        float impulse = collision.impulse.magnitude;
+        _hapticTimer -= Time.fixedDeltaTime;
 
-        float intensity = Mathf.InverseLerp(
-            10f,
-            100f,
-            impulse
+        if (_hapticTimer > 0f)
+            return;
+
+        if (IsGrounded)
+        {
+            GroundHaptic();
+        }
+        else
+        {
+            AirHaptic();
+        }
+    }
+
+    private void GroundHaptic()
+    {
+        float speed = _rb.linearVelocity.magnitude;
+
+        if (speed < _minHapticSpeed)
+            return;
+
+        float speed01 = Mathf.InverseLerp(
+            _minHapticSpeed,
+            _moveSpeed,
+            speed
         );
 
-        _hapticManager.HapticControl(
-            intensity,
-            0f,
-            0.15f
+        float mass = _rb.mass;
+
+        float lowFrequency =
+            Mathf.Clamp01(speed01 * 0.4f * mass) * _hapticStrength;
+
+        float highFrequency =
+            Mathf.Clamp01(speed01 * 0.25f / mass) * _hapticStrength;
+
+        _hapticController.Vibrate(
+            lowFrequency,
+            highFrequency,
+            0.05f
         );
+
+        _hapticTimer = _groundHapticInterval;
+    }
+
+    private void AirHaptic()
+    {
+        float fallSpeed = -_rb.linearVelocity.y;
+
+        if (fallSpeed < _minFallSpeed)
+            return;
+
+        float fall01 = Mathf.InverseLerp(
+            _minFallSpeed,
+            _maxGravityVelocity,
+            fallSpeed
+        ) * _hapticStrength;
+
+        _hapticController.Vibrate(
+            fall01 * 0.15f,
+            fall01 * 0.35f,
+            0.04f
+        );
+
+        _hapticTimer = _fallHapticInterval;
     }
 
     private void OnCollisionStay(Collision collision)

@@ -32,7 +32,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 20, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -70,7 +70,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9875a245ac49007498213638a307faa1, type: 2}
+  - {fileID: 2100000, guid: dbed15661b745324ba4360e71c5ad801, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -141,7 +141,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!114 &1725289687414119516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,12 +159,8 @@ MonoBehaviour:
     m_Bits: 8
   _groundCheckDistance: 0.1
   _groundCheckRadiusRatio: 0.9
-  _ownedBalls:
-  - {fileID: 11400000, guid: 5a67a359f1204cd4b95fb650c7f4a02d, type: 2}
-  - {fileID: 11400000, guid: 1eb012c8afdc6284dae6a58faf9d42b3, type: 2}
-  - {fileID: 11400000, guid: 8fa17fab22ef23246b29cb02e2e42158, type: 2}
-  - {fileID: 11400000, guid: 32707346193573c45b3e6acf9d193d50, type: 2}
-  _currentBallNum: 0
+  _smallBall: {fileID: 11400000, guid: 5a67a359f1204cd4b95fb650c7f4a02d, type: 2}
+  _largeBall: {fileID: 11400000, guid: 8fa17fab22ef23246b29cb02e2e42158, type: 2}
   _diveAcceleration: -20
   _hapticStrength: 0.5
   _groundHapticInterval: 0.1

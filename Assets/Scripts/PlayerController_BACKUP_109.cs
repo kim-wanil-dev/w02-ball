@@ -68,6 +68,7 @@ public class PlayerController : MonoBehaviour
     private float _currentSizeRatio;
     private float _previousSizeRatio;
     private float _targetSizeRatio;
+    private float _previousMass;
     private BallStat _targetBallStat;
 
     public bool IsGrounded { get; private set; }
@@ -123,7 +124,6 @@ public class PlayerController : MonoBehaviour
             _isExpanding = false;
             _isShrinking = false;
             _elpasedTime = 0f;
-            Time.timeScale = 1f;
             _targetBallStat = null;
             return;
         }
@@ -134,8 +134,7 @@ public class PlayerController : MonoBehaviour
             return;
 
         _previousSizeChangeInput = currentSizeChangeInput;
-        _previousSizeRatio = _currentSizeRatio;
-        _previousLenearVelocity = _rb.linearVelocity;
+
 
 
         if (currentSizeChangeInput == 0)
@@ -199,17 +198,23 @@ public class PlayerController : MonoBehaviour
         float x = _elpasedTime / _transitionDuration;
         float t = Mathf.Sin((x * Mathf.PI) / 2f);
 
+        _previousSizeRatio = _currentSizeRatio;
         _currentSizeRatio = Mathf.Lerp(_originalSizeRatio, _targetSizeRatio, t);
-        float previousRadius = transform.localScale.x;
-        transform.localScale = Vector3.Lerp(_originalLocalScale, Vector3.one * inputBallStat.SphereRadius, t);
+        float previousScale = transform.localScale.x;
+        transform.localScale = Vector3.Lerp(_originalLocalScale, Vector3.one * inputBallStat.Scale, t);
         _moveSpeed = Mathf.Lerp(_originalMoveSpeed, inputBallStat.MoveSpeed, t);
         _moveAcceleration = Mathf.Lerp(_originalMoveAcceleration, inputBallStat.MoveAcceleration, t);
         _moveResponseTime = Mathf.Lerp(_originalResponseTime, inputBallStat.MoveResponseTime, t);
         _jumpForce = Mathf.Lerp(_originalJumpForce, inputBallStat.JumpForce, t);
         _maxGravityVelocity = Mathf.Lerp(_originalMaxGravityVelocity, inputBallStat.MaxGravityVelocity, t);
         _physicsMaterial.bounciness = Mathf.Lerp(_originalBounciness, inputBallStat.Bounciness, t);
+        _previousMass = _rb.mass;
         _rb.mass = Mathf.Lerp(_originalMass, inputBallStat.Mass, t);
 
+<<<<<<< HEAD
+        float scaleDelta = transform.localScale.x - previousScale;
+        transform.Translate(Vector3.up * (scaleDelta), Space.World);
+=======
         //float previousRadius = Mathf.Lerp(_smallBall.SphereRadius, _largeBall.SphereRadius, _previousSizeRatio);
         //float currentRadius = Mathf.Lerp(_smallBall.SphereRadius, _largeBall.SphereRadius, _currentSizeRatio);
         //transform.position = Vector3.Lerp(_originalPosition, _originalPosition + new Vector3(0f, transform.localScale.x - previousRadius, 0f), t);
@@ -226,20 +231,26 @@ public class PlayerController : MonoBehaviour
         _hapticManager.HapticControl(intensity);
 
         Debug.Log(radiusDelta);
+>>>>>>> f48b86f07f5916af884322d255f1fbb4b5553715
 
 
 
     }
     private void ApplyMomentum()
     {
-        float previousMass = Mathf.Lerp(_smallBall.Mass, _largeBall.Mass, _previousSizeRatio);
+        _previousLenearVelocity = _rb.linearVelocity;
+
+        //Vector3 targetVelocity = _previousLenearVelocity * Mathf.Sqrt(_previousMass / _rb.mass);
+        float velocityRatio = Mathf.Sqrt(_previousMass / _rb.mass);
+        _rb.linearVelocity *= velocityRatio;
+
+        Debug.Log($"velocityRatio{velocityRatio}");
+        Debug.Log($"_rb.linearVelocity{_rb.linearVelocity.magnitude}");
 
 
-        Vector3 targetVelocity = _previousLenearVelocity * Mathf.Sqrt(previousMass / _rb.mass);
+        //_rb.linearVelocity = targetVelocity;
 
-        _rb.linearVelocity = targetVelocity;
         _rb.angularVelocity = Vector3.zero;
-
         Vector3 velocity = _rb.linearVelocity;
 
 
@@ -285,25 +296,25 @@ public class PlayerController : MonoBehaviour
 
         _velocityText.text = $"{_rb.linearVelocity.magnitude:F2} m/s";
         _heightText.text = $"{_rb.transform.position.y:F2} m";
-        Debug.Log($"Ground: {IsGrounded}\n Ground Normal: {_groundNormal}");
+        //Debug.Log($"Ground: {IsGrounded}\n Ground Normal: {_groundNormal}");
     }
 
     private void CheckGround()
     {
         Vector3 gravityDirection = _gravityDir;
 
-        float sphereRadius =
+        float scale =
             transform.localScale.x;
 
-        float checkRadius =
-            sphereRadius * _groundCheckRadiusRatio;
+        float checkScale =
+            scale * _groundCheckRadiusRatio;
 
-        float castDistance = sphereRadius - checkRadius +
+        float castDistance = scale - checkScale +
             _groundCheckDistance;
 
         if (Physics.SphereCast(
             transform.position,
-            checkRadius,
+            checkScale,
             gravityDirection,
             out RaycastHit hit,
             castDistance,
@@ -356,8 +367,11 @@ public class PlayerController : MonoBehaviour
         else
             AirMove(worldMoveInput);
 
-        if (_isExpanding || _isShrinking)
-            ApplyMomentum();
+        if (!_isExpanding && !_isShrinking)
+            return;
+        if (Mathf.Approximately(_rb.mass, _previousMass))
+            return;
+        ApplyMomentum();
     }
 
     private Vector3 GetWorldMoveInput(Vector2 input)
@@ -535,8 +549,8 @@ public class PlayerController : MonoBehaviour
 
     public void InitSizeBall(BallStat inputBallStat)
     {
-        transform.localScale = 2 * Vector3.one *
-            inputBallStat.SphereRadius;
+        transform.localScale = Vector3.one *
+            inputBallStat.Scale;
 
         _moveSpeed = inputBallStat.MoveSpeed;
         _moveAcceleration = inputBallStat.MoveAcceleration;
