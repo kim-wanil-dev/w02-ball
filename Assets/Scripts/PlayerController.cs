@@ -22,6 +22,8 @@ public class PlayerController : MonoBehaviour
     [Header("Haptic")]
     [SerializeField] private HapticManager _hapticManager;
 
+    [SerializeField] private float _hapticStrength = 0.5f;
+
     [SerializeField] private float _groundHapticInterval = 0.1f;
     [SerializeField] private float _fallHapticInterval = 0.12f;
 
@@ -452,10 +454,10 @@ public class PlayerController : MonoBehaviour
         float mass = _ownedBalls[CurrentBallNum].Mass;
 
         float lowFrequency =
-            Mathf.Clamp01(speed01 * 0.4f * mass);
+            Mathf.Clamp01(speed01 * 0.4f * mass) * _hapticStrength;
 
         float highFrequency =
-            Mathf.Clamp01(speed01 * 0.25f / mass);
+            Mathf.Clamp01(speed01 * 0.25f / mass) * _hapticStrength;
 
         _hapticManager.Vibrate(
             lowFrequency,
@@ -477,7 +479,7 @@ public class PlayerController : MonoBehaviour
             _minFallSpeed,
             _ownedBalls[_currentBallNum].MaxGravityVelocity,
             fallSpeed
-        );
+        ) * _hapticStrength;
 
         _hapticManager.Vibrate(
             fall01 * 0.15f,

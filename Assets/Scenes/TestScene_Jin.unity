@@ -1270,6 +1270,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1725289687414119516, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
+      propertyPath: _minFallSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1725289687414119516, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
       propertyPath: _hapticManager
       value: 
       objectReference: {fileID: 1163206135}
@@ -1278,20 +1282,36 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1725289687414119516, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
+      propertyPath: _hapticStrength
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 1725289687414119516, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
+      propertyPath: _minHapticSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1725289687414119516, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
       propertyPath: inputController
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1725289687414119516, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
+      propertyPath: _fallHapticInterval
+      value: 0.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 1725289687414119516, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
+      propertyPath: _groundHapticInterval
+      value: 0.05
+      objectReference: {fileID: 0}
     - target: {fileID: 3640661126572887836, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -58.92
+      value: -15.77
       objectReference: {fileID: 0}
     - target: {fileID: 3640661126572887836, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 183.57
+      value: 87.37
       objectReference: {fileID: 0}
     - target: {fileID: 3640661126572887836, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -357.25
+      value: -187.62
       objectReference: {fileID: 0}
     - target: {fileID: 3640661126572887836, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
       propertyPath: m_LocalRotation.w
