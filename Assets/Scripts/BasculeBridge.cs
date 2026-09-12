@@ -10,6 +10,7 @@ public class BasculeBridge : MonoBehaviour
     [SerializeField] private float _springDamp = 50f;
 
     private HingeJoint _hingeJoint;
+    private Rigidbody _rb;
     private float _lastYAngle;
     private float _accumulatedRotation = 0;
     private bool _Initialized = false;
@@ -18,6 +19,7 @@ public class BasculeBridge : MonoBehaviour
     void Awake()
     {
         _hingeJoint = GetComponent<HingeJoint>();
+        _rb = GetComponent<Rigidbody>();
     }
 
     void Start()
@@ -48,13 +50,23 @@ public class BasculeBridge : MonoBehaviour
 
     private void SetBridgeZRotation(float targetZAngle)
     {
+        if (Mathf.Approximately(targetZAngle, _endBridgeAngle))
+        {
+            _hingeJoint.useSpring = false;
+            _rb.useGravity = true;
+            // JointLimits fixLimits = _hingeJoint.limits;
+            // fixLimits.min = _endBridgeAngle - 0.1f;
+            // fixLimits.max = _endBridgeAngle + 0.1f;
+            // _hingeJoint.limits = fixLimits;
+            return;
+        }
+
+        _rb.useGravity = false;
         _hingeJoint.useSpring = true;
         JointSpring spring = _hingeJoint.spring;
-
         spring.targetPosition = targetZAngle;
         spring.spring = _springForce;
         spring.damper = _springDamp;
-
         _hingeJoint.spring = spring;
     }
 }
