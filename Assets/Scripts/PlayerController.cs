@@ -68,8 +68,6 @@ public class PlayerController : MonoBehaviour
         GameObject debugCanvas = Instantiate(Resources.Load<GameObject>("Prefabs/DebugCanvas"));
         _velocityText = debugCanvas.transform.Find("VelocityText").GetComponent<Text>();
         _heightText = debugCanvas.transform.Find("HeightText").GetComponent<Text>();
-
-        Debug.Log($"Ground: {IsGrounded}\n Ground Normal: {_groundNormal}");
     }
 
     private void Update()
@@ -90,6 +88,8 @@ public class PlayerController : MonoBehaviour
 
         _velocityText.text = $"{_rb.linearVelocity.magnitude:F2} m/s";
         _heightText.text = $"{transform.position.y:F2} m";
+
+        Debug.Log($"Ground: {IsGrounded}\n Ground Normal: {_groundNormal}");
     }
 
     private void OnDisable()
