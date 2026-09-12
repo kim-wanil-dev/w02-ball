@@ -31,8 +31,8 @@ public class SpringLauncher : MonoBehaviour
 
     [Header("Return")]
     //mass가 1일 때 기준 시간. 높으면 duration이 늘어남 
-    [SerializeField] private float _basicReturnDuration = 0.2f;
-    private float _returnDuration = 0.2f;
+    [SerializeField] private float _basicReturnDuration = 0.1f;
+    private float _returnDuration = 0.1f;
     private float _returnTimer;
     private float _maxChargeGuage = 100f;
     private float _launchWaitTimer;
@@ -119,7 +119,7 @@ public class SpringLauncher : MonoBehaviour
         _currentChargeGuage += compressionSpeed * Time.fixedDeltaTime;
         float scaleY = (100f - _currentChargeGuage) / 100f;
         _springPivot.localScale = new Vector3(1f, scaleY, 1f);
-        Vector3 targetPosition = Vector3.Lerp(_originalTopPlateWorldPosition, _originalTopPlateWorldPosition + Vector3.down * _springLength, _currentChargeGuage / 100f);
+        Vector3 targetPosition = Vector3.Lerp(_originalTopPlateWorldPosition, _originalTopPlateWorldPosition + (-transform.up) * _springLength, _currentChargeGuage / 100f);
         _topPlateRb.MovePosition(targetPosition);
         if (_currentChargeGuage >= _maxChargeGuage)
         {
