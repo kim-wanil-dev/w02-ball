@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask _groundLayer;
     [SerializeField] private float _groundCheckDistance = 0.1f;
     [SerializeField, Range(0.5f, 1f)] private float _groundCheckRadiusRatio = 0.9f;
+    [SerializeField, Range(0f, 90f)] private float _maxGroundAngle = 50f;
 
     [Header("Ball Stat")]
     [SerializeField] private BallStat _smallBall;
@@ -66,6 +67,8 @@ public class PlayerController : MonoBehaviour
         GameObject debugCanvas = Instantiate(Resources.Load<GameObject>("Prefabs/DebugCanvas"));
         _velocityText = debugCanvas.transform.Find("VelocityText").GetComponent<Text>();
         _heightText = debugCanvas.transform.Find("HeightText").GetComponent<Text>();
+
+        Debug.Log($"Ground: {IsGrounded}\n Ground Normal: {_groundNormal}");
     }
 
     private void Update()
@@ -348,26 +351,26 @@ public class PlayerController : MonoBehaviour
         if ((_groundLayer.value & (1 << collision.gameObject.layer)) == 0)
             return;
 
-        Vector3 upDirection = -_gravityDir;
-        float bestDot = -1f;
-        Vector3 bestNormal = upDirection;
+        float bestGroundDot = Mathf.Cos(_maxGroundAngle * Mathf.Deg2Rad);
+        Vector3 bestGroundNormal = Vector3.zero;
+        bool hasGroundContact = false;
 
-        for (int i = 0; i < collision.contactCount; i++)
+        foreach (ContactPoint contact in collision.contacts)
         {
-            Vector3 normal = collision.GetContact(i).normal;
-            float dot = Vector3.Dot(normal, upDirection);
+            float groundDot = Vector3.Dot(contact.normal, Vector3.up);
 
-            if (dot > bestDot)
-            {
-                bestDot = dot;
-                bestNormal = normal;
-            }
+            if (groundDot < bestGroundDot)
+                continue;
+
+            bestGroundDot = groundDot;
+            bestGroundNormal = contact.normal;
+            hasGroundContact = true;
         }
 
-        if (bestDot <= 0f)
+        if (!hasGroundContact)
             return;
 
         _hasGroundContact = true;
-        _contactGroundNormal = bestNormal;
+        _contactGroundNormal = bestGroundNormal;
     }
 }
