@@ -158,6 +158,26 @@ public class PlayerController : MonoBehaviour
 
             if (downwardSpeed > 0f)
                 _rb.linearVelocity -= _gravityDir * downwardSpeed;
+
+            //회전 속도 바뀐 반지름에 맞춰 유지되게 설정(커질때만)
+            Vector3 horizontalVelocity =
+                new Vector3(_rb.linearVelocity.x, 0f, _rb.linearVelocity.z);
+
+            if (horizontalVelocity.sqrMagnitude > 0.001f)
+            {
+                float scale = GetStat(_currentSizeRatio, stat => stat.Scale);
+                float angularSpeed =
+                    horizontalVelocity.magnitude / (scale / 2f);
+
+                Vector3 rotationAxis =
+                    Vector3.Cross(
+                        Vector3.up,
+                        horizontalVelocity.normalized
+                    );
+
+                _rb.angularVelocity =
+                    rotationAxis * angularSpeed;
+            }
         }
         else
         {
@@ -179,6 +199,8 @@ public class PlayerController : MonoBehaviour
                 _rb.linearVelocity += -_gravityDir * (_shrinkUpwardVelocityBoost * boostDelta);
             }
         }
+
+
 
         float hapticIntensity = Mathf.Lerp(0.05f, 0.1f, _currentSizeRatio);
         _hapticManager.HapticControl(hapticIntensity);
