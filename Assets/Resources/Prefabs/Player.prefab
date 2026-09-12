@@ -159,9 +159,12 @@ MonoBehaviour:
     m_Bits: 8
   _groundCheckDistance: 0.1
   _groundCheckRadiusRatio: 0.9
+  _maxGroundAngle: 70
   _smallBall: {fileID: 11400000, guid: 5a67a359f1204cd4b95fb650c7f4a02d, type: 2}
   _largeBall: {fileID: 11400000, guid: 8fa17fab22ef23246b29cb02e2e42158, type: 2}
-  _diveAcceleration: 20
+  _resizeSpeed: 1
+  _shrinkUpwardVelocityBoost: 30
+  _diveAcceleration: 80
 --- !u!114 &7444097142018545840
 MonoBehaviour:
   m_ObjectHideFlags: 0

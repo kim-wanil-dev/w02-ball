@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Resize")]
     [SerializeField] private float _resizeSpeed = 1f;
+    [SerializeField] private float _shrinkUpwardVelocityBoost = 10f;
 
     [Header("Gravity")]
     [SerializeField, Range(0f, 100f)] private float _diveAcceleration = 20f;
@@ -144,10 +145,40 @@ public class PlayerController : MonoBehaviour
         ApplyCurrentSizeStat();
 
         float currentRadius = _collider.radius * transform.lossyScale.x;
+        float radiusDelta = currentRadius - previousRadius;
         float currentMass = GetStat(_currentSizeRatio, stat => stat.Mass);
 
-        transform.position += -_gravityDir * (currentRadius - previousRadius);
         _rb.linearVelocity = previousVelocity * Mathf.Sqrt(previousMass / currentMass);
+
+        if (_currentSizeRatio > previousRatio)
+        {
+            _rb.position += -_gravityDir * radiusDelta * 2f;
+
+            float downwardSpeed = Vector3.Dot(_rb.linearVelocity, _gravityDir);
+
+            if (downwardSpeed > 0f)
+                _rb.linearVelocity -= _gravityDir * downwardSpeed;
+        }
+        else
+        {
+            if (IsGrounded)
+                _rb.position += _groundNormal * radiusDelta;
+
+            float upwardSpeed = Vector3.Dot(previousVelocity, -_gravityDir);
+
+            if (!IsGrounded && upwardSpeed > 0f)
+            {
+                float previousShrinkProgress = 1f - previousRatio;
+                float currentShrinkProgress = 1f - _currentSizeRatio;
+
+                float previousBoostRatio = previousShrinkProgress * previousShrinkProgress * previousShrinkProgress;
+                float currentBoostRatio = currentShrinkProgress * currentShrinkProgress * currentShrinkProgress;
+
+                float boostDelta = currentBoostRatio - previousBoostRatio;
+
+                _rb.linearVelocity += -_gravityDir * (_shrinkUpwardVelocityBoost * boostDelta);
+            }
+        }
 
         float hapticIntensity = Mathf.Lerp(0.05f, 0.1f, _currentSizeRatio);
         _hapticManager.HapticControl(hapticIntensity);
