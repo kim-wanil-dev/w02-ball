@@ -21,6 +21,12 @@ public class PlayerController : MonoBehaviour
     [Header("Gravity")]
     [SerializeField, Range(0f, 100f)] private float _diveAcceleration = 20f;
 
+    [Header("Boundary")]
+    [SerializeField] private Vector3 _boundaryCenter = new Vector3(-600f, 0f, 0f);
+    [SerializeField] private float _boundaryRadius = 1200f;
+    [SerializeField] private float _freeAngle = 10f;
+
+
     private Rigidbody _rb;
     private SphereCollider _collider;
     private PhysicsMaterial _physicsMaterial;
@@ -40,6 +46,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 _groundNormal = Vector3.up;
     private bool _hasGroundContact;
     private Vector3 _contactGroundNormal = Vector3.up;
+    private Vector3 _lastValidPosition;
 
     public bool IsGrounded { get; private set; }
     public float CurrentSizeRatio => _currentSizeRatio;
@@ -85,6 +92,8 @@ public class PlayerController : MonoBehaviour
         ProcessJump();
         ApplyMovement();
         ClampGravityVelocity();
+
+        RestrictPosition();
 
         _velocityText.text = $"{_rb.linearVelocity.magnitude:F2} m/s";
         _heightText.text = $"{transform.position.y:F2} m";
@@ -179,26 +188,8 @@ public class PlayerController : MonoBehaviour
                     rotationAxis * angularSpeed;
             }
         }
-        else
-        {
-            if (IsGrounded)
-                _rb.position += _groundNormal * radiusDelta;
-
-            float upwardSpeed = Vector3.Dot(previousVelocity, -_gravityDir);
-
-            if (!IsGrounded && upwardSpeed > 0f)
-            {
-                float previousShrinkProgress = 1f - previousRatio;
-                float currentShrinkProgress = 1f - _currentSizeRatio;
-
-                float previousBoostRatio = previousShrinkProgress * previousShrinkProgress * previousShrinkProgress;
-                float currentBoostRatio = currentShrinkProgress * currentShrinkProgress * currentShrinkProgress;
-
-                float boostDelta = currentBoostRatio - previousBoostRatio;
-
-                _rb.linearVelocity += -_gravityDir * (_shrinkUpwardVelocityBoost * boostDelta);
-            }
-        }
+        else if (IsGrounded)
+            _rb.position += _groundNormal * radiusDelta;
 
 
 
@@ -391,6 +382,77 @@ public class PlayerController : MonoBehaviour
 
         Vector3 excessVelocity = _gravityDir * (gravitySpeed - maxGravityVelocity);
         _rb.linearVelocity -= excessVelocity;
+    }
+
+    private void RestrictPosition()
+    {
+        Vector3 previousOffset = _lastValidPosition - _boundaryCenter;
+        Vector3 currentOffset = _rb.position - _boundaryCenter;
+
+        previousOffset.y = 0f;
+        currentOffset.y = 0f;
+
+        float previousDistance = previousOffset.magnitude;
+        float currentDistance = currentOffset.magnitude;
+
+        float previousAngle = Vector3.SignedAngle(
+            Vector3.back,
+            previousOffset,
+            Vector3.up
+        );
+
+        float currentAngle = Vector3.SignedAngle(
+            Vector3.back,
+            currentOffset,
+            Vector3.up
+        );
+
+        bool isInsideCircle =
+            currentDistance <= _boundaryRadius;
+
+        bool isInsidePassage =
+            Mathf.Abs(currentAngle) <= _freeAngle;
+
+        if (isInsideCircle || isInsidePassage)
+        {
+            _lastValidPosition = _rb.position;
+            return;
+        }
+
+        float angleTolerance = 0.01f;
+        if (
+            previousDistance > _boundaryRadius &&
+            Mathf.Abs(previousAngle) <= _freeAngle + angleTolerance)
+        {
+            float boundaryAngle =
+                currentAngle > 0f
+                    ? _freeAngle - angleTolerance
+                    : -_freeAngle + angleTolerance;
+
+            Vector3 direction =
+                Quaternion.AngleAxis(
+                    boundaryAngle,
+                    Vector3.up
+                ) * Vector3.back;
+
+            _rb.position = new Vector3(
+                _boundaryCenter.x + direction.x * currentDistance,
+                _rb.position.y,
+                _boundaryCenter.z + direction.z * currentDistance
+            );
+        }
+        else
+        {
+            Vector3 direction = currentOffset.normalized;
+
+            _rb.position = new Vector3(
+                _boundaryCenter.x + direction.x * _boundaryRadius,
+                _rb.position.y,
+                _boundaryCenter.z + direction.z * _boundaryRadius
+            );
+        }
+
+        _lastValidPosition = _rb.position;
     }
 
     private void OnCollisionEnter(Collision collision)
