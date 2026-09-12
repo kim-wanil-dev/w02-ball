@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 7444097142018545840}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -165,6 +165,9 @@ MonoBehaviour:
   _resizeSpeed: 1
   _shrinkUpwardVelocityBoost: 30
   _diveAcceleration: 80
+  _boundaryCenter: {x: -600, y: 0, z: 0}
+  _boundaryRadius: 1200
+  _freeAngle: 10
 --- !u!114 &7444097142018545840
 MonoBehaviour:
   m_ObjectHideFlags: 0
