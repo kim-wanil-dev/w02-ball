@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4391524040438767767}
   - component: {fileID: 8510207838002569579}
   - component: {fileID: 4521064531207239460}
+  - component: {fileID: 5547517347468872388}
   m_Layer: 0
   m_Name: Wing
   m_TagString: Untagged
@@ -139,7 +140,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 14
   m_CollisionDetection: 0
 --- !u!138 &4521064531207239460
 FixedJoint:
@@ -157,6 +158,18 @@ FixedJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &5547517347468872388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 530454105385728327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 618df76f2a97a8144a8dfd3d3e097a79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WheelWing
 --- !u!1 &4165276146288225380
 GameObject:
   m_ObjectHideFlags: 0
@@ -171,6 +184,7 @@ GameObject:
   - component: {fileID: 6453268131594718193}
   - component: {fileID: 7428755540033829509}
   - component: {fileID: 4838270668478637279}
+  - component: {fileID: 5968035472807492880}
   m_Layer: 0
   m_Name: Wing
   m_TagString: Untagged
@@ -296,7 +310,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 14
   m_CollisionDetection: 0
 --- !u!138 &4838270668478637279
 FixedJoint:
@@ -314,6 +328,18 @@ FixedJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &5968035472807492880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4165276146288225380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 618df76f2a97a8144a8dfd3d3e097a79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WheelWing
 --- !u!1 &4848458013819969470
 GameObject:
   m_ObjectHideFlags: 0
@@ -328,6 +354,7 @@ GameObject:
   - component: {fileID: 3084192607470761116}
   - component: {fileID: 8619564402145838929}
   - component: {fileID: 291182547793228341}
+  - component: {fileID: 1469329374004357072}
   m_Layer: 0
   m_Name: Wing
   m_TagString: Untagged
@@ -453,7 +480,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 14
   m_CollisionDetection: 0
 --- !u!138 &291182547793228341
 FixedJoint:
@@ -471,6 +498,18 @@ FixedJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &1469329374004357072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4848458013819969470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 618df76f2a97a8144a8dfd3d3e097a79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WheelWing
 --- !u!1 &7543807041655350250
 GameObject:
   m_ObjectHideFlags: 0
@@ -484,6 +523,7 @@ GameObject:
   - component: {fileID: 8043316335936752474}
   - component: {fileID: 6846736773599926048}
   - component: {fileID: 9099373748666449215}
+  - component: {fileID: 4391702633217602789}
   m_Layer: 0
   m_Name: WheelOfPain
   m_TagString: Untagged
@@ -501,8 +541,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 201.4, y: 104.75, z: 220}
-  m_LocalScale: {x: 12, y: 4.5, z: 12}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 15, y: 5.625, z: 15}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6008315943217340946}
   - {fileID: 2167235283632233327}
@@ -617,6 +657,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 94
   m_CollisionDetection: 0
+--- !u!114 &4391702633217602789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7543807041655350250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcc8ae5cca6c00d4f9ca6a3ddd71e819, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Wheel
 --- !u!1 &7611302892458150849
 GameObject:
   m_ObjectHideFlags: 0
@@ -631,6 +683,7 @@ GameObject:
   - component: {fileID: 7216582467501877247}
   - component: {fileID: 3007976489948509319}
   - component: {fileID: 1726731694683157837}
+  - component: {fileID: 376474458466683862}
   m_Layer: 0
   m_Name: Wing
   m_TagString: Untagged
@@ -756,7 +809,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 14
   m_CollisionDetection: 0
 --- !u!138 &1726731694683157837
 FixedJoint:
@@ -774,3 +827,15 @@ FixedJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &376474458466683862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7611302892458150849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 618df76f2a97a8144a8dfd3d3e097a79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WheelWing
