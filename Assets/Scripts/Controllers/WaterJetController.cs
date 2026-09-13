@@ -68,7 +68,5 @@ public class WaterJetController : MonoBehaviour
 
         rb.linearVelocity +=
             Vector3.up * velocityIncrease;
-
-        Debug.Log($"Jet acc: {Vector3.up * velocityIncrease}");
     }
 }

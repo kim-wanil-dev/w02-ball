@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviour
     private HapticManager _hapticManager;
     private Text _velocityText;
     private Text _heightText;
+    private JumpPanelController _jumpPanelController;
 
     private Vector2 _moveInput;
     private float _resizeInput;
@@ -58,6 +59,15 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        Instantiate(Resources.Load<GameObject>("Prefabs/EventSystem"));
+
+        GameObject debugCanvas = Instantiate(Resources.Load<GameObject>("Prefabs/DebugCanvas"));
+        _velocityText = debugCanvas.transform.Find("VelocityText").GetComponent<Text>();
+        _heightText = debugCanvas.transform.Find("HeightText").GetComponent<Text>();
+
+        GameObject jumpCountCanvas = Instantiate(Resources.Load<GameObject>("Prefabs/JumpCountCanvas"));
+        _jumpPanelController = jumpCountCanvas.GetComponent<JumpPanelController>();
+
         _rb = GetComponent<Rigidbody>();
         _rb.useGravity = true;
 
@@ -70,16 +80,11 @@ public class PlayerController : MonoBehaviour
         _currentSizeRatio = Mathf.Clamp01(_smallBall.SizeRatio);
         ApplyCurrentSizeStat();
 
-        _currentJumpCount = _maxJumpCount;
+        _jumpPanelController.SetMaxJumps(_maxJumpCount);
+        SetCurrentJumpCount(_maxJumpCount);
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
-        Instantiate(Resources.Load<GameObject>("Prefabs/EventSystem"));
-
-        GameObject debugCanvas = Instantiate(Resources.Load<GameObject>("Prefabs/DebugCanvas"));
-        _velocityText = debugCanvas.transform.Find("VelocityText").GetComponent<Text>();
-        _heightText = debugCanvas.transform.Find("HeightText").GetComponent<Text>();
     }
 
     private void Update()
@@ -121,7 +126,7 @@ public class PlayerController : MonoBehaviour
 
     private void ProcessJumpInput()
     {
-        if (GameInputController.Instance.JumpPressed && (IsGrounded || _maxJumpCount > 1))
+        if (GameInputController.Instance.JumpPressed && (IsGrounded || _currentJumpCount >= 1))
             _jumpRequested = true;
     }
 
@@ -242,7 +247,7 @@ public class PlayerController : MonoBehaviour
             IsGrounded = true;
             _groundNormal = hit.normal;
 
-            _currentJumpCount = _maxJumpCount;
+            SetCurrentJumpCount(_maxJumpCount);
         }
         else if (_hasGroundContact)
         {
@@ -265,13 +270,10 @@ public class PlayerController : MonoBehaviour
 
         _jumpRequested = false;
 
-        if (!IsGrounded)
+        if (!IsGrounded && _currentJumpCount <= 0)
             return;
 
-        if (_currentJumpCount <= 0)
-            return;
-
-        _currentJumpCount--;
+        SetCurrentJumpCount(_currentJumpCount - 1);
 
         float jumpForce = GetStat(_currentSizeRatio, stat => stat.JumpForce);
         _rb.AddForce(-_gravityDir * jumpForce, ForceMode.Impulse);
@@ -504,7 +506,19 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Prize"))
         {
-            _maxJumpCount++;
+            SetMaxJumpCount(_maxJumpCount + 1);
         }
+    }
+
+    private void SetCurrentJumpCount(int currentJumpCount)
+    {
+        _jumpPanelController.SetCurrentJumps(currentJumpCount);
+        _currentJumpCount = currentJumpCount;
+    }
+
+    private void SetMaxJumpCount(int maxJumpCount)
+    {
+        _jumpPanelController.SetMaxJumps(maxJumpCount);
+        _maxJumpCount = maxJumpCount;
     }
 }
