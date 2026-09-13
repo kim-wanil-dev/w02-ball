@@ -32,6 +32,11 @@ public class SpringLauncher : MonoBehaviour
     [Header("Return")]
     //mass가 1일 때 기준 시간. 높으면 duration이 늘어남 
     [SerializeField] private float _basicReturnDuration = 0.1f;
+    [Header("Color")]
+    private Renderer _chargeRenderer;
+
+    [SerializeField] private Color _chargedColor = Color.red;
+    [SerializeField] private Color _launchColor = Color.white;
     private float _returnDuration = 0.1f;
     private float _returnTimer;
     private float _maxChargeGuage = 100f;
@@ -49,8 +54,11 @@ public class SpringLauncher : MonoBehaviour
 
         _originalSpringScale = _springPivot.localScale;
         _originalTopPlateWorldPosition = _topPlateRb.transform.position;
+        _chargeRenderer = _topPlateRb.gameObject.GetComponent<Renderer>();
+        _chargeRenderer.material.color = _launchColor;
 
         ChangeState(SpringState.Idle);
+
     }
 
     private void OnEnable()
@@ -124,6 +132,7 @@ public class SpringLauncher : MonoBehaviour
         if (_currentChargeGuage >= _maxChargeGuage)
         {
             ChangeState(SpringState.Charged);
+            _chargeRenderer.material.color = _chargedColor;
         }
     }
 
@@ -132,14 +141,25 @@ public class SpringLauncher : MonoBehaviour
         if (_targetRb == null)
         {
             ChangeState(SpringState.Returning);
+
+            _chargeRenderer.material.color = _launchColor;
+
             return;
         }
         _launchWaitTimer += Time.fixedDeltaTime;
+
+        _chargeRenderer.material.color = Color.Lerp(
+            _chargedColor,
+            _launchColor,
+            _launchWaitTimer / _launchWaitDuration);
+
         if (_launchWaitTimer >= _launchWaitDuration)
         {
             Launch();
 
             ChangeState(SpringState.Returning);
+
+            _chargeRenderer.material.color = _launchColor;
         }
     }
 
@@ -167,6 +187,10 @@ public class SpringLauncher : MonoBehaviour
         _topPlateRb.MovePosition(targetPosition);
         _topPlateRb.MovePosition(targetPosition);
         _springPivot.localScale = scale;
+
+
+
+
 
         if (_returnTimer >= _returnDuration)
         {

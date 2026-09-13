@@ -83,12 +83,14 @@ MonoBehaviour:
   _springPivot: {fileID: 5758577761319781939}
   _triggerDetector: {fileID: 2842793976746184029}
   _springLength: 10
-  _compressionSpeedPerMass: 1
+  _compressionSpeedPerMass: 1.1
   _launchWaitDuration: 1.5
   _currentChargeGuage: 0
   _launchForce: 100
   _launchForceMode: 1
   _basicReturnDuration: 0.2
+  _chargedColor: {r: 1, g: 0, b: 0, a: 1}
+  _launchColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &3163603262731169842
 GameObject:
   m_ObjectHideFlags: 0

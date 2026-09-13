@@ -2,7 +2,10 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Splines;
-using UnityEngine.Splines.ExtrusionShapes;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 [RequireComponent(typeof(SplineContainer))]
 [RequireComponent(typeof(MeshFilter))]
@@ -15,22 +18,33 @@ public class FlowClimbTrackGenerator : MonoBehaviour
     [SerializeField] private float _length = 60f;
     [SerializeField] private float _width = 30f;
 
-    [Header("Shape")]
+    [Header("Width Shape")]
+    [SerializeField] private float _bottomEndWidth = 10f;
+    [SerializeField] private float _topEndWidth = 10f;
+
+    [Range(0f, 0.5f)]
+    [SerializeField] private float _bottomWidenRatio = 0.2f;
+
+    [Range(0.5f, 1f)]
+    [SerializeField] private float _topNarrowStartRatio = 0.8f;
+
+    [Range(0f, 0.4f)]
+    [SerializeField] private float _flatStartRatio = 0.2f;
+
+    [Range(0f, 0.4f)]
+    [SerializeField] private float _flatEndRatio = 0.2f;
+
     [Range(0f, 1f)]
     [SerializeField] private float _curvature = 0.85f;
 
-    [Range(0f, 0.5f)]
-    [SerializeField] private float _accelerationDipRatio = 0.18f;
-
-    [Range(0.1f, 0.6f)]
-    [SerializeField] private float _dipPortion = 0.35f;
 
     [Header("Generation")]
     [SerializeField] private int _segmentCount = 4;
-    [SerializeField] private int _samplesPerSegment = 8;
+    [SerializeField] private int _samplesPerSegment = 12;
 
-    [SerializeField] private float _meshSegmentsPerUnit = 0.5f;
-
+    [Header("Mesh")]
+    [SerializeField] private float _trackThickness = 2f;
+    [SerializeField] private int _meshResolution = 100;
     private SplineContainer _splineContainer;
     private MeshFilter _meshFilter;
     private MeshCollider _meshCollider;
@@ -62,13 +76,14 @@ public class FlowClimbTrackGenerator : MonoBehaviour
 
         for (int segment = 0; segment < _segmentCount; segment++)
         {
-            float segmentStartX = segment * _length;
-            float segmentStartY = segment * _height;
+            float segmentStartX =
+                segment * _length;
+
+            float segmentStartY =
+                segment * _height;
 
             for (int i = 0; i <= _samplesPerSegment; i++)
             {
-                // 이전 Segment의 끝점과
-                // 다음 Segment의 시작점 중복 방지
                 if (segment > 0 && i == 0)
                     continue;
 
@@ -79,72 +94,78 @@ public class FlowClimbTrackGenerator : MonoBehaviour
                     segmentStartX
                     + t * _length;
 
-                float rise =
-                    EvaluateRise(t);
-
-                float dip =
-                    EvaluateAccelerationDip(t);
+                float height01 =
+                    EvaluateTrackHeight(t);
 
                 float y =
                     segmentStartY
-                    + rise * _height
-                    + dip;
+                    + height01 * _height;
 
-                Vector3 position =
+                positions.Add(
                     new Vector3(
                         x,
                         y,
                         0f
-                    );
-
-                positions.Add(position);
+                    )
+                );
             }
         }
 
         return positions;
     }
 
-    private float EvaluateRise(float t)
+    private float EvaluateTrackHeight(float t)
     {
-        // Quintic SmootherStep
-        // 시작과 끝의 기울기가 자연스럽게 0에 가까워짐
-        float smoothT =
-            t * t * t
-            * (t * (t * 6f - 15f) + 10f);
+        float rampStart =
+            _flatStartRatio;
 
-        // Curvature 0
-        // -> 직선에 가까움
-        //
-        // Curvature 1
-        // -> 시작 / 끝이 매우 부드러운 S Curve
+        float rampEnd =
+            1f - _flatEndRatio;
+
+        // 시작 직선
+        if (t <= rampStart)
+        {
+            return 0f;
+        }
+
+        // 마지막 직선
+        if (t >= rampEnd)
+        {
+            return 1f;
+        }
+
+        // 오르막 부분만 0~1로 다시 정규화
+        float rampT =
+            Mathf.InverseLerp(
+                rampStart,
+                rampEnd,
+                t
+            );
+
+        // 직선 경사
+        float linearRamp =
+            rampT;
+
+        // 부드러운 S자 경사
+        float smoothRamp =
+            SmootherStep(rampT);
+
+        // Curvature로 두 형태를 혼합
         return Mathf.Lerp(
-            t,
-            smoothT,
+            linearRamp,
+            smoothRamp,
             _curvature
         );
     }
 
-    private float EvaluateAccelerationDip(float t)
+    private float SmootherStep(float t)
     {
-        if (t >= _dipPortion)
-            return 0f;
-
-        float dipT =
-            t / _dipPortion;
-
-        float wave =
-            Mathf.Sin(
-                dipT * Mathf.PI
-            );
-
-        wave *= wave;
-
-        float dipDepth =
-            _height
-            * _accelerationDipRatio;
-
-        return -wave * dipDepth;
+        return t * t * t
+            * (t * (t * 6f - 15f) + 10f);
     }
+
+
+
 
     private Spline CreateSpline(
         List<Vector3> positions)
@@ -300,53 +321,255 @@ public class FlowClimbTrackGenerator : MonoBehaviour
         return distance * handleScale;
     }
 
-    private void GenerateRoadMesh(
-        Spline spline)
+    private void GenerateRoadMesh(Spline spline)
     {
-        Mesh mesh = _meshFilter.sharedMesh;
-
-        if (mesh == null ||
-            mesh.name != "Flow Climb Road Mesh")
+        Mesh mesh = new Mesh
         {
-            mesh = new Mesh
-            {
-                name = "Flow Climb Road Mesh"
-            };
+            name = "Flow Climb Track Mesh"
+        };
 
-            _meshFilter.sharedMesh = mesh;
-        }
-        else
+        int sampleCount = Mathf.Max(2, _meshResolution);
+
+        List<Vector3> vertices = new List<Vector3>();
+        List<int> triangles = new List<int>();
+        List<Vector2> uvs = new List<Vector2>();
+
+        for (int i = 0; i < sampleCount; i++)
         {
-            mesh.Clear();
-        }
+            float t = i / (float)(sampleCount - 1);
 
-        float approximateLength =
-            _length * _segmentCount;
-
-        int meshSegments =
-            Mathf.Max(
-                16,
-                Mathf.CeilToInt(
-                    approximateLength
-                    * _meshSegmentsPerUnit
-                )
+            bool success = _splineContainer.Evaluate(
+                0,
+                t,
+                out float3 worldPosition,
+                out float3 worldTangent,
+                out float3 worldUp
             );
 
-        Road roadShape = new Road();
+            if (!success)
+                continue;
 
-        SplineMesh.Extrude(
-            spline,
-            mesh,
-            _width * 0.5f,
-            meshSegments,
-            true,
-            roadShape
-        );
+            Vector3 position =
+                transform.InverseTransformPoint(
+                    ToVector3(worldPosition)
+                );
 
+            Vector3 tangent =
+                transform.InverseTransformDirection(
+                    ToVector3(worldTangent)
+                ).normalized;
+
+            Vector3 up =
+                transform.InverseTransformDirection(
+                    ToVector3(worldUp)
+                ).normalized;
+
+            Vector3 right =
+                Vector3.Cross(
+                    up,
+                    tangent
+                ).normalized;
+
+            // 현재 위치의 폭 계산
+            float currentWidth = CalculateWidth(t);
+
+            float halfWidth =
+                currentWidth * 0.5f;
+
+            float halfThickness =
+                _trackThickness * 0.5f;
+
+            Vector3 topCenter =
+                position + up * halfThickness;
+
+            Vector3 bottomCenter =
+                position - up * halfThickness;
+
+            Vector3 topLeft =
+                topCenter - right * halfWidth;
+
+            Vector3 topRight =
+                topCenter + right * halfWidth;
+
+            Vector3 bottomLeft =
+                bottomCenter - right * halfWidth;
+
+            Vector3 bottomRight =
+                bottomCenter + right * halfWidth;
+
+            vertices.Add(topLeft);
+            vertices.Add(topRight);
+            vertices.Add(bottomLeft);
+            vertices.Add(bottomRight);
+
+            uvs.Add(new Vector2(0f, t));
+            uvs.Add(new Vector2(1f, t));
+            uvs.Add(new Vector2(0f, t));
+            uvs.Add(new Vector2(1f, t));
+        }
+
+        for (int i = 0; i < sampleCount - 1; i++)
+        {
+            int current = i * 4;
+            int next = (i + 1) * 4;
+
+            // Top
+            AddQuad(
+                triangles,
+                current,
+                next,
+                next + 1,
+                current + 1
+            );
+
+            // Bottom
+            AddQuad(
+                triangles,
+                current + 3,
+                next + 3,
+                next + 2,
+                current + 2
+            );
+
+            // Left
+            AddQuad(
+                triangles,
+                current + 2,
+                next + 2,
+                next,
+                current
+            );
+
+            // Right
+            AddQuad(
+                triangles,
+                current + 1,
+                next + 1,
+                next + 3,
+                current + 3
+            );
+        }
+
+        AddStartCap(triangles);
+        AddEndCap(triangles, sampleCount);
+
+        mesh.SetVertices(vertices);
+        mesh.SetTriangles(triangles, 0);
+        mesh.SetUVs(0, uvs);
+
+        mesh.RecalculateNormals();
+        mesh.RecalculateTangents();
         mesh.RecalculateBounds();
+
+        _meshFilter.sharedMesh = mesh;
 
         _meshCollider.sharedMesh = null;
         _meshCollider.sharedMesh = mesh;
+    }
+
+    private float CalculateWidth(float t)
+    {
+        // -------------------------
+        // 아래쪽 시작 끝
+        // 좁은 폭 → 기본 폭
+        // -------------------------
+
+        if (t < _bottomWidenRatio)
+        {
+            float widenT = Mathf.InverseLerp(
+                0f,
+                _bottomWidenRatio,
+                t
+            );
+
+            widenT = SmootherStep(widenT);
+
+            return Mathf.Lerp(
+                _bottomEndWidth,
+                _width,
+                widenT
+            );
+        }
+
+        // -------------------------
+        // 위쪽 마지막 끝
+        // 기본 폭 → 좁은 폭
+        // -------------------------
+
+        if (t > _topNarrowStartRatio)
+        {
+            float narrowT = Mathf.InverseLerp(
+                _topNarrowStartRatio,
+                1f,
+                t
+            );
+
+            narrowT = SmootherStep(narrowT);
+
+            return Mathf.Lerp(
+                _width,
+                _topEndWidth,
+                narrowT
+            );
+        }
+
+        // 가운데는 기본 폭 유지
+        return _width;
+    }
+
+    private void AddQuad(
+    List<int> triangles,
+    int a,
+    int b,
+    int c,
+    int d)
+    {
+        triangles.Add(a);
+        triangles.Add(b);
+        triangles.Add(c);
+
+        triangles.Add(a);
+        triangles.Add(c);
+        triangles.Add(d);
+    }
+
+    private void AddStartCap(
+        List<int> triangles)
+    {
+        // 시작 단면
+        AddQuad(
+            triangles,
+            2,
+            0,
+            1,
+            3
+        );
+    }
+
+    private void AddEndCap(
+        List<int> triangles,
+        int sampleCount)
+    {
+        int start =
+            (sampleCount - 1) * 4;
+
+        AddQuad(
+            triangles,
+            start,
+            start + 2,
+            start + 3,
+            start + 1
+        );
+    }
+
+    private Vector3 ToVector3(
+        float3 value)
+    {
+        return new Vector3(
+            value.x,
+            value.y,
+            value.z
+        );
     }
 
     private float3 ToFloat3(
@@ -369,4 +592,62 @@ public class FlowClimbTrackGenerator : MonoBehaviour
             value.w
         );
     }
+
+#if UNITY_EDITOR
+
+    [ContextMenu("Save Generated Mesh")]
+    private void SaveGeneratedMesh()
+    {
+        if (_meshFilter == null)
+        {
+            _meshFilter = GetComponent<MeshFilter>();
+        }
+
+        Mesh currentMesh = _meshFilter.sharedMesh;
+
+        if (currentMesh == null)
+        {
+            Debug.LogWarning("저장할 Mesh가 없습니다. 먼저 Generate를 실행하세요.");
+            return;
+        }
+
+        string path = EditorUtility.SaveFilePanelInProject(
+            "Save Generated Mesh",
+            $"{gameObject.name}_Mesh",
+            "asset",
+            "생성된 Mesh를 저장할 위치를 선택하세요."
+        );
+
+        if (string.IsNullOrEmpty(path))
+            return;
+
+        // 현재 임시 Mesh를 복제해서 Asset으로 저장
+        Mesh savedMesh = Instantiate(currentMesh);
+        savedMesh.name = $"{gameObject.name}_Mesh";
+
+        AssetDatabase.CreateAsset(savedMesh, path);
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+
+        // 저장된 Asset을 다시 참조
+        _meshFilter.sharedMesh = savedMesh;
+
+        if (_meshCollider != null)
+        {
+            _meshCollider.sharedMesh = null;
+            _meshCollider.sharedMesh = savedMesh;
+        }
+
+        EditorUtility.SetDirty(_meshFilter);
+
+        if (_meshCollider != null)
+        {
+            EditorUtility.SetDirty(_meshCollider);
+        }
+
+        Debug.Log($"Mesh 저장 완료: {path}");
+    }
+
+#endif
 }
+
