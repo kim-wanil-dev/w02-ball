@@ -29,7 +29,6 @@ public class PlayerController : MonoBehaviour
     [Header("JumpCount")]
     [SerializeField] private int _maxJumpCount;
 
-
     private Rigidbody _rb;
     private SphereCollider _collider;
     private PhysicsMaterial _physicsMaterial;
@@ -172,7 +171,7 @@ public class PlayerController : MonoBehaviour
             if (downwardSpeed > 0f)
                 _rb.linearVelocity -= _gravityDir * downwardSpeed;
 
-            //È¸Àü ¼Óµµ ¹Ù²ï ¹ÝÁö¸§¿¡ ¸ÂÃç À¯ÁöµÇ°Ô ¼³Á¤(Ä¿Áú¶§¸¸)
+            //È¸ï¿½ï¿½ ï¿½Óµï¿½ ï¿½Ù²ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ ï¿½ï¿½ï¿½ï¿½(Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
             Vector3 horizontalVelocity =
                 new Vector3(_rb.linearVelocity.x, 0f, _rb.linearVelocity.z);
 
@@ -266,14 +265,13 @@ public class PlayerController : MonoBehaviour
 
         _jumpRequested = false;
 
-        if (!IsGrounded && _maxJumpCount <= 1 )
+        if (!IsGrounded)
             return;
 
         if (_currentJumpCount <= 0)
             return;
 
         _currentJumpCount--;
-        Debug.Log(_currentJumpCount);
 
         float jumpForce = GetStat(_currentSizeRatio, stat => stat.JumpForce);
         _rb.AddForce(-_gravityDir * jumpForce, ForceMode.Impulse);
@@ -504,7 +502,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Prize"))
+        if (other.CompareTag("Prize"))
         {
             _maxJumpCount++;
         }
