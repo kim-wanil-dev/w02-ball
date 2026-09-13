@@ -26,6 +26,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _boundaryRadius = 1200f;
     [SerializeField] private float _freeAngle = 10f;
 
+    [Header("JumpCount")]
+    [SerializeField] private int _maxJumpCount;
+
 
     private Rigidbody _rb;
     private SphereCollider _collider;
@@ -39,6 +42,7 @@ public class PlayerController : MonoBehaviour
     private float _resizeInput;
     private bool _jumpRequested;
     private bool _diveInput;
+    private int _currentJumpCount;
 
     private float _currentSizeRatio;
 
@@ -66,6 +70,8 @@ public class PlayerController : MonoBehaviour
 
         _currentSizeRatio = Mathf.Clamp01(_smallBall.SizeRatio);
         ApplyCurrentSizeStat();
+
+        _currentJumpCount = _maxJumpCount;
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -97,8 +103,6 @@ public class PlayerController : MonoBehaviour
 
         _velocityText.text = $"{_rb.linearVelocity.magnitude:F2} m/s";
         _heightText.text = $"{transform.position.y:F2} m";
-
-        Debug.Log($"Ground: {IsGrounded}\n Ground Normal: {_groundNormal}");
     }
 
     private void OnDisable()
@@ -118,7 +122,7 @@ public class PlayerController : MonoBehaviour
 
     private void ProcessJumpInput()
     {
-        if (GameInputController.Instance.JumpPressed && IsGrounded)
+        if (GameInputController.Instance.JumpPressed && (IsGrounded || _maxJumpCount > 1))
             _jumpRequested = true;
     }
 
@@ -238,11 +242,15 @@ public class PlayerController : MonoBehaviour
         {
             IsGrounded = true;
             _groundNormal = hit.normal;
+
+            _currentJumpCount = _maxJumpCount;
+            Debug.Log("!");
         }
         else if (_hasGroundContact)
         {
             IsGrounded = true;
             _groundNormal = _contactGroundNormal;
+            Debug.Log("!");
         }
         else
         {
@@ -260,8 +268,14 @@ public class PlayerController : MonoBehaviour
 
         _jumpRequested = false;
 
-        if (!IsGrounded)
+        if (!IsGrounded && _maxJumpCount <= 1 )
             return;
+
+        if (_currentJumpCount <= 0)
+            return;
+
+        _currentJumpCount--;
+        Debug.Log(_currentJumpCount);
 
         float jumpForce = GetStat(_currentSizeRatio, stat => stat.JumpForce);
         _rb.AddForce(-_gravityDir * jumpForce, ForceMode.Impulse);
@@ -487,5 +501,13 @@ public class PlayerController : MonoBehaviour
 
         _hasGroundContact = true;
         _contactGroundNormal = bestGroundNormal;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Prize"))
+        {
+            _maxJumpCount++;
+        }
     }
 }
