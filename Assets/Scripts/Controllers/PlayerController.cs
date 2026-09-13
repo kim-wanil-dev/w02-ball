@@ -60,8 +60,6 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        Instantiate(Resources.Load<GameObject>("Prefabs/UIs/EventSystem"));
-
         GameObject debugCanvas = Instantiate(Resources.Load<GameObject>("Prefabs/UIs/DebugCanvas"));
         _velocityText = debugCanvas.transform.Find("VelocityText").GetComponent<Text>();
         _heightText = debugCanvas.transform.Find("HeightText").GetComponent<Text>();

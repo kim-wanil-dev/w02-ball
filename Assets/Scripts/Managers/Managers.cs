@@ -37,6 +37,8 @@ public class Managers : MonoBehaviour
             managers = go.AddComponent<Managers>();
 
         _instance = managers;
+
+        Instantiate(Resources.Load<GameObject>("Prefabs/UIs/EventSystem"));
     }
 
     private void Awake()

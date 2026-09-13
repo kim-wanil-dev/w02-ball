@@ -3770,7 +3770,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCameraController
   _height: 1.5
   _mouseSensitivity: 0.12
-  _gamepadSensitivity: 0.6
+  _gamepadSensitivity: 1.8
   _minPitch: -30
   _maxPitch: 70
 --- !u!1 &700825426
