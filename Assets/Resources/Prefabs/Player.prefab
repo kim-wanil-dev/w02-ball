@@ -168,7 +168,7 @@ MonoBehaviour:
   _boundaryCenter: {x: -600, y: 0, z: 0}
   _boundaryRadius: 1200
   _freeAngle: 10
-  _maxJumpCount: 1
+  _maxJumpCount: 0
 --- !u!114 &7444097142018545840
 MonoBehaviour:
   m_ObjectHideFlags: 0

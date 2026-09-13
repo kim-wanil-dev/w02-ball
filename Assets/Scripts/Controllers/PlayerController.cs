@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviour
     private float _resizeInput;
     private bool _jumpRequested;
     private bool _diveInput;
+    private bool _canJump;
     private int _currentJumpCount;
 
     private float _currentSizeRatio;
@@ -176,7 +177,6 @@ public class PlayerController : MonoBehaviour
             if (downwardSpeed > 0f)
                 _rb.linearVelocity -= _gravityDir * downwardSpeed;
 
-            //ȸ�� �ӵ� �ٲ� �������� ���� �����ǰ� ����(Ŀ������)
             Vector3 horizontalVelocity =
                 new Vector3(_rb.linearVelocity.x, 0f, _rb.linearVelocity.z);
 
@@ -270,10 +270,14 @@ public class PlayerController : MonoBehaviour
 
         _jumpRequested = false;
 
+        if (!_canJump)
+            return;
+
         if (!IsGrounded && _currentJumpCount <= 0)
             return;
 
-        SetCurrentJumpCount(_currentJumpCount - 1);
+        if (!IsGrounded)
+            SetCurrentJumpCount(_currentJumpCount - 1);
 
         float jumpForce = GetStat(_currentSizeRatio, stat => stat.JumpForce);
         _rb.AddForce(-_gravityDir * jumpForce, ForceMode.Impulse);
@@ -505,9 +509,10 @@ public class PlayerController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Prize"))
-        {
             SetMaxJumpCount(_maxJumpCount + 1);
-        }
+        else if (other.CompareTag("PrizeFirst"))
+            _canJump = true;
+
     }
 
     private void SetCurrentJumpCount(int currentJumpCount)
