@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6700164203079211433}
   - component: {fileID: 1725289687414119516}
   - component: {fileID: 7444097142018545840}
+  - component: {fileID: 14072148601706930}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -182,3 +183,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HapticController
   _hapticChangeSpeed: 2
+--- !u!114 &14072148601706930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6909172467078964908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e85a9cdd8a628ff4b8b2c96747ec8689, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerTrackAssist
+  _rb: {fileID: 0}
+  _trackSpline: {fileID: 0}
+  _railLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  _railCheckOffset: 1
+  _groundCheckRadius: 0.3
+  _groundCheckDistance: 1.5
+  _groundGraceTime: 0.2
+  _nearestPointResolution: 4
+  _nearestPointIterations: 2
+  _adhesionForce: 15
+  _lateralCorrection: 4
+  _forwardAcceleration: 8
+  _maxTrackSpeed: 40
