@@ -244,13 +244,11 @@ public class PlayerController : MonoBehaviour
             _groundNormal = hit.normal;
 
             _currentJumpCount = _maxJumpCount;
-            Debug.Log("!");
         }
         else if (_hasGroundContact)
         {
             IsGrounded = true;
             _groundNormal = _contactGroundNormal;
-            Debug.Log("!");
         }
         else
         {
@@ -471,8 +469,9 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        float intensity = Mathf.InverseLerp(10f, 100f, collision.impulse.magnitude);
-        _hapticManager.HapticControl(intensity, 0f, 0.15f);
+        float clampedImpulseData = Mathf.Clamp(collision.impulse.magnitude, 70, 100);
+        float intensity = Mathf.InverseLerp(0f, 100f, clampedImpulseData);
+        _hapticManager.HapticControl(intensity * 3, 0f, 0.15f);
     }
 
     private void OnCollisionStay(Collision collision)
