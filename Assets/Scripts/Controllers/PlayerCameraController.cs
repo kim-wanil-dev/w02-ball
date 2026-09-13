@@ -10,6 +10,7 @@ public class PlayerCameraController : MonoBehaviour
     [SerializeField] private float _maxPitch = 70f;
 
     private Transform _player;
+    private PlayerController _playerController;
 
     private float _yaw;
     private float _pitch;
@@ -17,10 +18,13 @@ public class PlayerCameraController : MonoBehaviour
     private void Awake()
     {
         _player = GameObject.Find("Player").transform;
+        _playerController = _player.gameObject.GetComponent<PlayerController>();
     }
 
     private void Update()
     {
+        if (_playerController.GetCutSceneState()) return;
+
         Vector2 lookInput =
             GameInputController.Instance.LookInput;
 

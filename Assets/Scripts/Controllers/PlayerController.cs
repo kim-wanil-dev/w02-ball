@@ -53,12 +53,12 @@ public class PlayerController : MonoBehaviour
     private Vector3 _contactGroundNormal = Vector3.up;
     private Vector3 _lastValidPosition;
 
+    private bool cutsceneStarted = false;
+
     public bool IsGrounded { get; private set; }
     public float CurrentSizeRatio => _currentSizeRatio;
     public BallStat SmallBall => _smallBall;
     public BallStat LargeBall => _largeBall;
-
-    public bool cutsceneStarted { get; set; }
 
     private void Awake()
     {
@@ -532,5 +532,26 @@ public class PlayerController : MonoBehaviour
     {
         _jumpPanelController.SetMaxJumps(maxJumpCount);
         _maxJumpCount = maxJumpCount;
+    }
+
+    public void SetCutSceneState(bool state)
+    {
+        cutsceneStarted = state;
+    }
+
+    public bool GetCutSceneState()
+    {
+        return cutsceneStarted;
+    }
+
+    public void SetLinearVelocity(Vector3 moveVec)
+    {
+        _rb.linearVelocity = moveVec;
+        if (moveVec == Vector3.zero)
+        {
+            _rb.angularVelocity = moveVec;
+
+        }
+
     }
 }
