@@ -3,6 +3,7 @@ using UnityEngine;
 public class CutsceneController : MonoBehaviour
 {
     [SerializeField] private GameObject[] _cineCams;
+    [SerializeField] private SphereFriend[] friends;
     private PlayerController _player;
     private bool _cutsceneStarted = false;
     private bool _timerOn = false;
@@ -49,6 +50,10 @@ public class CutsceneController : MonoBehaviour
         switch (_flag)
         {
             case 1: //컷신 시작. _endTime동안 슬로프를 비춤. 
+                foreach (SphereFriend friend in friends)
+                {
+                    friend.SetRoute();
+                }
                 _player.SetLinearVelocity(Vector3.zero);
                 _player.transform.LookAt(_cineCams[0].transform);
                 _cineCams[0].SetActive(true);
@@ -60,24 +65,24 @@ public class CutsceneController : MonoBehaviour
                 _cineCams[0].SetActive(false);
                 _cineCams[1].SetActive(true);
                 _player.SetLinearVelocity(Vector3.forward * 15);
-                _endTime = 2;
+                _endTime = 1;
                 break;
             case 3: //돌부리 캠으로 전환. 돌부리에 걸리는 것을 목격.
                 _cineCams[1].SetActive(false);
                 _cineCams[2].SetActive(true);
                 _timeElapsed = 0;
-                _endTime = 2;
+                _endTime = 1.5f;
                 break;
             case 4: //돌부리에 걸려 뒤로 빠르게 넘어짐. _endTime 뒤에 절벽 뷰로 카메라 전환. 
                 _player.SetLinearVelocity(Vector3.forward * 15);
                 _timeElapsed = 0;
-                _endTime = 1f;
+                _endTime = 1.5f;
                 break;
             case 5: //절벽 가장자리에서 떨어지는 플레이어를 관찰. _endTime 후 추적 시작. 
                 _timeElapsed = 0;
                 _cineCams[2].SetActive(false);
                 _cineCams[3].SetActive(true);
-                _endTime = 1f;
+                _endTime = 2f;
                 break;
             case 6:
                 _cineCams[3].SetActive(false);
