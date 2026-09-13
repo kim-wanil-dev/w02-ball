@@ -58,6 +58,8 @@ public class PlayerController : MonoBehaviour
     public BallStat SmallBall => _smallBall;
     public BallStat LargeBall => _largeBall;
 
+    public bool cutsceneStarted { get; set; }
+
     private void Awake()
     {
         GameObject debugCanvas = Instantiate(Resources.Load<GameObject>("Prefabs/UIs/DebugCanvas"));
@@ -88,6 +90,8 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (cutsceneStarted) return;
+
         ProcessMoveInput();
         ProcessResizeInput();
         ProcessJumpInput();
@@ -96,6 +100,8 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (cutsceneStarted) return;
+
         ProcessResize();
         CheckGround();
         ProcessJump();
