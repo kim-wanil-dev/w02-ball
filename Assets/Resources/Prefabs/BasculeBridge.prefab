@@ -173,7 +173,7 @@ Transform:
   m_GameObject: {fileID: 4324049689785114513}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 25.610016, y: 0, z: 0}
+  m_LocalPosition: {x: 25.5, y: 0, z: 0}
   m_LocalScale: {x: 50, y: 1, z: 30}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -265,7 +265,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4324049689785114513}
   serializedVersion: 5
-  m_Mass: 1
+  m_Mass: 1000
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -302,7 +302,7 @@ HingeJoint:
   m_Spring:
     spring: 0
     damper: 0
-    targetPosition: 70
+    targetPosition: 85
   m_UseMotor: 0
   m_Motor:
     targetVelocity: 5
@@ -313,7 +313,7 @@ HingeJoint:
   m_UseAcceleration: 0
   m_Limits:
     min: 0
-    max: 70
+    max: 85
     bounciness: 0
     bounceMinVelocity: 0.2
     contactDistance: 0
@@ -336,11 +336,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasculeBridge
   _connectedWheel: {fileID: 0}
-  _maxTargetRotation: 720
-  _startBridgeAngle: 70
-  _endBridgeAngle: 0
-  _springForce: 1000
-  _springDamp: 50
+  _maxTargetRotation: 360
+  _startBridgeAngle: 85
+  _endBridgeAngle: 60
+  _springForce: 10000000
+  _springDamp: 1
 --- !u!1 &4907059551826975570
 GameObject:
   m_ObjectHideFlags: 0
@@ -367,8 +367,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 239.18, y: 101.94, z: 201.4}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.5000001, y: 1.5, z: 1.5000001}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6377024263578297365}
   - {fileID: 2548061961592970108}

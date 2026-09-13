@@ -60,13 +60,13 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        Instantiate(Resources.Load<GameObject>("Prefabs/EventSystem"));
+        Instantiate(Resources.Load<GameObject>("Prefabs/UIs/EventSystem"));
 
-        GameObject debugCanvas = Instantiate(Resources.Load<GameObject>("Prefabs/DebugCanvas"));
+        GameObject debugCanvas = Instantiate(Resources.Load<GameObject>("Prefabs/UIs/DebugCanvas"));
         _velocityText = debugCanvas.transform.Find("VelocityText").GetComponent<Text>();
         _heightText = debugCanvas.transform.Find("HeightText").GetComponent<Text>();
 
-        GameObject jumpCountCanvas = Instantiate(Resources.Load<GameObject>("Prefabs/JumpCountCanvas"));
+        GameObject jumpCountCanvas = Instantiate(Resources.Load<GameObject>("Prefabs/UIs/JumpCountCanvas"));
         _jumpPanelController = jumpCountCanvas.GetComponent<JumpPanelController>();
 
         _rb = GetComponent<Rigidbody>();
@@ -511,7 +511,10 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Prize"))
             SetMaxJumpCount(_maxJumpCount + 1);
         else if (other.CompareTag("PrizeFirst"))
+        {
             _canJump = true;
+            Managers.Game.MoveToNextState();
+        }
 
     }
 
