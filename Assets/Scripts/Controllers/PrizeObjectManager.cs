@@ -25,18 +25,6 @@ public class PrizeObjectManager : MonoBehaviour
         _confirmAction = InputSystem.actions.FindAction("Confirm");
         _confirmAction.performed += OnJumpPerformed;
 
-        string jump = GetBindingName("Jump");
-        string dive = GetBindingName("Dive");
-        string resize = GetBindingName("Resize");
-
-        string message = (_greeting + _guide)
-            .Replace("{Jump}", jump)
-            .Replace("{Dive}", dive)
-            .Replace("{Resize}", resize);
-
-        Text text = _prizeUI.transform.Find("Panel/Text").GetComponent<Text>();
-        text.text = message;
-
         _prizeUI.SetActive(false);
     }
 
@@ -49,6 +37,18 @@ public class PrizeObjectManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
+        string jump = GetBindingName("Jump");
+        string dive = GetBindingName("Dive");
+        string resize = GetBindingName("Resize");
+
+        string message = _isTouched ? _guide : _greeting + _guide;
+        message = message
+               .Replace("{Jump}", jump)
+               .Replace("{Dive}", dive)
+               .Replace("{Resize}", resize);
+        Text text = _prizeUI.transform.Find("Panel/Text").GetComponent<Text>();
+        text.text = message;
 
         GameInputController.Instance.SetInputMode(InputMode.UI);
         Time.timeScale = 0f;
@@ -70,25 +70,13 @@ public class PrizeObjectManager : MonoBehaviour
 
         if (!_isTouched)
         {
-            string jump = GetBindingName("Jump");
-            string dive = GetBindingName("Dive");
-            string resize = GetBindingName("Resize");
-
-            string message = _guide
-                .Replace("{Jump}", jump)
-                .Replace("{Dive}", dive)
-                .Replace("{Resize}", resize);
-
-            Text text = _prizeUI.transform.Find("Panel/Text").GetComponent<Text>();
-            text.text = message;
-
             Renderer renderer = gameObject.GetComponent<Renderer>();
             renderer.material.SetColor(
                 "_EmissionColor",
                 new Color(0, 171, 184)
             );
+            _isTouched = true;
         }
-        _isTouched = true;
 
         GameInputController.Instance.SetInputMode(InputMode.Player);
         Cursor.visible = false;
@@ -102,6 +90,58 @@ public class PrizeObjectManager : MonoBehaviour
 
         if (action == null)
             return actionName;
+
+        bool isGamepad = GameInputController.Instance.GamePadConnected;
+
+        for (int i = 0; i < action.bindings.Count; i++)
+        {
+            InputBinding binding = action.bindings[i];
+
+            if (binding.isComposite)
+            {
+                bool compositeIsGamepad = false;
+
+                for (int j = i + 1; j < action.bindings.Count; j++)
+                {
+                    InputBinding part = action.bindings[j];
+
+                    if (!part.isPartOfComposite)
+                        break;
+
+                    string path = part.effectivePath;
+
+                    if (!string.IsNullOrEmpty(path) &&
+                        path.StartsWith("<Gamepad>/"))
+                    {
+                        compositeIsGamepad = true;
+                        break;
+                    }
+
+                    if (part.groups != null &&
+                        part.groups.Contains("Gamepad"))
+                    {
+                        compositeIsGamepad = true;
+                        break;
+                    }
+                }
+
+                if (isGamepad == compositeIsGamepad)
+                    return action.GetBindingDisplayString(i);
+            }
+            else if (!binding.isPartOfComposite)
+            {
+                string path = binding.effectivePath;
+
+                bool isBindingGamepad =
+                    (binding.groups != null &&
+                     binding.groups.Contains("Gamepad")) ||
+                    (!string.IsNullOrEmpty(path) &&
+                     path.StartsWith("<Gamepad>/"));
+
+                if (isGamepad == isBindingGamepad)
+                    return action.GetBindingDisplayString(i);
+            }
+        }
 
         return action.GetBindingDisplayString();
     }
