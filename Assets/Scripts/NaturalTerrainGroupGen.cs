@@ -11,11 +11,11 @@ public sealed class NaturalTerrainGroupGen : MonoBehaviour
     public Terrain[] terrains = new Terrain[0];
     public int seed = 12345;
     [Header("Smooth natural riding terrain (metres)")]
-    [Range(15f, 70f)] public float relief = 45f;
+    [Range(15f, 150f)] public float relief = 45f;
     [Range(70f, 300f)] public float landformScale = 140f;
     [Range(0f, 100f)] public float warpStrength = 45f;
     [Range(0f, 0.15f)] public float detailStrength = 0.035f;
-    [Range(0f, 40f)] public float floorHeight = 0f;
+    [Range(0f, 100f)] public float floorHeight = 0f;
     [Tooltip("Fixed world X/Z sampling offset. Changing it moves the landscape pattern.")]
     public Vector2 noiseOffset;
     [Min(100f)] public float terrainHeight = 600f;
@@ -133,9 +133,9 @@ public sealed class NaturalTerrainGroupGen : MonoBehaviour
                 UnityEditor.AssetDatabase.GetAssetPath(tile.terrainData)));
         }
         var field = new NaturalDirectHeightField(seed,
-            Mathf.Clamp(relief, 15f, 70f), Mathf.Clamp(landformScale, 70f, 300f),
+            relief, Mathf.Clamp(landformScale, 70f, 300f),
             Mathf.Clamp(warpStrength, 0f, 100f), Mathf.Clamp(detailStrength, 0f, 0.15f),
-            Mathf.Clamp(floorHeight, 0f, 20f));
+            floorHeight);
         float vertical = Mathf.Max(100f, terrainHeight);
         int resolution = terrains[0].terrainData.heightmapResolution;
         var generated = new Dictionary<Terrain, float[,]>();
