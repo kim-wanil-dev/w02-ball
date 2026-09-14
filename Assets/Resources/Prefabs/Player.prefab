@@ -162,7 +162,7 @@ MonoBehaviour:
   _groundCheckRadiusRatio: 0.9
   _maxGroundAngle: 70
   _smallBall: {fileID: 11400000, guid: 5a67a359f1204cd4b95fb650c7f4a02d, type: 2}
-  _largeBall: {fileID: 11400000, guid: 8fa17fab22ef23246b29cb02e2e42158, type: 2}
+  _largeBall: {fileID: 11400000, guid: 32707346193573c45b3e6acf9d193d50, type: 2}
   _resizeSpeed: 1
   _shrinkUpwardVelocityBoost: 30
   _diveAcceleration: 80
@@ -170,6 +170,8 @@ MonoBehaviour:
   _boundaryRadius: 1200
   _freeAngle: 10
   _maxJumpCount: 0
+  _currentJumpCount: 0
+  registeredSaveObject: {fileID: 0}
 --- !u!114 &7444097142018545840
 MonoBehaviour:
   m_ObjectHideFlags: 0
