@@ -276,19 +276,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e981ecae8e8cfb744891463de117f44b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
-  _prizeUI: {fileID: 6111779121081666459}
+  _prizePanel: {fileID: 6111779121081666459}
   _prizeButton: {fileID: 7233003029355868975}
   _text: {fileID: 7185344025104889915}
-  _confirmAction:
-    m_Name: Confirm
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 96800ae4-26b3-4d0d-ab04-36a8daa713d4
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-    m_Priority: 0
   isGetFirstSave: 1
   isGetFirstPrize: 1
 --- !u!1 &6304774811240299987

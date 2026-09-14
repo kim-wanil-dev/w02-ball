@@ -18,11 +18,12 @@ public class UIManager : MonoBehaviour
     private string _guide = "점프: {Jump}\n강하: {Dive}\n크기 조절: {Resize}\n언제든지 이 구슬로 다시 돌아와 사용법을 확인하실 수 있습니다.";
     private string _secondPirzeGuide = "축하합니다!\n 첫 구슬을 획득하셨습니다.\n 구슬을 얻을 때 마다 점프 횟수가 1회 늘어납니다.\n";
     private string _firstSaveGuide = "첫 세이브 포인트에 도달했습니다!\n[{Restart}]을 눌러 언제든지 이곳에서 다시 시작할 수 있습니다.";
-    [SerializeField] private GameObject _prizeUI;
+    [SerializeField] private GameObject _prizePanel;
     [SerializeField] private Button _prizeButton;
     [SerializeField] private Text _text;
     //private bool _isTouched;
-    [SerializeField] private InputAction _confirmAction;
+    private InputAction _confirmAction;
+    private HapticManager _hapticManager;
 
     public bool isGetFirstSave = true;
     public bool isGetFirstPrize = true;
@@ -41,9 +42,15 @@ public class UIManager : MonoBehaviour
 
         _confirmAction = InputSystem.actions.FindAction("Confirm");
         _confirmAction.performed += OnJumpPerformed;
-        _prizeUI.SetActive(false);
-
+        _prizePanel.SetActive(false);
         _prizeButton.onClick.AddListener(OnPrizeUIButtonClicked);
+
+        if (!GameObject.Find("Player").TryGetComponent(out _hapticManager))
+        {
+            Debug.LogError($"{_hapticManager} component is missing", this);
+            enabled = false;
+            return;
+        }
     }
     private void Update()
     {
@@ -51,14 +58,14 @@ public class UIManager : MonoBehaviour
     }
     private void OnJumpPerformed(InputAction.CallbackContext context)
     {
-        if (!_prizeUI.activeSelf)
+        if (!_prizePanel.activeSelf)
             return;
 
         OnPrizeUIButtonClicked();
     }
     private void OnPrizeUIButtonClicked()
     {
-        _prizeUI.SetActive(false);
+        _prizePanel.SetActive(false);
 
 
 
@@ -71,11 +78,13 @@ public class UIManager : MonoBehaviour
 
     public void ShowTutorial(TutorialSequence seq)
     {
+        _hapticManager.StopHaptic();
+
         GameInputController.Instance.SetInputMode(InputMode.UI);
         Time.timeScale = 0f;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-        _prizeUI.SetActive(true);
+        _prizePanel.SetActive(true);
 
         string jump = GetBindingName("Jump");
         string dive = GetBindingName("Dive");
