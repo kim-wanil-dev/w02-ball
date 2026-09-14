@@ -3,15 +3,45 @@ using UnityEngine;
 
 public class StreamController : MonoBehaviour
 {
-    private void OnTriggerStay(Collider other)
+    [SerializeField] private float _upwardForce = 20f;
+    [SerializeField] private float _heightCorrection = 10f;
+    [SerializeField] private float _correctionDistance = 5f;
+
+    private Collider _collider;
+
+    void Awake()
+    {
+        _collider = GetComponent<Collider>();
+    }
+
+    void OnTriggerStay(Collider other)
     {
         if (!other.CompareTag("Player"))
             return;
 
         Rigidbody rb = other.attachedRigidbody;
+        float targetTopY = _collider.bounds.max.y;
+        float playerTopY = other.transform.position.y;
 
-        Vector3 velocity = rb.linearVelocity;
-        velocity.y = Mathf.Max(velocity.y, -0.1f);
-        rb.linearVelocity = velocity;
+        float heightDifference = targetTopY - playerTopY;
+
+        float additionalForce = 0f;
+
+        if (heightDifference > 0f)
+        {
+            float t = Mathf.Clamp01(
+                heightDifference / _correctionDistance
+            );
+
+            // Ease-Out Sine
+            float eased = Mathf.Sin(t * Mathf.PI * 0.5f);
+
+            additionalForce = eased * _heightCorrection;
+        }
+
+        rb.AddForce(
+            Vector3.up * (_upwardForce + additionalForce),
+            ForceMode.Acceleration
+        );
     }
 }
