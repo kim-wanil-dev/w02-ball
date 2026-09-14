@@ -8,12 +8,14 @@ public class BasculeBridge : MonoBehaviour
     [SerializeField] private float _endBridgeAngle = 0f;
     [SerializeField] private float _springForce = 1000f;
     [SerializeField] private float _springDamp = 50f;
+    [SerializeField] private float _accumulatedRotation = 0;
 
     private HingeJoint _hingeJoint;
     private Rigidbody _rb;
     private float _lastYAngle;
-    private float _accumulatedRotation = 0;
+
     private bool _Initialized = false;
+    private bool _opend = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -34,11 +36,15 @@ public class BasculeBridge : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (!_Initialized) return;
+        if (!_Initialized || _opend) return;
 
         float currentYAngle = _connectedWheel.transform.eulerAngles.y;
         float deltaAngle = Mathf.DeltaAngle(_lastYAngle, currentYAngle);
-        _accumulatedRotation += deltaAngle;
+        if (deltaAngle > 0)
+        {
+            _accumulatedRotation += deltaAngle;
+        }
+
         _accumulatedRotation = Mathf.Clamp(_accumulatedRotation, 0f, _maxTargetRotation);
         _lastYAngle = currentYAngle;
 
@@ -52,6 +58,7 @@ public class BasculeBridge : MonoBehaviour
     {
         if (Mathf.Approximately(targetZAngle, _endBridgeAngle))
         {
+            _opend = true;
             _hingeJoint.useSpring = false;
             _rb.useGravity = true;
             // JointLimits fixLimits = _hingeJoint.limits;
