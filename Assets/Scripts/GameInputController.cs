@@ -22,6 +22,7 @@ public class GameInputController : MonoBehaviour
     public float ResizeInput { get; private set; }
     public bool JumpPressed { get; private set; }
     public bool JumpHeld { get; private set; }
+    public bool RestartPressed { get; private set; }
     public bool GamePadConnected { get; private set; }
     private void Awake()
     {
@@ -70,6 +71,7 @@ public class GameInputController : MonoBehaviour
         ResizeInput = inputActions.Player.Resize.ReadValue<float>();
         JumpPressed = inputActions.Player.Jump.WasPressedThisFrame();
         JumpHeld = inputActions.Player.Jump.IsPressed();
+        RestartPressed = inputActions.Player.Restart.WasPressedThisFrame();
     }
 
     public void SetInputMode(InputMode mode)

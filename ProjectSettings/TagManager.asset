@@ -8,6 +8,7 @@ TagManager:
   - Prize
   - PrizeFirst
   - CursceneStartZone
+  - Save
   layers:
   - Default
   - TransparentFX

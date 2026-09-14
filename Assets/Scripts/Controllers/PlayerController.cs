@@ -52,13 +52,17 @@ public class PlayerController : MonoBehaviour
     private bool _hasGroundContact;
     private Vector3 _contactGroundNormal = Vector3.up;
     private Vector3 _lastValidPosition;
+    private Vector3 _registeredSavePos;
+    private SaveObject _registeredSaveObject;
 
     private bool cutsceneStarted = false;
+    public Action OnRegistered;
 
     public bool IsGrounded { get; private set; }
     public float CurrentSizeRatio => _currentSizeRatio;
     public BallStat SmallBall => _smallBall;
     public BallStat LargeBall => _largeBall;
+    public SaveObject RegisteredSaveObject => _registeredSaveObject;
 
     private void Awake()
     {
@@ -84,6 +88,8 @@ public class PlayerController : MonoBehaviour
         _jumpPanelController.SetMaxJumps(_maxJumpCount);
         SetCurrentJumpCount(_maxJumpCount);
 
+        _registeredSavePos = transform.position;
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -96,6 +102,7 @@ public class PlayerController : MonoBehaviour
         ProcessResizeInput();
         ProcessJumpInput();
         ProcessDiveInput();
+        ProcessRestartInput();
     }
 
     private void FixedUpdate()
@@ -141,6 +148,18 @@ public class PlayerController : MonoBehaviour
     private void ProcessDiveInput()
     {
         _diveInput = GameInputController.Instance.DiveInput;
+    }
+
+    private void ProcessRestartInput()
+    {
+        if (!GameInputController.Instance.RestartPressed)
+            return;
+
+        _rb.position = _registeredSavePos + new Vector3(0f, ((transform.localScale.y - _registeredSaveObject.transform.localScale.y) / 2f), 0f);
+
+        _rb.linearVelocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
+
     }
 
     private void ProcessResize()
@@ -521,6 +540,12 @@ public class PlayerController : MonoBehaviour
         {
             _canJump = true;
             Managers.Game.MoveToNextState();
+        }
+        else if (other.CompareTag("Save"))
+        {
+            _registeredSavePos = other.transform.position;
+            _registeredSaveObject = other.GetComponent<SaveObject>();
+            OnRegistered?.Invoke();
         }
 
     }
