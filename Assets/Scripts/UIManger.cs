@@ -20,6 +20,7 @@ public class UIManager : MonoBehaviour
     private string _firstSaveGuide = "첫 세이브 포인트에 도달했습니다!\n[{Restart}]을 눌러 언제든지 이곳에서 다시 시작할 수 있습니다.";
     [SerializeField] private GameObject _prizeUI;
     [SerializeField] private Button _prizeButton;
+    [SerializeField] private Text _text;
     //private bool _isTouched;
     [SerializeField] private InputAction _confirmAction;
 
@@ -109,8 +110,9 @@ public class UIManager : MonoBehaviour
                .Replace("{Dive}", dive)
                .Replace("{Resize}", resize)
                .Replace("{Restart}", restrart);
-        Text text = _prizeUI.transform.Find("Panel/Text").GetComponent<Text>();
-        text.text = message;
+
+        // _text = _prizeUI.transform.Find("Panel/Text").GetComponent<Text>();
+        _text.text = message;
     }
 
 

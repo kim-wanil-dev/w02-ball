@@ -173,6 +173,7 @@ GameObject:
   - component: {fileID: 7072042631006815451}
   - component: {fileID: 72962060941722405}
   - component: {fileID: 6442442567820235467}
+  - component: {fileID: 2454697409791783730}
   m_Layer: 5
   m_Name: PrizeCanvas
   m_TagString: Untagged
@@ -263,6 +264,33 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &2454697409791783730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6199676943508247232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e981ecae8e8cfb744891463de117f44b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIManager
+  _prizeUI: {fileID: 6111779121081666459}
+  _prizeButton: {fileID: 7233003029355868975}
+  _text: {fileID: 7185344025104889915}
+  _confirmAction:
+    m_Name: Confirm
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 96800ae4-26b3-4d0d-ab04-36a8daa713d4
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+    m_Priority: 0
+  isGetFirstSave: 1
+  isGetFirstPrize: 1
 --- !u!1 &6304774811240299987
 GameObject:
   m_ObjectHideFlags: 0

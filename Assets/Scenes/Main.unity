@@ -16869,10 +16869,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6199676943508247232, guid: 8c9bc0dd7480cdf439e9007aebf6237e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1380124308}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c9bc0dd7480cdf439e9007aebf6237e, type: 3}
 --- !u!1 &974777689
 GameObject:
@@ -24313,11 +24310,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1343403125}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1355279168 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6111779121081666459, guid: 8c9bc0dd7480cdf439e9007aebf6237e, type: 3}
-  m_PrefabInstance: {fileID: 971568660}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1362805258
 GameObject:
   m_ObjectHideFlags: 0
@@ -24506,37 +24498,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 430797255}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1380124307 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6199676943508247232, guid: 8c9bc0dd7480cdf439e9007aebf6237e, type: 3}
-  m_PrefabInstance: {fileID: 971568660}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1380124308
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1380124307}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e981ecae8e8cfb744891463de117f44b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIManager
-  _prizeUI: {fileID: 1355279168}
-  _prizeButton: {fileID: 1557046403}
-  _confirmAction:
-    m_Name: Confirm
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 4fc4b4af-b2d1-4048-af0d-92eb1e8e66ca
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-    m_Priority: 0
-  isGetFirstSave: 1
-  isGetFirstPrize: 1
 --- !u!1 &1388566594
 GameObject:
   m_ObjectHideFlags: 0
@@ -25851,17 +25812,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 430797255}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1557046403 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7233003029355868975, guid: 8c9bc0dd7480cdf439e9007aebf6237e, type: 3}
-  m_PrefabInstance: {fileID: 971568660}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
 --- !u!1 &1569309498
 GameObject:
   m_ObjectHideFlags: 0
