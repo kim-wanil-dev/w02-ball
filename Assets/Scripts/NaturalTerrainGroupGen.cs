@@ -15,7 +15,7 @@ public sealed class NaturalTerrainGroupGen : MonoBehaviour
     [Range(70f, 300f)] public float landformScale = 140f;
     [Range(0f, 100f)] public float warpStrength = 45f;
     [Range(0f, 0.15f)] public float detailStrength = 0.035f;
-    [Range(0f, 20f)] public float floorHeight = 0f;
+    [Range(0f, 40f)] public float floorHeight = 0f;
     [Tooltip("Fixed world X/Z sampling offset. Changing it moves the landscape pattern.")]
     public Vector2 noiseOffset;
     [Min(100f)] public float terrainHeight = 600f;
