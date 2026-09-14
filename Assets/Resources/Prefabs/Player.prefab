@@ -162,7 +162,7 @@ MonoBehaviour:
   _groundCheckRadiusRatio: 0.9
   _maxGroundAngle: 70
   _smallBall: {fileID: 11400000, guid: 5a67a359f1204cd4b95fb650c7f4a02d, type: 2}
-  _largeBall: {fileID: 11400000, guid: 8fa17fab22ef23246b29cb02e2e42158, type: 2}
+  _largeBall: {fileID: 11400000, guid: 32707346193573c45b3e6acf9d193d50, type: 2}
   _resizeSpeed: 1
   _shrinkUpwardVelocityBoost: 30
   _diveAcceleration: 80
@@ -199,14 +199,14 @@ MonoBehaviour:
   _trackSpline: {fileID: 0}
   _railLayerMask:
     serializedVersion: 2
-    m_Bits: 0
-  _railCheckOffset: 1
-  _groundCheckRadius: 0.3
+    m_Bits: 128
+  _railCheckOffset: 3
+  _groundCheckRadius: 1
   _groundCheckDistance: 1.5
   _groundGraceTime: 0.2
   _nearestPointResolution: 4
   _nearestPointIterations: 2
-  _adhesionForce: 15
+  _adhesionForce: 20
   _lateralCorrection: 4
-  _forwardAcceleration: 8
-  _maxTrackSpeed: 40
+  _forwardAcceleration: 20
+  _maxTrackSpeed: 400
