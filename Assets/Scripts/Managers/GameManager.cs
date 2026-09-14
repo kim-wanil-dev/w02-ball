@@ -62,4 +62,9 @@ public class GameManager
     {
         _gameState = _stateOrder[0];
     }
+
+    public GameState CheckPlaying()
+    {
+        return _gameState;
+    }
 }

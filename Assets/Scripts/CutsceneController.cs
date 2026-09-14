@@ -1,5 +1,7 @@
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class CutsceneController : MonoBehaviour
 {
@@ -12,9 +14,28 @@ public class CutsceneController : MonoBehaviour
     private float _endTime = 3;
     private int _flag = 0;
 
+    private string _endingMessage = "Thanks For Play!\n친구들을 따라 여행을 시작하세요!\n세이브 포인트로 돌아와 맵을 구경할 수도 있습니다.";
+    private Button _endingButton;
+    private GameObject _endingUIPrefab;
+    private GameObject _endingUIObject;
+    private InputAction _confirmAction;
+
+    void Awake()
+    {
+        _endingUIPrefab = Resources.Load<GameObject>("Prefabs/UIs/EndingCanvas");
+        _endingUIObject = Instantiate(_endingUIPrefab);
+        _endingButton = _endingUIObject.GetComponentInChildren<Button>();
+        _endingButton.onClick.AddListener(OnEndingUIButtonClicked);
+        _confirmAction = InputSystem.actions.FindAction("Confirm");
+        _confirmAction.performed += OnJumpPerformed;
+        _endingUIObject.SetActive(false);
+
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+
         foreach (GameObject cam in _cineCams)
         {
             cam.SetActive(false);
@@ -51,6 +72,19 @@ public class CutsceneController : MonoBehaviour
             _cutsceneStarted = true;
             _player.SetCutSceneState(true);
             SetNextFlag();
+        }
+
+        if (other.gameObject.CompareTag("Player") && Managers.Game.CheckPlaying() == GameState.Playing)
+        {
+            Managers.Game.MoveToNextState();
+            Text text = _endingUIObject.transform.Find("Panel/Text").GetComponent<Text>();
+            text.text = _endingMessage;
+
+            GameInputController.Instance.SetInputMode(InputMode.UI);
+            Time.timeScale = 0f;
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            _endingUIObject.SetActive(true);
         }
     }
 
@@ -121,7 +155,31 @@ public class CutsceneController : MonoBehaviour
                 Physics.gravity = new Vector3(0, -50, 0);
                 Managers.Game.MoveToNextState();
                 _player.SetCutSceneState(false);
+                SetEndingFlag();
                 break;
         }
+    }
+
+    private void SetEndingFlag()
+    {
+        Vector3 endingPointScale = new Vector3(30, 6, 30);
+        transform.localScale = endingPointScale;
+    }
+
+    private void OnEndingUIButtonClicked()
+    {
+        _endingUIObject.SetActive(false);
+        GameInputController.Instance.SetInputMode(InputMode.Player);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Time.timeScale = 1f;
+    }
+
+    private void OnJumpPerformed(InputAction.CallbackContext context)
+    {
+        if (!_endingUIObject.activeSelf)
+            return;
+
+        OnEndingUIButtonClicked();
     }
 }
