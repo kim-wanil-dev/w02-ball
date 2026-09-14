@@ -1,27 +1,12 @@
 using UnityEngine;
 
-public class SaveObject : MonoBehaviour
+public class PrizeObject : MonoBehaviour
 {
-    [SerializeField] private Material _unregisteredMaterial;
-    [SerializeField] private Material _registeredMaterial;
-    private MeshRenderer _renderer;
-    private PlayerController _player;
+    [SerializeField] private Material _guideMaterial;
+    private bool isFisrtObject = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-
     private void Awake()
     {
-        if (!GameObject.Find("Player").TryGetComponent(out _player))
-        {
-            Debug.LogError($"{_player.name} component is missing.", this);
-            enabled = false;
-            return;
-        }
-        if (!TryGetComponent(out _renderer))
-        {
-            Debug.LogError($"{_renderer} : renderer component is missing.", this);
-            enabled = false;
-            return;
-        }
     }
 
     void Start()
@@ -29,29 +14,44 @@ public class SaveObject : MonoBehaviour
 
     }
 
-    private void OnEnable()
-    {
-        _player.OnRegistered += HandleRegisterSaveObject;
-    }
-    private void OnDisable()
-    {
-        _player.OnRegistered -= HandleRegisterSaveObject;
-    }
+
     // Update is called once per frame
     void Update()
     {
 
     }
-    private void HandleRegisterSaveObject()
+
+    private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("HandleRegisterSaveObject");
-        if (_player.RegisteredSaveObject == this)
+        if (!other.CompareTag("Player"))
+            return;
+
+        PlayerController player = other.GetComponent<PlayerController>();
+        if (isFisrtObject)
         {
-            _renderer.material = _registeredMaterial;
+            UIManager.Instance.ShowTutorial(TutorialSequence.Guide);
+            return;
         }
-        else
+
+        if (UIManager.Instance.isGetFirstPrize)
         {
-            _renderer.material = _unregisteredMaterial;
+            player.AcquireFirstPrize();
+            this.isFisrtObject = true;
+            Renderer renderer = GetComponent<Renderer>();
+            renderer.material = _guideMaterial;
+            UIManager.Instance.ShowTutorial(TutorialSequence.Greeting);
+            UIManager.Instance.isGetFirstPrize = false;
+            return;
         }
+
+        player.AcquirePrize();
+        Destroy(this.gameObject);
+
+        if (player.MaxJumpCount == 1)
+        {
+            UIManager.Instance.ShowTutorial(TutorialSequence.SecondPirzeGuide);
+        }
+
+
     }
 }

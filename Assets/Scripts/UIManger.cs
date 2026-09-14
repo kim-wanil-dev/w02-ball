@@ -2,64 +2,108 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class PrizeObjectManager : MonoBehaviour
+public enum TutorialSequence
 {
+    Greeting = 0,
+    Guide,
+    SecondPirzeGuide,
+    FirstSaveGuide
+
+}
+public class UIManager : MonoBehaviour
+{
+    public static UIManager Instance;
+
     private string _greeting = "잘 하셨습니다!\n이제부터 {Jump}키를 눌러 점프가 가능합니다.\n구슬을 모아 힘을 회복한 뒤 성지로 돌아가세요.\n\n";
     private string _guide = "점프: {Jump}\n강하: {Dive}\n크기 조절: {Resize}\n언제든지 이 구슬로 다시 돌아와 사용법을 확인하실 수 있습니다.";
-    private string _secondPirzeGuide = "점프: {Jump}\n강하: {Dive}\n크기 조절: {Resize}\n언제든지 이 구슬로 다시 돌아와 사용법을 확인하실 수 있습니다.";
-    private string _fistSaveGuide = "점프: {Jump}\n강하: {Dive}\n크기 조절: {Resize}\n언제든지 이 구슬로 다시 돌아와 사용법을 확인하실 수 있습니다.";
-    private GameObject _prizeUI;
-    private Button _prizeButton;
-    private bool _isTouched;
-    private InputAction _confirmAction;
+    private string _secondPirzeGuide = "축하합니다!\n 첫 구슬을 획득하셨습니다.\n 구슬을 얻을 때 마다 점프 횟수가 1회 늘어납니다.\n";
+    private string _firstSaveGuide = "첫 세이브 포인트에 도달했습니다!\n[{Restart}]을 눌러 언제든지 이곳에서 다시 시작할 수 있습니다.";
+    [SerializeField] private GameObject _prizeUI;
+    [SerializeField] private Button _prizeButton;
+    //private bool _isTouched;
+    [SerializeField] private InputAction _confirmAction;
+
+    public bool isGetFirstSave = true;
+    public bool isGetFirstPrize = true;
 
     private void Awake()
     {
-        if (gameObject.CompareTag("Prize"))
-            return;
-
-        _prizeUI = Instantiate(Managers.Game.PrizeUI);
-
-        _prizeButton = _prizeUI.GetComponentInChildren<Button>();
-        _prizeButton.onClick.AddListener(OnPrizeUIButtonClicked);
+        Instance = this;
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
 
         _confirmAction = InputSystem.actions.FindAction("Confirm");
         _confirmAction.performed += OnJumpPerformed;
-
         _prizeUI.SetActive(false);
+
+        _prizeButton.onClick.AddListener(OnPrizeUIButtonClicked);
+    }
+    private void Update()
+    {
+
+    }
+    private void OnJumpPerformed(InputAction.CallbackContext context)
+    {
+        if (!_prizeUI.activeSelf)
+            return;
+
+        OnPrizeUIButtonClicked();
+    }
+    private void OnPrizeUIButtonClicked()
+    {
+        _prizeUI.SetActive(false);
+
+
+
+        GameInputController.Instance.SetInputMode(InputMode.Player);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Time.timeScale = 1f;
     }
 
-    private void OnTriggerEnter(Collider other)
+
+    public void ShowTutorial(TutorialSequence seq)
     {
-        if (!other.CompareTag("Player"))
-            return;
-        if (gameObject.CompareTag("Prize"))
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-
-
-
-
         GameInputController.Instance.SetInputMode(InputMode.UI);
         Time.timeScale = 0f;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         _prizeUI.SetActive(true);
-    }
-
-    private void SetText(string inputString)
-    {
 
         string jump = GetBindingName("Jump");
         string dive = GetBindingName("Dive");
         string resize = GetBindingName("Resize");
         string restrart = GetBindingName("Restart");
 
+        string message;
+        switch (seq)
+        {
+            case TutorialSequence.Greeting:
+                message = _greeting + _guide;
+                break;
+            case TutorialSequence.Guide:
+                message = _guide;
+                break;
+            case TutorialSequence.SecondPirzeGuide:
+                message = _secondPirzeGuide;
+                break;
+            case TutorialSequence.FirstSaveGuide:
+                message = _firstSaveGuide;
+                break;
+            default:
+                Debug.LogError($"존재하지 않는 TutorialSequence : {seq}");
+                return;
 
-        string message = _isTouched ? _guide : _greeting + _guide;
+        }
+
+
+        //string message = _isTouched ? _guide : _greeting + _guide;
         message = message
                .Replace("{Jump}", jump)
                .Replace("{Dive}", dive)
@@ -69,33 +113,9 @@ public class PrizeObjectManager : MonoBehaviour
         text.text = message;
     }
 
-    private void OnJumpPerformed(InputAction.CallbackContext context)
-    {
-        if (!_prizeUI.activeSelf)
-            return;
 
-        OnPrizeUIButtonClicked();
-    }
 
-    private void OnPrizeUIButtonClicked()
-    {
-        _prizeUI.SetActive(false);
 
-        if (!_isTouched)
-        {
-            Renderer renderer = gameObject.GetComponent<Renderer>();
-            renderer.material.SetColor(
-                "_EmissionColor",
-                new Color(0, 171, 184)
-            );
-            _isTouched = true;
-        }
-
-        GameInputController.Instance.SetInputMode(InputMode.Player);
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-        Time.timeScale = 1f;
-    }
 
     private string GetBindingName(string actionName)
     {
@@ -158,4 +178,5 @@ public class PrizeObjectManager : MonoBehaviour
 
         return action.GetBindingDisplayString();
     }
+
 }

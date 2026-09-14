@@ -4,24 +4,12 @@ public class SaveObject : MonoBehaviour
 {
     [SerializeField] private Material _unregisteredMaterial;
     [SerializeField] private Material _registeredMaterial;
-    private MeshRenderer _renderer;
-    private PlayerController _player;
+    public Renderer _renderer;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     private void Awake()
     {
-        if (!GameObject.Find("Player").TryGetComponent(out _player))
-        {
-            Debug.LogError($"{_player.name} component is missing.", this);
-            enabled = false;
-            return;
-        }
-        if (!TryGetComponent(out _renderer))
-        {
-            Debug.LogError($"{_renderer} : renderer component is missing.", this);
-            enabled = false;
-            return;
-        }
+        _renderer = GetComponent<Renderer>();
     }
 
     void Start()
@@ -29,29 +17,36 @@ public class SaveObject : MonoBehaviour
 
     }
 
-    private void OnEnable()
-    {
-        _player.OnRegistered += HandleRegisterSaveObject;
-    }
-    private void OnDisable()
-    {
-        _player.OnRegistered -= HandleRegisterSaveObject;
-    }
     // Update is called once per frame
     void Update()
     {
 
     }
-    private void HandleRegisterSaveObject()
+
+
+    private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("HandleRegisterSaveObject");
-        if (_player.RegisteredSaveObject == this)
+        if (!other.CompareTag("Player"))
+            return;
+
+        PlayerController player = other.GetComponent<PlayerController>();
+        Renderer renderer = GetComponent<Renderer>();
+        renderer.material = _registeredMaterial;
+
+        if (player.registeredSaveObject == null)
         {
-            _renderer.material = _registeredMaterial;
+            UIManager.Instance.ShowTutorial(TutorialSequence.FirstSaveGuide);
+            this._renderer.material = _registeredMaterial;
+
         }
-        else
+        else if (player.registeredSaveObject != this)
         {
-            _renderer.material = _unregisteredMaterial;
+            player.registeredSaveObject._renderer.material = _unregisteredMaterial;
+            this._renderer.material = _registeredMaterial;
+            player.registeredSaveObject = this;
         }
+
     }
+
+
 }

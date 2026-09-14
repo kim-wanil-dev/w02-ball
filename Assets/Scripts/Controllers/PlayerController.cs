@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
     private bool _jumpRequested;
     private bool _diveInput;
     private bool _canJump;
-    private int _currentJumpCount;
+    [SerializeField] private int _currentJumpCount;
 
     private float _currentSizeRatio;
 
@@ -53,16 +53,16 @@ public class PlayerController : MonoBehaviour
     private Vector3 _contactGroundNormal = Vector3.up;
     private Vector3 _lastValidPosition;
     private Vector3 _registeredSavePos;
-    private SaveObject _registeredSaveObject;
 
+    public SaveObject registeredSaveObject;
     private bool cutsceneStarted = false;
     public Action OnRegistered;
 
     public bool IsGrounded { get; private set; }
     public float CurrentSizeRatio => _currentSizeRatio;
+    public float MaxJumpCount => _maxJumpCount;
     public BallStat SmallBall => _smallBall;
     public BallStat LargeBall => _largeBall;
-    public SaveObject RegisteredSaveObject => _registeredSaveObject;
 
     private void Awake()
     {
@@ -155,7 +155,7 @@ public class PlayerController : MonoBehaviour
         if (!GameInputController.Instance.RestartPressed)
             return;
 
-        _rb.position = _registeredSavePos + new Vector3(0f, ((transform.localScale.y - _registeredSaveObject.transform.localScale.y) / 2f), 0f);
+        _rb.position = _registeredSavePos + new Vector3(0f, ((transform.localScale.y - registeredSaveObject.transform.localScale.y) / 2f), 0f);
 
         _rb.linearVelocity = Vector3.zero;
         _rb.angularVelocity = Vector3.zero;
@@ -534,20 +534,28 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Prize"))
-            SetMaxJumpCount(_maxJumpCount + 1);
-        else if (other.CompareTag("PrizeFirst"))
-        {
-            _canJump = true;
-            Managers.Game.MoveToNextState();
-        }
-        else if (other.CompareTag("Save"))
+
+        //else if (other.CompareTag("PrizeFirst"))
+        //{
+        //    _canJump = true;
+        //    Managers.Game.MoveToNextState();
+        //}
+        if (other.CompareTag("Save"))
         {
             _registeredSavePos = other.transform.position;
-            _registeredSaveObject = other.GetComponent<SaveObject>();
+            registeredSaveObject = other.GetComponent<SaveObject>();
             OnRegistered?.Invoke();
         }
 
+    }
+    public void AcquireFirstPrize()
+    {
+        _canJump = true;
+        Managers.Game.MoveToNextState();
+    }
+    public void AcquirePrize()
+    {
+        SetMaxJumpCount(_maxJumpCount + 1);
     }
 
     private void SetCurrentJumpCount(int currentJumpCount)

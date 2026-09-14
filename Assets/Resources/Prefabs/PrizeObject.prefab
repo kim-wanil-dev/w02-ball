@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8813793134995515080}
-  - component: {fileID: 9175651564229385031}
   - component: {fileID: 6420633719301593300}
   - component: {fileID: 5437115761478763952}
   - component: {fileID: 5866662262677760959}
+  - component: {fileID: 4626982063594981436}
   m_Layer: 0
   m_Name: PrizeObject
   m_TagString: Prize
@@ -35,18 +35,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9175651564229385031
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2290358807422951759}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0740602897357d743b333b331fc584a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PrizeObjectManager
 --- !u!33 &6420633719301593300
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -125,3 +113,16 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4626982063594981436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2290358807422951759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81e61e709b75f954785d1732aaddf2ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PrizeObject
+  _guideMaterial: {fileID: 2100000, guid: 68b3214a9aa121c4892df27e7c63b709, type: 2}
