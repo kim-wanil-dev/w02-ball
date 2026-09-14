@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,7 +27,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _boundaryRadius = 1200f;
     [SerializeField] private float _freeAngle = 10f;
 
-    [Header("JumpCount")]
+    [Header("Jump")]
+    [SerializeField] private float _coyoteTime = 0.1f;
     [SerializeField] private int _maxJumpCount;
 
     private Rigidbody _rb;
@@ -121,7 +123,8 @@ public class PlayerController : MonoBehaviour
         _velocityText.text = $"{_rb.linearVelocity.magnitude:F2} m/s";
         _heightText.text = $"{transform.position.y:F2} m";
 
-        Debug.Log($"IsGrounded: {IsGrounded}, GroundNormal: {_groundNormal}");
+        // Debug.Log($"IsGrounded: {IsGrounded}, GroundNormal: {_groundNormal}");
+        Debug.Log($"IsGrounded: {IsGrounded}");
     }
 
     private void OnDisable()
@@ -280,11 +283,8 @@ public class PlayerController : MonoBehaviour
             IsGrounded = true;
             _groundNormal = _contactGroundNormal;
         }
-        else
-        {
-            IsGrounded = false;
-            _groundNormal = -_gravityDir;
-        }
+        else if (IsGrounded)
+            StartCoroutine(ApplyCoyoteTime());
 
         _hasGroundContact = false;
     }
@@ -305,6 +305,8 @@ public class PlayerController : MonoBehaviour
         if (!IsGrounded)
             SetCurrentJumpCount(_currentJumpCount - 1);
 
+        IsGrounded = false;
+        _groundNormal = -_gravityDir;
         float jumpForce = GetStat(_currentSizeRatio, stat => stat.JumpForce);
         _rb.AddForce(-_gravityDir * jumpForce, ForceMode.Impulse);
     }
@@ -495,6 +497,13 @@ public class PlayerController : MonoBehaviour
         }
 
         _lastValidPosition = _rb.position;
+    }
+
+    private IEnumerator ApplyCoyoteTime()
+    {
+        yield return new WaitForSeconds(_coyoteTime);
+        IsGrounded = false;
+        _groundNormal = -_gravityDir;
     }
 
     private void OnCollisionEnter(Collision collision)
