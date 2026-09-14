@@ -116,11 +116,11 @@ public class SpringLauncher : MonoBehaviour
 
     private void Compressing()
     {
-        if (_targetRb == null)
-        {
-            ChangeState(SpringState.Returning);
-            return;
-        }
+        //if (_targetRb == null)
+        //{
+        //    ChangeState(SpringState.Returning);
+        //    return;
+        //}
 
         float compressionSpeed =
             _compressionSpeedPerMass * _targetRb.mass;
@@ -138,14 +138,14 @@ public class SpringLauncher : MonoBehaviour
 
     private void Charged()
     {
-        if (_targetRb == null)
-        {
-            ChangeState(SpringState.Returning);
+        //if (_targetRb == null)
+        //{
+        //    ChangeState(SpringState.Returning);
 
-            _chargeRenderer.material.color = _launchColor;
+        //    _chargeRenderer.material.color = _launchColor;
 
-            return;
-        }
+        //    return;
+        //}
         _launchWaitTimer += Time.fixedDeltaTime;
 
         _chargeRenderer.material.color = Color.Lerp(
