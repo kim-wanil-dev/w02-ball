@@ -5738,6 +5738,10 @@ PrefabInstance:
       propertyPath: _trackSpline
       value: 
       objectReference: {fileID: 739053907}
+    - target: {fileID: 1725289687414119516, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
+      propertyPath: _largeBall
+      value: 
+      objectReference: {fileID: 11400000, guid: 8fa17fab22ef23246b29cb02e2e42158, type: 2}
     - target: {fileID: 3640661126572887836, guid: 78e7007f7f161964f9bdfd65140ea13e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -523.2404
@@ -25969,6 +25973,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1653660166}
   - component: {fileID: 1653660167}
+  - component: {fileID: 1653660169}
+  - component: {fileID: 1653660168}
   m_Layer: 0
   m_Name: CutSceneCineCam (1)
   m_TagString: Untagged
@@ -26011,7 +26017,7 @@ MonoBehaviour:
   m_StreamingVersion: 20241001
   m_LegacyPriority: 0
   Target:
-    TrackingTarget: {fileID: 0}
+    TrackingTarget: {fileID: 1194691321}
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
@@ -26034,6 +26040,38 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!114 &1653660168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1653660165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e8b78ac948f05a46a6d8339a503172b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineHardLookAt
+  LookAtOffset: {x: 0, y: 0, z: 0}
+--- !u!114 &1653660169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1653660165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b617507da6d07e749b7efdb34e1173e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineFollow
+  TrackerSettings:
+    BindingMode: 4
+    PositionDamping: {x: 1, y: 1, z: 1}
+    AngularDampingMode: 0
+    RotationDamping: {x: 1, y: 1, z: 1}
+    QuaternionDamping: 1
+  FollowOffset: {x: 0, y: 30, z: 30}
 --- !u!1001 &1672453536
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -37897,7 +37935,7 @@ Transform:
   m_GameObject: {fileID: 1988831626}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 300, y: 598, z: -470}
+  m_LocalPosition: {x: 320, y: 598, z: -470}
   m_LocalScale: {x: 6, y: 6, z: 6}
   m_ConstrainProportionsScale: 0
   m_Children: []

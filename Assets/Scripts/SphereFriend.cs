@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Splines;
 
@@ -9,6 +10,7 @@ public class SphereFriend : MonoBehaviour
     [SerializeField] private float stopPoint;
     [SerializeField] private SplineContainer _splineRoute;
     private SplineAnimate _splineAnimate;
+    private Rigidbody _rb;
 
 
 
@@ -29,20 +31,24 @@ public class SphereFriend : MonoBehaviour
         }
     }
 
-    public void SetRoute()
+    public void SetRunUp()
     {
-        _splineAnimate.ElapsedTime /= _splineAnimate.Duration / 15;
-        _splineAnimate.Duration = 15f;
-        _splineAnimate.Play();
+        _splineAnimate.enabled = false;
+        _rb = gameObject.AddComponent<Rigidbody>();
+        _rb.linearVelocity = Vector3.forward * 50;
+        StartCoroutine(Running());
 
-        // Invoke("ChangeSplineRoute", 1 - (startOffset * 5));
+        // _splineAnimate.ElapsedTime /= _splineAnimate.Duration / 15;
+        // _splineAnimate.Duration = 15f;
+        // _splineAnimate.Play();
+
     }
 
-    private void ChangeSplineRoute()
+    private IEnumerator Running()
     {
-        _splineAnimate.ElapsedTime = 0;
-        _splineAnimate.Container = _splineRoute;
-        _splineAnimate.Play();
-
+        yield return new WaitForSeconds(4);
+        _rb.AddForce(Vector3.back * 150, ForceMode.Impulse);
+        yield return new WaitForSeconds(20);
+        Destroy(gameObject);
     }
 }
