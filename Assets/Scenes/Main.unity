@@ -2432,7 +2432,7 @@ GameObject:
   - component: {fileID: 229771786}
   - component: {fileID: 229771788}
   - component: {fileID: 229771787}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Terrain_C
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2510,7 +2510,7 @@ Terrain:
   m_LightmapParameters: {fileID: 15203, guid: 0000000000000000f000000000000000, type: 0}
   m_GroupingID: 0
   m_RenderingLayerMask: 1
-  m_AllowAutoConnect: 0
+  m_AllowAutoConnect: 1
   m_EnableHeightmapRayTracing: 1
   m_EnableTreesAndDetailsRayTracing: 0
   m_EnableHeightmapLODFrustumCulling: 1
@@ -10395,7 +10395,7 @@ GameObject:
   - component: {fileID: 701032013}
   - component: {fileID: 701032015}
   - component: {fileID: 701032014}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Terrain_B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10473,7 +10473,7 @@ Terrain:
   m_LightmapParameters: {fileID: 15203, guid: 0000000000000000f000000000000000, type: 0}
   m_GroupingID: 0
   m_RenderingLayerMask: 1
-  m_AllowAutoConnect: 0
+  m_AllowAutoConnect: 1
   m_EnableHeightmapRayTracing: 1
   m_EnableTreesAndDetailsRayTracing: 0
   m_EnableHeightmapLODFrustumCulling: 1
@@ -33408,7 +33408,7 @@ GameObject:
   - component: {fileID: 1936738999}
   - component: {fileID: 1936739001}
   - component: {fileID: 1936739000}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Terrain_D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33486,7 +33486,7 @@ Terrain:
   m_LightmapParameters: {fileID: 15203, guid: 0000000000000000f000000000000000, type: 0}
   m_GroupingID: 0
   m_RenderingLayerMask: 1
-  m_AllowAutoConnect: 0
+  m_AllowAutoConnect: 1
   m_EnableHeightmapRayTracing: 1
   m_EnableTreesAndDetailsRayTracing: 0
   m_EnableHeightmapLODFrustumCulling: 1
@@ -35139,7 +35139,7 @@ Terrain:
   m_LightmapParameters: {fileID: 15203, guid: 0000000000000000f000000000000000, type: 0}
   m_GroupingID: 0
   m_RenderingLayerMask: 1
-  m_AllowAutoConnect: 0
+  m_AllowAutoConnect: 1
   m_EnableHeightmapRayTracing: 1
   m_EnableTreesAndDetailsRayTracing: 0
   m_EnableHeightmapLODFrustumCulling: 1
