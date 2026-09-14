@@ -5386,14 +5386,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 123943279}
-  - component: {fileID: 123943280}
   m_Layer: 3
   m_Name: GroundBaseTerrain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &123943279
 Transform:
   m_ObjectHideFlags: 0
@@ -5413,31 +5412,6 @@ Transform:
   - {fileID: 279250686}
   m_Father: {fileID: 839797531}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &123943280
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 123943278}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 137af33d8c18b5244b4fcb4fcc11ef11, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NaturalTerrainGroupGen
-  terrains:
-  - {fileID: 1061769879}
-  - {fileID: 2136965377}
-  - {fileID: 713620200}
-  - {fileID: 279250688}
-  seed: -846293244
-  relief: 90
-  landformScale: 100
-  warpStrength: 4.8
-  detailStrength: 0.035
-  floorHeight: 20
-  noiseOffset: {x: 0, y: 0}
-  terrainHeight: 600
 --- !u!1 &134640036
 GameObject:
   m_ObjectHideFlags: 0
