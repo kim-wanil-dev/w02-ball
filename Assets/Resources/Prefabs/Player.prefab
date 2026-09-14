@@ -174,6 +174,7 @@ MonoBehaviour:
   _jumpGroundedCheckLockTime: 0.1
   _maxJumpCount: 0
   _currentJumpCount: 0
+  _canJump: 0
   registeredSaveObject: {fileID: 0}
 --- !u!114 &7444097142018545840
 MonoBehaviour:

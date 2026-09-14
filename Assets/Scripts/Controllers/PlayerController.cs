@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _jumpGroundedCheckLockTime = 0.15f;
     [SerializeField] private int _maxJumpCount;
     [SerializeField] private int _currentJumpCount;
+    [SerializeField] private bool _canJump;
 
     private Rigidbody _rb;
     private SphereCollider _collider;
@@ -49,7 +50,6 @@ public class PlayerController : MonoBehaviour
     private float _jumpGroundedCheckLockTimer;
     private float _coyoteTimer;
     private bool _diveInput;
-    private bool _canJump;
 
     private float _currentSizeRatio;
 
@@ -324,6 +324,8 @@ public class PlayerController : MonoBehaviour
 
         if (!IsGrounded && !canCoyote && _currentJumpCount <= 0)
             return;
+
+        _jumpBufferTimer = 0f;
 
         bool groundJump = IsGrounded || canCoyote;
 

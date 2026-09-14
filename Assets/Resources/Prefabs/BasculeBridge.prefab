@@ -336,9 +336,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasculeBridge
   _connectedWheel: {fileID: 0}
-  _maxTargetRotation: 360
-  _startBridgeAngle: 85
-  _endBridgeAngle: 60
+  _maxTargetRotation: 180
+  _startBridgeAngle: 90
+  _endBridgeAngle: 50
   _springForce: 10000000
   _springDamp: 1
 --- !u!1 &4907059551826975570
