@@ -2,13 +2,16 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 public class CutsceneController : MonoBehaviour
 {
     [SerializeField] private GameObject[] _cineCams;
-    [SerializeField] private SphereFriend[] friends;
+    [SerializeField] private SphereFriend[] _friends;
     [SerializeField] private GameObject _savePoint;
-    private PlayerController _player;
+    [SerializeField] private Vector3 _startPos;
+    [SerializeField] private float _fadeTime = 2f;
+    [SerializeField] private PlayerController _player;
     private bool _cutsceneStarted = false;
     private bool _timerOn = false;
     private float _timeElapsed = 0;
@@ -19,25 +22,30 @@ public class CutsceneController : MonoBehaviour
     private Button _endingButton;
     private GameObject _endingUIPrefab;
     private GameObject _endingUIObject;
+    private GameObject _fadeOutUIPrefab;
+    private GameObject _fadeOutUiObject;
     private InputAction _confirmAction;
 
 
     void Awake()
     {
         _endingUIPrefab = Resources.Load<GameObject>("Prefabs/UIs/EndingCanvas");
+        _fadeOutUIPrefab = Resources.Load<GameObject>("Prefabs/UIs/FadeOutCanvas");
         _endingUIObject = Instantiate(_endingUIPrefab);
+        _fadeOutUiObject = Instantiate(_fadeOutUIPrefab);
+
         _endingButton = _endingUIObject.GetComponentInChildren<Button>();
         _endingButton.onClick.AddListener(OnEndingUIButtonClicked);
         _confirmAction = InputSystem.actions.FindAction("Confirm");
         _confirmAction.performed += OnJumpPerformed;
         _endingUIObject.SetActive(false);
+        _fadeOutUiObject.SetActive(false);
         _savePoint.SetActive(false);
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
         foreach (GameObject cam in _cineCams)
         {
             cam.SetActive(false);
@@ -47,6 +55,10 @@ public class CutsceneController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (_flag < 1 && _player.gameObject.transform.position.y < 500)
+        {
+            FastenStartPoint();
+        }
         if (_timerOn && _timeElapsed < _endTime)
         {
             _timeElapsed += Time.deltaTime;
@@ -58,11 +70,6 @@ public class CutsceneController : MonoBehaviour
         else if (_timerOn && _timeElapsed > _endTime && _flag == 4 && !_player.IsGrounded)
         {
             SetNextFlag();
-        }
-
-        if (_cutsceneStarted)
-        {
-            Debug.Log("cutscene" + _player.IsGrounded);
         }
     }
 
@@ -87,18 +94,19 @@ public class CutsceneController : MonoBehaviour
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
             _endingUIObject.SetActive(true);
-            _savePoint.SetActive(true);
+
         }
     }
 
     private void SetNextFlag()
     {
+        Debug.Log(_flag);
         _flag++;
         switch (_flag)
         {
             case 1: //컷신 시작. _endTime동안 친구들이 도움닫기 하는 것을 바라봄 슬로프를 비춤. 
                 Managers.Game.MoveToNextState();
-                foreach (SphereFriend friend in friends)
+                foreach (SphereFriend friend in _friends)
                 {
                     friend.SetRunUp();
                 }
@@ -148,16 +156,21 @@ public class CutsceneController : MonoBehaviour
                 _endTime = 2.0f;
                 break;
             case 7: //추적 시작. 
+                StartCoroutine(FadeOutCoroutine());
                 _timeElapsed = 0;
                 _cineCams[2].SetActive(false);
                 // _cineCams[3].SetActive(true);
                 _endTime = 2f;
                 break;
             case 8:
+
+                _player.gameObject.transform.position = _startPos - new Vector3(0, 400, 0);
                 // _cineCams[3].SetActive(false);
                 Physics.gravity = new Vector3(0, -50, 0);
                 Managers.Game.MoveToNextState();
+                //Fade out
                 _player.SetCutSceneState(false);
+                _savePoint.SetActive(true);
                 SetEndingFlag();
                 break;
         }
@@ -184,5 +197,57 @@ public class CutsceneController : MonoBehaviour
             return;
 
         OnEndingUIButtonClicked();
+    }
+
+    private void FastenStartPoint()
+    {
+        _cutsceneStarted = true;
+        Managers.Game.MoveToNextState();
+        foreach (SphereFriend friend in _friends)
+        {
+            friend.SetRunUp();
+        }
+        _player.SetLinearVelocity(Vector3.zero);
+        _player.gameObject.transform.position = _startPos;
+        _cineCams[2].transform.position = _startPos + new Vector3(0, 20, 30);
+        _cineCams[2].transform.rotation = Quaternion.Euler(30, 180, 0);
+        _cineCams[2].SetActive(true);
+        _flag = 5;
+        _timeElapsed = 10;
+        _timerOn = true;
+        SetNextFlag();
+    }
+
+    private IEnumerator FadeOutCoroutine()
+    {
+        _fadeOutUiObject.SetActive(true);
+        Image image = _fadeOutUiObject.GetComponentInChildren<Image>();
+        Color fadeColor = image.color;
+        fadeColor.a = 0;
+        image.color = fadeColor;
+        float fadeTimeElapsed = 0;
+        while (fadeTimeElapsed < _fadeTime)
+        {
+            fadeTimeElapsed += Time.deltaTime;
+            fadeColor.a = Mathf.Lerp(0, 1, fadeTimeElapsed / _fadeTime);
+            image.color = fadeColor;
+            yield return null;
+        }
+        yield return new WaitForSeconds(_fadeTime / 2);
+        fadeTimeElapsed = 0;
+        while (fadeTimeElapsed < _fadeTime)
+        {
+            fadeTimeElapsed += Time.deltaTime;
+            fadeColor.a = Mathf.Lerp(1, 0, fadeTimeElapsed / _fadeTime);
+            image.color = fadeColor;
+            yield return null;
+
+        }
+        _fadeOutUiObject.SetActive(false);
+    }
+
+    void OnDisable()
+    {
+        Debug.Log("Dest");
     }
 }
