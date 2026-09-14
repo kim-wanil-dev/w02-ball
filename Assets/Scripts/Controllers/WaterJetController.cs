@@ -17,7 +17,22 @@ public class WaterJetController : MonoBehaviour
     [SerializeField] private float _acceleration = 40f;
     [SerializeField] private float _maxUpVelocity = 100f;
 
+    ParticleSystem _smoke;
+    ParticleSystem _bubble;
+    ParticleSystem _jet;
+
     private State _state;
+
+    private void Awake()
+    {
+        _smoke = transform.Find("CaveSSmoke").GetComponent<ParticleSystem>();
+        _bubble = transform.Find("Bubble").GetComponent<ParticleSystem>();
+        _jet = transform.Find("Jet").GetComponent<ParticleSystem>();
+
+        _smoke.Stop();
+        _bubble.Stop();
+        _jet.Stop();
+    }
 
     private void Start()
     {
@@ -29,22 +44,31 @@ public class WaterJetController : MonoBehaviour
         while (true)
         {
             _state = State.Prepare;
+            _bubble.Play();
             yield return new WaitForSeconds(_prepareDuration);
 
             _state = State.Jet;
-            yield return new WaitForSeconds(_jetDuration);
+            _bubble.Stop();
+            _smoke.Stop();
+            _jet.Play();
+
+            yield return new WaitForSeconds(
+                _jetDuration
+            );
 
             _state = State.Idle;
+            _smoke.Play();
+            _jet.Stop();
             yield return new WaitForSeconds(_idleDuration);
         }
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (_state != State.Jet)
+        if (!other.CompareTag("Player"))
             return;
 
-        if (!other.CompareTag("Player"))
+        if (_state != State.Jet)
             return;
 
         Rigidbody rb = other.attachedRigidbody;
