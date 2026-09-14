@@ -1,3 +1,4 @@
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class CutsceneController : MonoBehaviour
@@ -27,9 +28,18 @@ public class CutsceneController : MonoBehaviour
         {
             _timeElapsed += Time.deltaTime;
         }
-        else if (_timerOn && _timeElapsed > _endTime)
+        else if (_timerOn && _timeElapsed > _endTime && _flag != 2)
         {
             SetNextFlag();
+        }
+        else if (_timerOn && _timeElapsed > _endTime && _flag == 2 && !_player.IsGrounded)
+        {
+            SetNextFlag();
+        }
+
+        if (_cutsceneStarted)
+        {
+            Debug.Log("cutscene" + _player.IsGrounded);
         }
     }
 
@@ -64,28 +74,34 @@ public class CutsceneController : MonoBehaviour
                 _timeElapsed = 0;
                 _cineCams[0].SetActive(false);
                 _cineCams[1].SetActive(true);
-                _player.SetLinearVelocity(Vector3.forward * 15);
-                _endTime = 1;
+                _player.SetLinearVelocity(Vector3.forward * 75);
+                _endTime = 8.5f;
                 break;
-            case 3: //돌부리 캠으로 전환. 돌부리에 걸리는 것을 목격.
+            case 3: //계속 뒤로 가다가 뒤를 보지 못한 플레이어가 떨어짐. 떨어질 때 팔로우 캠 위치에서 새 카메라로 전환.
+                _timeElapsed = 0;
+                _cineCams[2].transform.position = _cineCams[1].transform.position;
+                _cineCams[2].transform.rotation = _cineCams[1].transform.rotation;
+
                 _cineCams[1].SetActive(false);
                 _cineCams[2].SetActive(true);
-                _timeElapsed = 0;
-                _endTime = 1.5f;
+                _player.SetLinearVelocity(Vector3.zero);
+                _endTime = 1f;
                 break;
-            case 4: //돌부리에 걸려 뒤로 빠르게 넘어짐. _endTime 뒤에 절벽 뷰로 카메라 전환. 
-                _player.SetLinearVelocity(Vector3.forward * 15);
+            case 4: //떨어지는 플레이어를 뒤늦게 확인. 
+                CinemachineCamera tempCineCam = _cineCams[2].GetComponent<CinemachineCamera>();
+                tempCineCam.Target.TrackingTarget = _player.gameObject.transform;
+                tempCineCam.Lens.FieldOfView = 30;
                 _timeElapsed = 0;
-                _endTime = 1.5f;
+                _endTime = 1.0f;
                 break;
-            case 5: //절벽 가장자리에서 떨어지는 플레이어를 관찰. _endTime 후 추적 시작. 
+            case 5: //추적 시작. 
                 _timeElapsed = 0;
                 _cineCams[2].SetActive(false);
-                _cineCams[3].SetActive(true);
+                // _cineCams[3].SetActive(true);
                 _endTime = 2f;
                 break;
             case 6:
-                _cineCams[3].SetActive(false);
+                // _cineCams[3].SetActive(false);
                 _player.SetCutSceneState(false);
                 break;
         }

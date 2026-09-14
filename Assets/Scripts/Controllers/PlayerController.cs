@@ -100,10 +100,11 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        CheckGround();
         if (cutsceneStarted) return;
 
         ProcessResize();
-        CheckGround();
+
         ProcessJump();
         ApplyMovement();
         ClampGravityVelocity();
