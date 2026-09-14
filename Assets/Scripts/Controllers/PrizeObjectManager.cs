@@ -10,8 +10,7 @@ public class PrizeObjectManager : MonoBehaviour
     private GameObject _prizeUI;
     private Button _prizeButton;
     private bool _isTouched;
-
-    private InputAction _jumpAction;
+    private InputAction _confirmAction;
 
     private void Awake()
     {
@@ -23,8 +22,8 @@ public class PrizeObjectManager : MonoBehaviour
         _prizeButton = _prizeUI.GetComponentInChildren<Button>();
         _prizeButton.onClick.AddListener(OnPrizeUIButtonClicked);
 
-        _jumpAction = InputSystem.actions.FindAction("Jump");
-        _jumpAction.performed += OnJumpPerformed;
+        _confirmAction = InputSystem.actions.FindAction("Confirm");
+        _confirmAction.performed += OnJumpPerformed;
 
         string jump = GetBindingName("Jump");
         string dive = GetBindingName("Dive");
@@ -51,6 +50,7 @@ public class PrizeObjectManager : MonoBehaviour
             return;
         }
 
+        GameInputController.Instance.SetInputMode(InputMode.UI);
         Time.timeScale = 0f;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
@@ -90,6 +90,7 @@ public class PrizeObjectManager : MonoBehaviour
         }
         _isTouched = true;
 
+        GameInputController.Instance.SetInputMode(InputMode.Player);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         Time.timeScale = 1f;
