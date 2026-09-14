@@ -169,7 +169,9 @@ MonoBehaviour:
   _boundaryCenter: {x: -600, y: 0, z: 0}
   _boundaryRadius: 1200
   _freeAngle: 10
-  _coyoteTime: 0.2
+  _coyoteTime: 0.1
+  _jumpBufferTime: 0.1
+  _jumpGroundedCheckLockTime: 0.1
   _maxJumpCount: 0
   _currentJumpCount: 0
   registeredSaveObject: {fileID: 0}

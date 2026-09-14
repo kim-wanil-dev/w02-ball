@@ -29,7 +29,10 @@ public class PlayerController : MonoBehaviour
 
     [Header("Jump")]
     [SerializeField] private float _coyoteTime = 0.1f;
+    [SerializeField] private float _jumpBufferTime = 0.15f;
+    [SerializeField] private float _jumpGroundedCheckLockTime = 0.15f;
     [SerializeField] private int _maxJumpCount;
+    [SerializeField] private int _currentJumpCount;
 
     private Rigidbody _rb;
     private SphereCollider _collider;
@@ -42,10 +45,11 @@ public class PlayerController : MonoBehaviour
 
     private Vector2 _moveInput;
     private float _resizeInput;
-    private bool _jumpRequested;
+    private float _jumpBufferTimer;
+    private float _jumpGroundedCheckLockTimer;
+    private float _coyoteTimer;
     private bool _diveInput;
-    private bool _canJump;
-    [SerializeField] private int _currentJumpCount;
+    private bool _canJump = true;
 
     private float _currentSizeRatio;
 
@@ -123,8 +127,7 @@ public class PlayerController : MonoBehaviour
         _velocityText.text = $"{_rb.linearVelocity.magnitude:F2} m/s";
         _heightText.text = $"{transform.position.y:F2} m";
 
-        // Debug.Log($"IsGrounded: {IsGrounded}, GroundNormal: {_groundNormal}");
-        Debug.Log($"IsGrounded: {IsGrounded}");
+        Debug.Log($"IsGrounded: {IsGrounded}, GroundNormal: {_groundNormal}");
     }
 
     private void OnDisable()
@@ -144,8 +147,10 @@ public class PlayerController : MonoBehaviour
 
     private void ProcessJumpInput()
     {
-        if (GameInputController.Instance.JumpPressed && (IsGrounded || _currentJumpCount >= 1))
-            _jumpRequested = true;
+        if (GameInputController.Instance.JumpPressed)
+            _jumpBufferTimer = _jumpBufferTime;
+        else
+            _jumpBufferTimer = Mathf.Max(0f, _jumpBufferTimer - Time.deltaTime);
     }
 
     private void ProcessDiveInput()
@@ -260,6 +265,16 @@ public class PlayerController : MonoBehaviour
 
     private void CheckGround()
     {
+        if (_jumpGroundedCheckLockTimer > 0f)
+        {
+            _jumpGroundedCheckLockTimer = Mathf.Max(0f, _jumpGroundedCheckLockTimer - Time.fixedDeltaTime);
+            _coyoteTimer = 0f;
+            _hasGroundContact = false;
+            IsGrounded = false;
+            _groundNormal = -_gravityDir;
+            return;
+        }
+
         float sphereRadius = _collider.radius * transform.lossyScale.x;
         float checkRadius = sphereRadius * _groundCheckRadiusRatio;
         float castDistance = sphereRadius - checkRadius + _groundCheckDistance;
@@ -277,38 +292,57 @@ public class PlayerController : MonoBehaviour
             _groundNormal = hit.normal;
 
             SetCurrentJumpCount(_maxJumpCount);
+            _coyoteTimer = _coyoteTime;
         }
         else if (_hasGroundContact)
         {
             IsGrounded = true;
             _groundNormal = _contactGroundNormal;
+
+            SetCurrentJumpCount(_maxJumpCount);
+            _coyoteTimer = _coyoteTime;
         }
-        else if (IsGrounded)
-            StartCoroutine(ApplyCoyoteTime());
+        else
+        {
+            IsGrounded = false;
+            _groundNormal = -_gravityDir;
+            _coyoteTimer = Mathf.Max(0f, _coyoteTimer - Time.fixedDeltaTime);
+        }
 
         _hasGroundContact = false;
     }
 
     private void ProcessJump()
     {
-        if (!_jumpRequested)
-            return;
-
-        _jumpRequested = false;
-
         if (!_canJump)
             return;
 
-        if (!IsGrounded && _currentJumpCount <= 0)
+        if (_jumpBufferTimer <= 0f)
             return;
 
-        if (!IsGrounded)
-            SetCurrentJumpCount(_currentJumpCount - 1);
+        bool canCoyote = _coyoteTimer > 0f;
 
-        IsGrounded = false;
-        _groundNormal = -_gravityDir;
+        if (!IsGrounded && !canCoyote && _currentJumpCount <= 0)
+            return;
+
+        bool groundJump = IsGrounded || canCoyote;
+
         float jumpForce = GetStat(_currentSizeRatio, stat => stat.JumpForce);
-        _rb.AddForce(-_gravityDir * jumpForce, ForceMode.Impulse);
+
+        if (groundJump)
+        {
+            Vector3 velocity = _rb.linearVelocity;
+            velocity.y = 0f;
+            _rb.linearVelocity = velocity;
+            _rb.AddForce(-_gravityDir * jumpForce, ForceMode.Impulse);
+        }
+        else
+        {
+            SetCurrentJumpCount(_currentJumpCount - 1);
+            _rb.AddForce(-_gravityDir * jumpForce, ForceMode.Impulse);
+        }
+
+        _jumpGroundedCheckLockTimer = _jumpGroundedCheckLockTime;
     }
 
     private void ApplyMovement()
